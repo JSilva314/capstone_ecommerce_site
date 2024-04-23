@@ -1,16 +1,32 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
-  const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  async function handleLogin() {
+    try {
+      const { data: token } = await axios.post("/auth/login", {
+        email,
+        password,
+      });
+      window.localStorage.setItem("TOKEN", token.token);
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <div>
       <h2>Login</h2>
       <div>
         <input
-          placeholder="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          placeholder="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           placeholder="password"
