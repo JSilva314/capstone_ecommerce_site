@@ -15,19 +15,19 @@ function AllCars() {
       car.vehicleType.includes(search)
   );
 
-  useEffect(() => {
-    async function getCars() {
-      try {
-        const { data: foundCars } = await axios.get("/api/singlecar");
-        setCars(foundCars);
+  // useEffect(() => {
+  //   async function getCars() {
+  //     try {
+  //       const { data: foundCars } = await axios.get("/api/singlecar");
+  //       setCars(foundCars);
 
-        console.log(foundCars);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    getCars();
-  }, []);
+  //       console.log(foundCars);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   }
+  //   getCars();
+  // }, []);
   return (
     <div>
       <h2>All Cars</h2>
