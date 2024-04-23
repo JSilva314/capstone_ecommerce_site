@@ -1,13 +1,39 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import Login from "./components/Login";
+import { useEffect, useState } from "react";
 import { muiTypography } from "./components/muiTypography";
+import { Route, Routes } from "react-router-dom";
+import AllCars from "./components/AllCars";
+import SingleCar from "./components/SingleCar";
+import Navbar from "./components/Navbar";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import ListCar from "./components/ListCar";
+import axios from "axios";
+import { BrowserRouter } from "react-router-dom";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [user, setUser] = useState("");
 
+  useEffect(() => {
+    async function getUser() {
+      const { data } = await axios.get("/api/users", {
+        headers: {
+          authorization: "Bearer " + localStorage.getItem("TOKEN"),
+        },
+      });
+      setUser(data.user);
+    }
+    getUser();
+  }, [user]);
   return (
     <div className="App">
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<AllCars />} />
+        <Route path="/:id" element={<SingleCar />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/listcar" element={<ListCar />} />
+      </Routes>
       <muiTypography />
     </div>
   );
