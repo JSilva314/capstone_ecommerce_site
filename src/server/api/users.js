@@ -1,5 +1,6 @@
 const express = require('express')
 const usersRouter = express.Router();
+const prisma = require('../client');
 
 const {
     createUser,
@@ -11,8 +12,7 @@ const jwt = require('jsonwebtoken')
 
 usersRouter.get('/', async( req, res, next) => {
     try {
-        const users = await getAllUsers();
-
+        const users = await prisma.user.findMany();
         res.send({
             users
         });

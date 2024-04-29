@@ -28,7 +28,9 @@ const users = [
     password: 'password123',
   },
   // Add more user objects as needed
-];  
+];
+
+
 
 const dropTables = async () => {
     try {
