@@ -19,7 +19,7 @@ model User {
   password      String
   email         String         @unique
   address       String
-  Phone         Int
+  Phone         BigInt
   paymentMethod String
   Admin         Boolean
   orders        orderHistory[]
@@ -36,7 +36,7 @@ model Cars {
   bodyType String
   image    String
   price    Int
-  vin      Int            @unique
+  vin      String            @unique
   orders   orderHistory[]
   Cart     Cart[]
 }
