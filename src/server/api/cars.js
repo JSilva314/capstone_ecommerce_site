@@ -16,7 +16,7 @@ carsRouter.get("/cars", async (req, res, next) => {
 carsRouter.get("/cars/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
-    const car = await prisma.car.findUnique({
+    const car = await prisma.cars.findUnique({
       where: {
         id: +id,
       },
