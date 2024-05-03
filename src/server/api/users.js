@@ -1,16 +1,11 @@
-const express = require('express')
+const express = require('express');
 const usersRouter = express.Router();
 const prisma = require('../client');
+const jwt = require('jsonwebtoken');
+const authMiddleware = require('../middleware/authMiddleware');
+const { createUser, getUser, getUserByEmail } = require('../db');
 
-const {
-    createUser,
-    getUser,
-    getUserByEmail
-} = require('../db');
-
-const jwt = require('jsonwebtoken')
-
-usersRouter.get('/', async( req, res, next) => {
+usersRouter.get('/', authMiddleware, async( req, res, next) => {
     try {
         const users = await prisma.user.findMany();
         res.send({
@@ -69,7 +64,7 @@ usersRouter.post('/register', async(req, res, next) => {
         }
 
         const user = await createUser({
-            name,
+            username,
             email,
             password
         });
