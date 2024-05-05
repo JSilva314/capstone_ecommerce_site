@@ -1,8 +1,11 @@
+
+body{
+  padding: 0;
+  margin: 0;
+}
+
 .App {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+ width: 100vw;
   height: 100vh; 
 }
 
@@ -10,9 +13,39 @@
   margin-bottom: 20px;
   font-size: 24px;
 }
-
+.navbar{
+  background-color: transparent !important;
+}
 #comp-img{
   width: 250px;
 }
-
+.herobg{
+  position: relative;
+  top: -20px;
+  background-image: url('/public/car_background.jpeg');
+  background-repeat: no-repeat;
+ height: 100%;
+  width: 100%;
+  background-size: cover;
+}
 /* Add more styling for other elements if needed */
+.heroContainer{
+  padding-top: 120px;
+ display: flex;
+ flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.inputBoxCar{
+  background-color: white;
+  width: 80%;
+  max-width: 1480px;
+/* border-radius: 40px; */
+  position: relative;
+}
+
+.searchIconWrapper{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
