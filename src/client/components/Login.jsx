@@ -9,7 +9,7 @@ function Login() {
 
   async function handleLogin() {
     try {
-      const { data: token } = await axios.post("/auth/login", {
+      const { data: token } = await axios.post("/users/login", {
         email,
         password,
       });

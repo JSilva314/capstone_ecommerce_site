@@ -1,19 +1,25 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-function Register() {
+function Register(setToken) {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  async function handleRegiseter() {
+  async function handleRegister() {
+    console.log(name, email, password);
     try {
-      const { data: token } = await axios.post("/auth/login", {
+      const { data: token } = await axios.post("/api/users/register", {
         name,
         email,
         password,
       });
+      console.log(token);
       window.localStorage.setItem("TOKEN", token.token);
+      setToken(token.token);
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
@@ -37,7 +43,7 @@ function Register() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button onClick={handleRegiseter}>Register</button>
+        <button onClick={handleRegister}>Register</button>
       </div>
     </div>
   );
