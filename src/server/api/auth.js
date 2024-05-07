@@ -1,21 +1,63 @@
 const express = require("express");
-const prisma = require("../client");
 const authRouter = express.Router();
-const jwt = require('jsonwebtoken');
-const { getUser, getUserByEmail, createUser } = require('../db');
-const bcrypt = require('bcrypt');
+const jwt = require("jsonwebtoken");
+const { getUser, getUserByEmail, createUser } = require("../db");
+const bcrypt = require("bcrypt");
+const prisma = require("../client");
 
-// Unsure if file is needed as bcrypt and jwt are used in db/users.js
-// Update or REMOVE file in the event it is not used.
 
 // Login endpoint
-authRouter.post('/login', async (req, res, next) => {
-    // Handle user login logic here
+authRouter.post("/login", async (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    res.status(401).send({ message: "Incorrect username or password" });
+    return; // 'return' used to ensure code below is not run in the event the username/pw are incorrect.
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    const isValid = await bcrypt.compare(password, user.password);
+
+    if (!isValid) {
+      res.status(401).send({ message: "Not Authorized!" });
+      return;
+    }
+
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      process.env.JWT_SECRET
+    );
+    res.status(200).send({ token });
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 // Register endpoint
-authRouter.post('/register', async (req, res, next) => {
-    // Handle user registration logic here
+authRouter.post("/register", async (req, res, next) => {
+  const { username, password } = req.body;
+  const SALT_ROUNDS = 5;
+  const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+  try {
+    const user = await prisma.user.create({
+      data: {
+        username,
+        password: hashedPassword,
+      },
+    });
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      process.env.JWT_SECRET
+    );
+    res.status(201).send({ token });
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 // Other authentication-related endpoints...
