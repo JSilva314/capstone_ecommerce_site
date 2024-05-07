@@ -5,17 +5,25 @@ const router = require('vite-express');
 const app = express();
 
 const bodyParser = require('body-parser')
+
 //Import authMiddleware
 const authMiddleware = require('./middleware/authMiddleware');
-app.use(bodyParser.json());
 
-app.use(express.static('public'))
+// Middlewares
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
 const db = require('./db/client')
 db.connect()
 
+// Declare Routes
 const apiRouter = require('./api');
-app.use('/api', authMiddleware, apiRouter); // Apply auth middleware to the /api routes
+const authRouter = require('./api/auth');
+
+// Apply auth middleware to the /api routes
+app.use('/api', authMiddleware, apiRouter);
+app.use('/api', authMiddleware, authRouter);
 // ADD more routes that require authorization
 
 router.listen(app, 3000, () =>
