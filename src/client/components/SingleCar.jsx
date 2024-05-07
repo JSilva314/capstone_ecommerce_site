@@ -5,12 +5,13 @@ import { useParams } from "react-router-dom";
 function SingleCar() {
   const { id } = useParams();
   const [car, setCar] = useState({});
-
+  console.log(car);
   useEffect(() => {
     async function getCar() {
       try {
         const { data: foundCar } = await axios.get(`/api/cars/${id}`);
         setCar(foundCar);
+        console.log(foundCar);
       } catch (error) {
         console.error(error);
       }

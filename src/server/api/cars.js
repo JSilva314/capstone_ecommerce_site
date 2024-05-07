@@ -13,7 +13,7 @@ carsRouter.get("/", async (req, res, next) => {
 });
 
 // GET 1 specific car based on ID
-carsRouter.get("/cars/:id", async (req, res, next) => {
+carsRouter.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     const car = await prisma.cars.findUnique({

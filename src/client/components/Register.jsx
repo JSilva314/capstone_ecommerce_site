@@ -4,15 +4,14 @@ import { useNavigate } from "react-router-dom";
 
 function Register(setToken) {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
+  // const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   async function handleRegister() {
-    console.log(name, email, password);
+    console.log(email, password);
     try {
       const { data: token } = await axios.post("/api/users/register", {
-        name,
         email,
         password,
       });
@@ -28,11 +27,11 @@ function Register(setToken) {
     <div>
       <h2>Register</h2>
       <div>
-        <input
+        {/* <input
           placeholder="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-        />
+        /> */}
         <input
           placeholder="email"
           value={email}
