@@ -13,13 +13,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Users {
   id            Int            @id @default(autoincrement())
   username      String         @unique
   password      String
   email         String         @unique
   address       String
-  Phone         BigInt
+  Phone         String
   paymentMethod String
   Admin         Boolean
   orders        orderHistory[]
@@ -44,7 +44,7 @@ model Cars {
 model orderHistory {
   orderId       Int      @id @default(autoincrement())
   car           Cars     @relation(fields: [carId], references: [id])
-  user          User     @relation(fields: [userId], references: [id])
+  user          Users     @relation(fields: [userId], references: [id])
   createdAt     DateTime @default(now())
   paymentMethod String
   email         String
@@ -55,7 +55,7 @@ model orderHistory {
 
 model Cart {
   id     Int  @id @default(autoincrement())
-  user   User @relation(fields: [userId], references: [id])
+  user   Users @relation(fields: [userId], references: [id])
   car    Cars @relation(fields: [carId], references: [id])
   price  Int
   carId  Int
