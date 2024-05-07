@@ -7,7 +7,7 @@ function ListCar() {
   const [newUsed, setNewUsed] = useState(true);
   const [color, setColor] = useState("");
   const [year, setYear] = useState("");
-  const [type, setType] = useState("");
+  const [bodyType, setType] = useState("");
   const [image, setImage] = useState("");
   const [price, setPrice] = useState("");
   const [vin, setVin] = useState("");
@@ -22,7 +22,7 @@ function ListCar() {
           newUsed,
           color,
           year: +year,
-          type,
+          bodyType,
           image,
           price,
           vin: +vin,
@@ -62,7 +62,7 @@ function ListCar() {
           onChange={(e) => setYear(e.target.value)}
         />
         <label>Vehicle Type</label>
-        <input value={type} onChange={(e) => setType(e.target.value)} />
+        <input value={bodyType} onChange={(e) => setType(e.target.value)} />
         <label>Image</label>
         <input
           placeholder="Image"

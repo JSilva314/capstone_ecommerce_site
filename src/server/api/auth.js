@@ -1,4 +1,5 @@
-const express = require('express');
+const express = require("express");
+const prisma = require("../client");
 const authRouter = express.Router();
 const jwt = require('jsonwebtoken');
 const { getUser, getUserByEmail, createUser } = require('../db');
