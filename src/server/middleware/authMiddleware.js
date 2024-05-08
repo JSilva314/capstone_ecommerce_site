@@ -1,6 +1,6 @@
 // Add middleware and review /db/users.js and /api/auth.js to ensure no redundent overlaps with JWT and bcrypt.
 
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 // Middleware funct to authenticate requests
 function authMiddleware(req, res, next) {
@@ -9,12 +9,13 @@ function authMiddleware(req, res, next) {
 
   // Check if token is provided
   if (!token) {
-    return res.status(401).json({ message: 'Authorization token is missing '});
+    return res.status(401).json({ message: "Authorization token is missing " });
   }
 
   try {
     // Verify JWT token
-    const decoded = jwt.verify(token, 'your_secret_key');
+    console.log("hello", token);
+    const decoded = jwt.verify(token, "your_secret_key");
 
     // Attach user information to the request object
     req.user = decoded.user;
@@ -22,7 +23,7 @@ function authMiddleware(req, res, next) {
     //Proceed to the next middleware or route handler
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Invalid Authorization token' });
+    return res.status(401).json({ message: "Invalid Authorization token" });
   }
 }
 

@@ -6,10 +6,22 @@ function AllCars() {
   const [cars, setCars] = useState([]);
   const [search, setSearch] = useState("");
 
+  const getToken = () => {
+    return localStorage.getItem("TOKEN");
+  };
+
   useEffect(() => {
     async function fetchCars() {
       try {
-        const { data: foundCars } = await axios.get("/api/cars");
+        const token = getToken();
+        const { data: foundCars } = await axios.get(
+          "/api/cars"
+          // , {
+          //   headers: {
+          //     Authorization: `Bearer ${token}`,
+          //   },
+          // }
+        );
         setCars(foundCars);
       } catch (error) {
         console.error(error);

@@ -1,10 +1,8 @@
 const express = require("express");
 const authRouter = express.Router();
 const jwt = require("jsonwebtoken");
-const { getUser, getUserByEmail, createUser } = require("../db");
 const bcrypt = require("bcrypt");
 const prisma = require("../client");
-
 
 // Login endpoint
 authRouter.post("/login", async (req, res, next) => {

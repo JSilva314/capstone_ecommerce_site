@@ -4,6 +4,7 @@ const prisma = require("../client");
 
 // GET list of all cars
 carsRouter.get("/", async (req, res, next) => {
+  console.log("cars hello", req);
   try {
     const cars = await prisma.cars.findMany();
     res.status(200).send(cars);
