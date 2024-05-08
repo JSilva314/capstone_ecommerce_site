@@ -33,13 +33,11 @@ apiRouter.use(async (req, res, next) => {
 const usersRouter = require("./users");
 const carsRouter = require("./cars");
 const ordersRouter = require("./orders");
-const authRouter = require("./auth");
 
 // Mount routers
 apiRouter.use("/users", usersRouter);
 apiRouter.use("/cars", carsRouter);
 apiRouter.use("/orders", ordersRouter);
-apiRouter.use("/auth", authRouter);
 
 // Error handling middleware
 apiRouter.use((err, req, res, next) => {

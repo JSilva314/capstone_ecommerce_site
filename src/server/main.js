@@ -19,19 +19,13 @@ db.connect();
 
 // Declare Routes
 const apiRouter = require('./api');
-const authRouter = require('./api/auth');
 const usersRouter = require("./api/users");
 
 // Apply auth middleware to the /api routes
 app.use('/api', apiRouter);
-app.use('/api', authMiddleware, authRouter);
 app.use('/api', authMiddleware, usersRouter);
 // ADD more routes that require authorization
 
-app.use("/api", apiRouter);
-app.use("/api", authMiddleware, authRouter);
-
-// ADD more routes that require authorization
 
 router.listen(app, 3000, () =>
   console.log("Server is listening on port 3000...")
