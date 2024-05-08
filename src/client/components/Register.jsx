@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function Register(setToken) {
+function Register({ setToken }) {
   const navigate = useNavigate();
   // const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,15 +27,10 @@ function Register(setToken) {
     <div>
       <h2>Register</h2>
       <div>
-        {/* <input
-          placeholder="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        /> */}
         <input
           placeholder="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setUsername(e.target.value)}
         />
         <input
           placeholder="password"

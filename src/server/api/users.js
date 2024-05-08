@@ -1,19 +1,16 @@
-const express = require('express');
+const express = require("express");
 const usersRouter = express.Router();
-const prisma = require('../client');
-const jwt = require('jsonwebtoken');
-const authMiddleware = require('../middleware/authMiddleware');
-const { createUser, getUser, getUserByEmail } = require('../db');
+const prisma = require("../client");
+const jwt = require("jsonwebtoken");
+const { getUserByEmail } = require("../db/users");
 
-usersRouter.get('/', authMiddleware, async( req, res, next) => {
-    try {
-        const users = await prisma.user.findMany();
-        res.send({
-            users
-        });
-    } catch ({name, message}) {
-        next({name, message})
-    }
+usersRouter.get("/", async (req, res, next) => {
+  try {
+    const users = await prisma.users.findMany();
+    res.status(200).send(users);
+  } catch ({ name, message }) {
+    next({ name, message });
+  }
 });
 
 usersRouter.post("/login", async (req, res, next) => {
@@ -68,13 +65,10 @@ usersRouter.post("/register", async (req, res, next) => {
       });
     }
 
-
-
-        const user = await createUser({
-            username,
-            email,
-            password
-        });
+    const user = await createUser({
+      email,
+      hashedPassword,
+    });
 
     const token = jwt.sign(
       {

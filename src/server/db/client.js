@@ -1,5 +1,6 @@
-const { Client } = require('pg');
-const connectionString = process.env.DATABASE_URL || 'http://localhost:5432/capstone_db';
+const { Client } = require("pg");
+const connectionString =
+  process.env.DATABASE_URL || "http://localhost:5432/capstone_db";
 
 const db = new Client({
   connectionString,
