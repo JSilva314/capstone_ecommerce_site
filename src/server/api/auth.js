@@ -8,16 +8,16 @@ const prisma = require("../client");
 
 // Login endpoint
 authRouter.post("/login", async (req, res, next) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    res.status(401).send({ message: "Incorrect username or password" });
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(401).send({ message: "Incorrect email or password" });
     return; // 'return' used to ensure code below is not run in the event the username/pw are incorrect.
   }
 
   try {
     const user = await prisma.user.findUnique({
       where: {
-        username,
+        email,
       },
     });
 
@@ -29,7 +29,7 @@ authRouter.post("/login", async (req, res, next) => {
     }
 
     const token = jwt.sign(
-      { id: user.id, username: user.username },
+      { id: user.id, email: user.email },
       process.env.JWT_SECRET
     );
     res.status(200).send({ token });
@@ -40,13 +40,13 @@ authRouter.post("/login", async (req, res, next) => {
 
 // Register endpoint
 authRouter.post("/register", async (req, res, next) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   const SALT_ROUNDS = 5;
   const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
   try {
     const user = await prisma.user.create({
       data: {
-        username,
+        email,
         password: hashedPassword,
       },
     });
