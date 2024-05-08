@@ -14,17 +14,17 @@ function App() {
   const [user, setUser] = useState("");
   const [token, setToken] = useState(window.localStorage.getItem("TOKEN"));
 
-  // useEffect(() => {
-  //   async function getUser() {
-  //     const { data } = await axios.get("/api/users", {
-  //       headers: {
-  //         authorization: "Bearer " + localStorage.getItem("TOKEN"),
-  //       },
-  //     });
-  //     setUser(data.user);
-  //   }
-  //   getUser();
-  // }, [user]);
+  useEffect(() => {
+    async function getUser() {
+      const { data } = await axios.get("/api/users", {
+        headers: {
+          authorization: "Bearer " + localStorage.getItem("TOKEN"),
+        },
+      });
+      setUser(data.user);
+    }
+    getUser();
+  }, [user]);
   return (
     <div className="App">
       <Navbar />
