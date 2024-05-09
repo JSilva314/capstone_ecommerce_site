@@ -1,21 +1,15 @@
-const db = require("./client");
-const bcrypt = require("bcrypt");
-const SALT_COUNT = 10;
+const prisma = require('../client');
+const bcrypt = require('bcrypt');
 
 const createUser = async ({ email, password }) => {
-  const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
+  const hashedPassword = await bcrypt.hash(password, 10);
   try {
-    const {
-      rows: [user],
-    } = await db.query(
-      `
-        INSERT INTO users(email, password)
-        VALUES($1, $2, $3)
-        ON CONFLICT (email) DO NOTHING
-        RETURNING *`,
-      [email, hashedPassword]
-    );
-
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+      },
+    });
     return user;
   } catch (err) {
     throw err;
@@ -27,10 +21,13 @@ const getUser = async ({ email, password }) => {
     return;
   }
   try {
-    const user = await getUserByEmail(email);
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
     if (!user) return;
-    const hashedPassword = user.password;
-    const passwordsMatch = await bcrypt.compare(password, hashedPassword);
+    const passwordsMatch = await bcrypt.compare(password, user.password);
     if (!passwordsMatch) return;
     delete user.password;
     return user;
@@ -41,19 +38,11 @@ const getUser = async ({ email, password }) => {
 
 const getUserByEmail = async (email) => {
   try {
-    const {
-      rows: [user],
-    } = await db.query(
-      `
-        SELECT * 
-        FROM users
-        WHERE email=$1;`,
-      [email]
-    );
-
-    if (!user) {
-      return;
-    }
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
     return user;
   } catch (err) {
     throw err;
