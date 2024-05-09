@@ -1,98 +1,77 @@
-const express = require("express");
+const express = require('express');
 const usersRouter = express.Router();
-const prisma = require("../client");
-const jwt = require("jsonwebtoken");
-const { getUserByEmail } = require("../db/users");
+const prisma = require('../client');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
-usersRouter.get("/", async (req, res, next) => {
-  try {
-    const users = await prisma.users.findMany();
-    res.status(200).send(users);
-  } catch ({ name, message }) {
-    next({ name, message });
-  }
-});
+// Import middleware if needed
+const authMiddleware = require('../middleware/authMiddleware');
 
-usersRouter.post("/login", async (req, res, next) => {
+// Import user-related database functions
+const { createUser, getUserByEmail } = require('../db');
+
+// Login endpoint
+usersRouter.post('/login', async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    next({
-      name: "MissingCredentialsError",
-      message: "Please supply both an email and password",
-    });
+    res.status(401).send({ message: 'Incorrect email or password' });
+    return;
   }
-  try {
-    const user = await getUser({ email, password });
-    if (user) {
-      const token = jwt.sign(
-        {
-          id: user.id,
-          email,
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "1w",
-        }
-      );
 
-      res.send({
-        message: "Login successful!",
-        token,
-      });
-    } else {
-      next({
-        name: "IncorrectCredentialsError",
-        message: "Username or password is incorrect",
-      });
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      res.status(401).send({ message: 'User not found' });
+      return;
     }
-  } catch (err) {
-    next(err);
+
+    const isValid = await bcrypt.compare(password, user.password);
+
+    if (!isValid) {
+      res.status(401).send({ message: 'Incorrect password' });
+      return;
+    }
+
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET
+    );
+    res.status(200).send({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Internal server error' });
   }
 });
 
-usersRouter.post("/register", async (req, res, next) => {
+// Register endpoint
+usersRouter.post('/register', async (req, res, next) => {
   const { email, password } = req.body;
   const SALT_ROUNDS = 5;
   const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
   try {
-    const _user = await getUserByEmail(email);
-
-    if (_user) {
-      next({
-        name: "UserExistsError",
-        message: "A user with that email already exists",
-      });
-    }
-
-
-
-
-        const user = await createUser({
-            username,
-            email,
-            password: hashedPassword
-        });
-
-
-    const token = jwt.sign(
-      {
-        id: user.id,
+    const user = await prisma.user.create({
+      data: {
         email,
+        password: hashedPassword,
       },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "1w",
-      }
-    );
-
-    res.send({
-      message: "Sign up successful!",
-      token,
     });
-  } catch ({ name, message }) {
-    next({ name, message });
+    const token = jwt.sign(
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET
+    );
+    res.status(201).send({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: 'Internal server error' });
   }
 });
+
+// Other user-related routes...
 
 module.exports = usersRouter;
