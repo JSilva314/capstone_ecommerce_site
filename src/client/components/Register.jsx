@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 function Register({ setToken }) {
   const navigate = useNavigate();
-  // const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -30,7 +29,7 @@ function Register({ setToken }) {
         <input
           placeholder="email"
           value={email}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         />
         <input
           placeholder="password"
