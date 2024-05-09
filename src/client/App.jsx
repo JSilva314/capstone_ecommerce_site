@@ -31,8 +31,8 @@ function App() {
       <Routes>
         <Route path="/" element={<AllCars />} />
         <Route path="/:id" element={<SingleCar />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login setToken={setToken} />} />
+        <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/listcar" element={<ListCar />} />
       </Routes>
     </div>

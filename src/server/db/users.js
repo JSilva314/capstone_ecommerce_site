@@ -21,7 +21,7 @@ const getUser = async ({ email, password }) => {
     return;
   }
   try {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: {
         email,
       },
