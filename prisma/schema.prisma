@@ -19,7 +19,7 @@ model Users {
   password      String
   email         String         @unique
   address       String?
-  Phone         String?
+  Phone         BigInt?
   paymentMethod String?
   Admin         Boolean        @default(false)
   orders        orderHistory[]

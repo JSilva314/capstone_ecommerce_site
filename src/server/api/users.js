@@ -50,7 +50,7 @@ usersRouter.post("/login", async (req, res, next) => {
 
 // Register endpoint
 usersRouter.post("/register", async (req, res, next) => {
-  const { email, password } = req.body; DD
+  const { email, password } = req.body;
 
   try {
     const existingUser = await getUserByEmail(email);
