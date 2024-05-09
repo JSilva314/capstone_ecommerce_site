@@ -1,39 +1,39 @@
-const express = require('express');
+const express = require("express");
 const usersRouter = express.Router();
-const prisma = require('../client');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const prisma = require("../client");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 // Import middleware if needed
-const authMiddleware = require('../middleware/authMiddleware');
+const authMiddleware = require("../middleware/authMiddleware");
 
 // Import user-related database functions
-const { createUser, getUser, getUserByEmail } = require('../db');
+const { createUser, getUser, getUserByEmail } = require("../db");
 
 // Login endpoint
-usersRouter.post('/login', async (req, res, next) => {
+usersRouter.post("/login", async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    res.status(401).send({ message: 'Incorrect email or password' });
+    res.status(401).send({ message: "Incorrect email or password" });
     return;
   }
 
   try {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: {
         email,
       },
     });
 
     if (!user) {
-      res.status(401).send({ message: 'User not found' });
+      res.status(401).send({ message: "User not found" });
       return;
     }
 
     const isValid = await bcrypt.compare(password, user.password);
 
     if (!isValid) {
-      res.status(401).send({ message: 'Incorrect password' });
+      res.status(401).send({ message: "Incorrect password" });
       return;
     }
 
@@ -44,27 +44,25 @@ usersRouter.post('/login', async (req, res, next) => {
     res.status(200).send({ token });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: 'Internal server error' });
+    res.status(500).send({ message: "Internal server error" });
   }
 });
 
 // Register endpoint
-usersRouter.post('/register', async (req, res, next) => {
-  const { email, password } = req.body;
-  const SALT_ROUNDS = 10; // Increase salt rounds for better security
-  const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+usersRouter.post("/register", async (req, res, next) => {
+  const { email, password } = req.body; DD
 
   try {
     const existingUser = await getUserByEmail(email);
 
     if (existingUser) {
-      res.status(400).send({ message: 'User already exists' });
+      res.status(400).send({ message: "User already exists" });
       return;
     }
 
     const newUser = await createUser({
       email,
-      password: hashedPassword,
+      password,
     });
 
     const token = jwt.sign(
@@ -75,7 +73,7 @@ usersRouter.post('/register', async (req, res, next) => {
     res.status(201).send({ token });
   } catch (error) {
     console.error(error);
-    res.status(500).send({ message: 'Internal server error' });
+    res.status(500).send({ message: "Internal server error" });
   }
 });
 

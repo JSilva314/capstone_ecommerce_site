@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const createUser = async ({ email, password }) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
-    const user = await prisma.user.create({
+    const user = await prisma.users.create({
       data: {
         email,
         password: hashedPassword,
@@ -38,7 +38,7 @@ const getUser = async ({ email, password }) => {
 
 const getUserByEmail = async (email) => {
   try {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: {
         email,
       },
