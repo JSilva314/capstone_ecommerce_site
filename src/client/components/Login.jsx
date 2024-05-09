@@ -9,7 +9,7 @@ function Login() {
 
   async function handleLogin() {
     try {
-      const { data: token } = await axios.post("/users/login", {
+      const { data: token } = await axios.post("/api/users/login", {
         email,
         password,
       });
@@ -33,7 +33,7 @@ function Login() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button>Login</button>
+        <button onClick={handleLogin}>Login</button>
       </div>
     </div>
   );

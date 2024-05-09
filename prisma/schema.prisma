@@ -15,13 +15,13 @@ datasource db {
 
 model Users {
   id            Int            @id @default(autoincrement())
-  username      String         @unique
+  username      String?
   password      String
   email         String         @unique
-  address       String
-  Phone         String
-  paymentMethod String
-  Admin         Boolean
+  address       String?
+  Phone         String?
+  paymentMethod String?
+  Admin         Boolean        @default(false)
   orders        orderHistory[]
   Cart          Cart[]
 }
@@ -36,7 +36,7 @@ model Cars {
   bodyType String
   image    String
   price    Int
-  vin      String            @unique
+  vin      String         @unique
   orders   orderHistory[]
   Cart     Cart[]
 }
@@ -44,7 +44,7 @@ model Cars {
 model orderHistory {
   orderId       Int      @id @default(autoincrement())
   car           Cars     @relation(fields: [carId], references: [id])
-  user          Users     @relation(fields: [userId], references: [id])
+  user          Users    @relation(fields: [userId], references: [id])
   createdAt     DateTime @default(now())
   paymentMethod String
   email         String
@@ -54,9 +54,9 @@ model orderHistory {
 }
 
 model Cart {
-  id     Int  @id @default(autoincrement())
+  id     Int   @id @default(autoincrement())
   user   Users @relation(fields: [userId], references: [id])
-  car    Cars @relation(fields: [carId], references: [id])
+  car    Cars  @relation(fields: [carId], references: [id])
   price  Int
   carId  Int
   userId Int

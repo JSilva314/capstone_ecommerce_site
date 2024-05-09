@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt");
 const authMiddleware = require("../middleware/authMiddleware");
 
 // Import user-related database functions
-const { createUser, getUser, getUserByEmail } = require('../db');
+const { createUser, getUser, getUserByEmail } = require("../db");
 
 // Login endpoint
 usersRouter.post("/login", async (req, res, next) => {
@@ -19,7 +19,7 @@ usersRouter.post("/login", async (req, res, next) => {
   }
 
   try {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: {
         email,
       },
@@ -50,21 +50,19 @@ usersRouter.post("/login", async (req, res, next) => {
 
 // Register endpoint
 usersRouter.post("/register", async (req, res, next) => {
-  const { email, password } = req.body;
-  const SALT_ROUNDS = 10; // Increase salt rounds for better security
-  const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+  const { email, password } = req.body; DD
 
   try {
     const existingUser = await getUserByEmail(email);
 
     if (existingUser) {
-      res.status(400).send({ message: 'User already exists' });
+      res.status(400).send({ message: "User already exists" });
       return;
     }
 
     const newUser = await createUser({
       email,
-      password: hashedPassword,
+      password,
     });
 
     const token = jwt.sign(
