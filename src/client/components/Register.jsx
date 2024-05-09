@@ -15,7 +15,7 @@ function Register({ setToken }) {
         password,
       });
       console.log(token);
-      window.localStorage.setItem("TOKEN", token.token);
+      localStorage.setItem("TOKEN", token.token);
       setToken(token.token);
       navigate("/");
     } catch (error) {
