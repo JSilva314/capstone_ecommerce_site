@@ -1,27 +1,38 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-function Navbar() {
+function Navbar({ setToken, isLoggedIn }) {
+  const navigate = useNavigate();
   function handleLogout() {
+    setToken(null);
     window.localStorage.removeItem("TOKEN");
+    navigate("/");
   }
   return (
     <div>
-      <Link to="/">
-        <button>All Cars</button>
-      </Link>
-      <Link to="/listcar">
-        <button>List Car</button>
-      </Link>
-      <Link to="/login">
-        <button>Login</button>
-      </Link>
-      <Link to="/register">
-        <button>Register</button>
-      </Link>
-      <button onClick={handleLogout}>Logout</button>
-
-      <button onClick={() => console.log("clicked login")}>Login</button>
+      {isLoggedIn ? (
+        <div>
+          <Link to="/">
+            <button>All Cars</button>
+          </Link>
+          <Link to="/listcar">
+            <button>List Car</button>
+          </Link>
+          <button onClick={handleLogout}>Logout</button>
+        </div>
+      ) : (
+        <div>
+          <Link to="/">
+            <button>All Cars</button>
+          </Link>
+          <Link to="/login">
+            <button>Login</button>
+          </Link>
+          <Link to="/register">
+            <button>Register</button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
