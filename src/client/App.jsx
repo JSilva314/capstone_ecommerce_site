@@ -27,7 +27,7 @@ function App() {
   }, [user]);
   return (
     <div className="App">
-      <Navbar />
+      <Navbar isLoggedIn={token !== null} setToken={setToken} />
       <Routes>
         <Route path="/" element={<AllCars />} />
         <Route path="/:id" element={<SingleCar />} />
