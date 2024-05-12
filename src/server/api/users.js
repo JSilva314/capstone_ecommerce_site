@@ -76,7 +76,27 @@ usersRouter.post("/register", async (req, res, next) => {
     res.status(500).send({ message: "Internal server error" });
   }
 });
+usersRouter.get("/profile", authMiddleware, async (req, res, next) => {
+  console.log(req.user);
+  const userId = req.user.id; // Extract user ID from decoded token
+  try {
+    const user = await prisma.users.findUnique({
+      where: {
+        id: userId,
+      },
+    });
 
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    // Send user details as response
+    res.status(200).send(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Internal server error" });
+  }
+});
 // Other user-related routes...
 
 module.exports = usersRouter;

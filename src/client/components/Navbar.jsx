@@ -15,8 +15,11 @@ function Navbar({ setToken, isLoggedIn }) {
           <Link to="/">
             <button>All Cars</button>
           </Link>
-          <Link to="/listcar">
+          {/* <Link to="/listcar">
             <button>List Car</button>
+          </Link> */}{" "}
+          <Link to="/cart">
+            <button>My Cart</button>
           </Link>
           <button onClick={handleLogout}>Logout</button>
         </div>

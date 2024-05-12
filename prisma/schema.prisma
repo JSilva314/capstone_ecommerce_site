@@ -19,7 +19,7 @@ model Users {
   password      String
   email         String         @unique
   address       String?
-  Phone         BigInt?
+  Phone         String?
   paymentMethod String?
   Admin         Boolean        @default(false)
   orders        orderHistory[]
@@ -57,9 +57,8 @@ model Cart {
   id     Int   @id @default(autoincrement())
   user   Users @relation(fields: [userId], references: [id])
   car    Cars  @relation(fields: [carId], references: [id])
-  price  Int
-  carId  Int
-  userId Int
+  carId         Int
+  userId        Int
 
   @@map(name: "cart_car_fk")
 }

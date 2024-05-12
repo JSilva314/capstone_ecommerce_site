@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 // Middleware to extract and verify JWT token
 apiRouter.use(async (req, res, next) => {
   const auth = req.header("Authorization");
-  
 
   if (!auth) {
     next();
@@ -32,11 +31,13 @@ apiRouter.use(async (req, res, next) => {
 // Import routers
 const usersRouter = require("./users");
 const carsRouter = require("./cars");
+const cartRouter = require("./cart");
 const ordersRouter = require("./orders");
 
 // Mount routers
 apiRouter.use("/users", usersRouter);
 apiRouter.use("/cars", carsRouter);
+apiRouter.use("/cart", cartRouter);
 apiRouter.use("/orders", ordersRouter);
 
 // Error handling middleware

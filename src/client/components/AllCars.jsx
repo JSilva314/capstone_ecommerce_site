@@ -57,7 +57,7 @@ function AllCars() {
                 <h3>Year: {car.year}</h3>
                 <h3>Vehicle Type: {car.bodyType}</h3>
                 <h3>Image: {car.image}</h3>
-                <h3>Price: {car.price}</h3>
+                <h3>Price: ${car.price}</h3>
                 <h3>Vin #: {car.vin}</h3>
               </Link>
             </div>
@@ -72,7 +72,7 @@ function AllCars() {
                 <h3>Year: {car.year}</h3>
                 <h3>Body Type: {car.bodyType}</h3>
                 <h3>Image: {car.image}</h3>
-                <h3>Price: {car.price}</h3>
+                <h3>Price: ${car.price}</h3>
                 <h3>Vin #: {car.vin}</h3>
               </Link>
             </div>
