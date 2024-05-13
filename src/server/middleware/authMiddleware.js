@@ -15,13 +15,15 @@ function authMiddleware(req, res, next) {
   try {
     // Verify JWT token
     console.log("hello", token);
-    const decoded = jwt.verify(token, "your_secret_key");
-
-    // Attach user information to the request object
-    req.user = decoded.user;
-
-    //Proceed to the next middleware or route handler
-    next();
+    const authToken = token.replace("Bearer ", "");
+    jwt.verify(authToken, process.env.JWT_SECRET, (err, user) => {
+      if (err) {
+        console.error("JWT verification error:", err);
+        return res.status(403).send({ message: "Forbidden: Invalid token" });
+      }
+      req.user = user; // Attach user details to the request object
+      next();
+    });
   } catch (error) {
     return res.status(401).json({ message: "Invalid Authorization token" });
   }

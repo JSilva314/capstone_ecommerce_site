@@ -9,7 +9,9 @@ import ListCar from "./components/ListCar";
 import Cart from "./components/Cart";
 import axios from "axios";
 import { BrowserRouter } from "react-router-dom";
-
+import Cart from "./components/Cart";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function App() {
   const [user, setUser] = useState("");
   const [token, setToken] = useState(window.localStorage.getItem("TOKEN"));
@@ -17,29 +19,27 @@ function App() {
 
   useEffect(() => {
     async function getUser() {
-      const { data } = await axios.get("/api/users", {
+      const { data } = await axios.get("/api/profile", {
         headers: {
           authorization: "Bearer " + localStorage.getItem("TOKEN"),
         },
       });
-      setUser(data.user);
+      console.log(data);
+      setUser(data);
     }
     getUser();
-  }, [user]);
-
-  const addToCart = (car) => {
-    setCart([...cart, car]);
-  };
+  }, []);
   return (
     <div className="App">
-      <Navbar isLoggedIn={token !== null} setToken={setToken} cart={cart} />
+      <ToastContainer />
+      <Navbar isLoggedIn={token !== null} setToken={setToken} />
       <Routes>
-        <Route path="/" element={<AllCars addToCart={addToCart} />} />
+        <Route path="/" element={<AllCars />} />
         <Route path="/:id" element={<SingleCar />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/listcar" element={<ListCar />} />
-        <Route path="/cart" element={<Cart cart={cart} />} />
+        <Route path="/cart" element={<Cart user={user} />} />
       </Routes>
     </div>
   );
