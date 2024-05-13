@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Cart from "./Cart";
 
 function AllCars() {
   const [cars, setCars] = useState([]);
   const [search, setSearch] = useState("");
+  const [cart, setCart] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const getToken = () => {
     return localStorage.getItem("TOKEN");
@@ -14,23 +17,22 @@ function AllCars() {
     async function fetchCars() {
       try {
         const token = getToken();
-        const { data: foundCars } = await axios.get(
-          "/api/cars"
-          // , {
-          //   headers: {
-          //     Authorization: `Bearer ${token}`,
-          //   },
-          // }
-        );
+        const { data: foundCars } = await axios.get("/api/cars");
         setCars(foundCars);
       } catch (error) {
         console.error(error);
       }
     }
     fetchCars();
+
+    setIsLoggedIn(!!localStorage.getItem("TOKEN"));
   }, []);
 
-  console.log("cars", cars);
+  async function handleAddToCart(car) {
+    try {
+      await axios.post();
+    } catch (error) {}
+  }
 
   // Filtering logic based on search query
   const filtered = cars.filter((car) =>
@@ -59,6 +61,16 @@ function AllCars() {
                 <h3>Image: {car.image}</h3>
                 <h3>Price: {car.price}</h3>
                 <h3>Vin #: {car.vin}</h3>
+                {isLoggedIn && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleAddToCart(car);
+                    }}
+                  >
+                    Add to Cart
+                  </button>
+                )}
               </Link>
             </div>
           ))
@@ -77,6 +89,8 @@ function AllCars() {
               </Link>
             </div>
           ))}
+
+      <Cart cart={cart} />
     </div>
   );
 }

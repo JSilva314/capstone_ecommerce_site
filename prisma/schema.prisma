@@ -54,12 +54,20 @@ model orderHistory {
 }
 
 model Cart {
-  id     Int   @id @default(autoincrement())
-  user   Users @relation(fields: [userId], references: [id])
-  car    Cars  @relation(fields: [carId], references: [id])
-  price  Int
-  carId  Int
-  userId Int
+  id        Int         @id @default(autoincrement())
+  user      Users       @relation(fields: [userId], references: [id])
+  car       Cars        @relation(fields: [carId], references: [id])
+  price     Int
+  carId     Int
+  userId    Int
+  Cart_Cars Cart_Cars[]
 
   @@map(name: "cart_car_fk")
+}
+
+model Cart_Cars {
+  id      Int  @id @default(autoincrement())
+  cart_id Int
+  cart    Cart @relation(fields: [car_id], references: [id])
+  car_id  Int
 }
