@@ -1,6 +1,5 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-// import Cart from "./Cart";
 
 function Navbar({ setToken, isLoggedIn }) {
   const navigate = useNavigate();
@@ -21,9 +20,6 @@ function Navbar({ setToken, isLoggedIn }) {
           </Link> */}{" "}
           <Link to="/cart">
             <button>My Cart</button>
-          </Link>
-          <Link to="/cart">
-            <button>Cart ({cart.length})</button>
           </Link>
           <button onClick={handleLogout}>Logout</button>
         </div>

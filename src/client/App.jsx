@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+// import { muiTypography } from "./components/muiTypography";
 import { Route, Routes } from "react-router-dom";
 import AllCars from "./components/AllCars";
 import SingleCar from "./components/SingleCar";
@@ -6,7 +7,6 @@ import Navbar from "./components/Navbar";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import ListCar from "./components/ListCar";
-import Cart from "./components/Cart";
 import axios from "axios";
 import { BrowserRouter } from "react-router-dom";
 import Cart from "./components/Cart";
@@ -15,7 +15,6 @@ import "react-toastify/dist/ReactToastify.css";
 function App() {
   const [user, setUser] = useState("");
   const [token, setToken] = useState(window.localStorage.getItem("TOKEN"));
-  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     async function getUser() {
@@ -35,7 +34,7 @@ function App() {
       <Navbar isLoggedIn={token !== null} setToken={setToken} />
       <Routes>
         <Route path="/" element={<AllCars />} />
-        <Route path="/:id" element={<SingleCar />} />
+        <Route path="/:id" element={<SingleCar user={user} />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/listcar" element={<ListCar />} />
