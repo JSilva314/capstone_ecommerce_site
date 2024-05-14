@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import ListCar from "./components/ListCar";
+import Orders from "./components/Order";
 import axios from "axios";
 import { BrowserRouter } from "react-router-dom";
 import Cart from "./components/Cart";
@@ -39,6 +40,7 @@ function App() {
         <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/listcar" element={<ListCar />} />
         <Route path="/cart" element={<Cart user={user} />} />
+        <Route path="/order" element={<Orders user={user} />} />
       </Routes>
     </div>
   );

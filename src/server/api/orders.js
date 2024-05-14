@@ -3,12 +3,12 @@ const ordersRouter = express.Router();
 const prisma = require("../client");
 
 // GET list of all orders for a specific member
-ordersRouter.get("/orders/:userId",  async (res, req, next) => {
+ordersRouter.get("/orders/:userId",  async (req, res, next) => {
   const { userId } = req.params;
   try {
     const orders = await prisma.orderHistory.findMany({
       where: {
-        userId: +userId,
+        userId: parseInt(userId),
       },
       include: {
         car: true,
@@ -22,12 +22,12 @@ ordersRouter.get("/orders/:userId",  async (res, req, next) => {
 });
 
 // GET 1 specific order based on ID
-ordersRouter.get("orders/:orderId", async (res, req, next) => {
+ordersRouter.get("/orders/:orderId", async (req, res, next) => {
   const { orderId } = req.params;
   try {
     const order = await prisma.orderHistory.findUnique({
       where: {
-        order: +orderId,
+        orderId: parseInt(orderId),
       },
       include: {
         car: true,

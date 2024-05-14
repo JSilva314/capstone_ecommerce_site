@@ -21,6 +21,9 @@ function Navbar({ setToken, isLoggedIn }) {
           <Link to="/cart">
             <button>My Cart</button>
           </Link>
+          <Link to="/order">
+            <button>Orders</button>
+          </Link>
           <button onClick={handleLogout}>Logout</button>
         </div>
       ) : (
