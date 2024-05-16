@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 // import { muiTypography } from "./components/muiTypography";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, BrowserRouter } from "react-router-dom";
 import AllCars from "./components/AllCars";
 import SingleCar from "./components/SingleCar";
 import Navbar from "./components/Navbar";
@@ -9,10 +9,11 @@ import Register from "./components/Register";
 import ListCar from "./components/ListCar";
 import Orders from "./components/Order";
 import axios from "axios";
-import { BrowserRouter } from "react-router-dom";
 import Cart from "./components/Cart";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./main.jsx";
+
 function App() {
   const [user, setUser] = useState("");
   const [token, setToken] = useState(window.localStorage.getItem("TOKEN"));

@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Button } from "@mui/material";
 
-function Cart({ user }) {
+function CartAndCheckout({ user }) {
   const [cart, setCart] = useState([]);
   const [search, setSearch] = useState("");
-  console.log(user);
+
   const getToken = () => {
     return localStorage.getItem("TOKEN");
   };
@@ -15,17 +16,10 @@ function Cart({ user }) {
     async function fetchCart() {
       try {
         const token = getToken();
-        const { data: foundCart } = await axios.get(
-          `/api/cart/${user?.id}`
-          // , {
-          //   headers: {
-          //     Authorization: `Bearer ${token}`,
-          //   },
-          // }
-        );
+        const { data: foundCart } = await axios.get(`/api/cart/${user?.id}`);
         setCart(foundCart);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching cart:", error);
       }
     }
     if (user) {
@@ -33,33 +27,40 @@ function Cart({ user }) {
     }
   }, [user]);
 
-  console.log("cart", cart);
   const handleRemoveCartItem = async (cartId) => {
     try {
       await axios.delete(`/api/cart/${cartId}`);
-      console.log("Item removed from cart successfully");
       toast.success("Item removed from cart successfully");
       setCart((prevCart) => prevCart.filter((item) => item.id !== cartId));
     } catch (error) {
+      console.error("Error removing item from cart:", error);
+      toast.error("Error removing item from cart. Please try again.");
+    }
+  };
+
+  const handlePurchaseCar = async (cartId) => {
+    try {
+      const token = getToken(); // Get JWT token from localStorage
+      await axios.post(`/api/cart/purchase/${cartId}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success("Car purchased successfully!");
+      setCart((prevCart) => prevCart.filter((item) => item.id !== cartId));
+    } catch (error) {
+      console.error("Error purchasing car:", error);
       if (error.response) {
-        // The request was made and the server responded with a status code
-        toast.error("Error removing item from cart");
         console.error("Error status:", error.response.status);
         console.error("Error message:", error.response.data);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error("No response received:", error.request);
-      } else {
-        // Something happened in setting up the request that triggered an error
-        console.error("Error:", error.message);
       }
+      toast.error("Error purchasing car. Please try again.");
     }
   };
 
   return (
     <div>
       <h2>My Cart</h2>
-
       {cart.map((singleCart) => (
         <div key={singleCart.car.id} style={{ border: "1.5px solid black" }}>
           <Link to={`/${singleCart.car.id}`}>
@@ -73,17 +74,16 @@ function Cart({ user }) {
             <h3>Price: ${singleCart.car.price}</h3>
             <h3>Vin #: {singleCart.car.vin}</h3>
           </Link>
-          <button
-            onClick={() => {
-              handleRemoveCartItem(singleCart.id);
-            }}
-          >
-            Cancel My Order
-          </button>
+          <Button onClick={() => handleRemoveCartItem(singleCart.id)}>
+            Remove from Cart
+          </Button>
+          <Button onClick={() => handlePurchaseCar(singleCart.id)}>
+            Purchase Car
+          </Button>
         </div>
       ))}
     </div>
   );
 }
 
-export default Cart;
+export default CartAndCheckout;

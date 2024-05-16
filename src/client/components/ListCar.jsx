@@ -1,5 +1,6 @@
-import axios from "axios";
 import React, { useState } from "react";
+import axios from "axios";
+import { Button, TextField, Checkbox } from "@mui/material";
 
 function ListCar() {
   const [make, setMake] = useState("");
@@ -41,47 +42,54 @@ function ListCar() {
     <div>
       <h2>List Car</h2>
       <div>
-        <label>Car Make</label>
-        <input value={make} onChange={(e) => setMake(e.target.value)} />
-        <label>Car Model</label>
-        <input value={model} onChange={(e) => setModel(e.target.value)} />
-        <label>New or Used</label>
-        <input
-          type="checkbox"
-          value={newUsed}
-          onChange={() => {
-            newUsed ? setNewUsed(false) : setNewUsed(true);
-          }}
+        <TextField
+          label="Car Make"
+          value={make}
+          onChange={(e) => setMake(e.target.value)}
         />
-        <label>Color</label>
-        <input value={color} onChange={(e) => setColor(e.target.value)} />
-        <label>Year</label>
-        <input
+        <TextField
+          label="Car Model"
+          value={model}
+          onChange={(e) => setModel(e.target.value)}
+        />
+        <Checkbox checked={newUsed} onChange={() => setNewUsed(!newUsed)} />
+        <TextField
+          label="Color"
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
+        />
+        <TextField
+          label="Year"
           type="number"
           value={year}
           onChange={(e) => setYear(e.target.value)}
         />
-        <label>Vehicle Type</label>
-        <input value={bodyType} onChange={(e) => setType(e.target.value)} />
-        <label>Image</label>
-        <input
+        <TextField
+          label="Vehicle Type"
+          value={bodyType}
+          onChange={(e) => setType(e.target.value)}
+        />
+        <TextField
+          label="Image"
           placeholder="Image"
           value={image}
           onChange={(e) => setImage(e.target.value)}
         />
-        <label>Price</label>
-        <input
+        <TextField
+          label="Price"
           type="number"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />
-        <label>Vin Number</label>
-        <input
+        <TextField
+          label="Vin Number"
           type="number"
           value={vin}
           onChange={(e) => setVin(e.target.value)}
         />
-        <button onClick={handleListCar}>List Car</button>
+        <Button variant="contained" onClick={handleListCar}>
+          List Car
+        </Button>
       </div>
     </div>
   );

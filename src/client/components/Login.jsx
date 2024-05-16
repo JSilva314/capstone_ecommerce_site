@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { TextField, Button } from "@mui/material";
 
-function Login({setToken}) {
+function Login({ setToken }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,21 +21,25 @@ function Login({setToken}) {
       console.error(error);
     }
   }
+
   return (
     <div>
       <h2>Login</h2>
       <div>
-        <input
+        <TextField
           placeholder="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <input
+        <TextField
+          type="password"
           placeholder="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button onClick={handleLogin}>Login</button>
+        <Button variant="contained" onClick={handleLogin}>
+          Login
+        </Button>
       </div>
     </div>
   );
