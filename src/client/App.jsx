@@ -10,6 +10,7 @@ import ListCar from "./components/ListCar";
 import Orders from "./components/Order";
 import axios from "axios";
 import Cart from "./components/Cart";
+import BottomNavBar from "./components/BottomNavBar"; 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./main.jsx";
@@ -45,6 +46,7 @@ function App() {
         <Route path="/orders" element={<Orders user={user} />} />
         <Route path="/success" element={<Success />} />
       </Routes>
+      <BottomNavBar />
     </div>
   );
 }

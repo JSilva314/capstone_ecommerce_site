@@ -48,7 +48,7 @@ async function main() {
           year: 2020,
           bodyType: "sedan",
           image:
-            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F65e81151f52e248c552b-fe74cd567ea2f1228f846834bd67571e.ssl.cf1.rackcdn.com%2Fldm-images%2F2020-Honda-Accord-LX-Platinum-White-Color.jpeg&f=1&nofb=1&ipt=2a8ee10ecce9de163f55374eb1749ecc19b4fd7fee61142cea68502741456153&ipo=images",
+              "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F65e81151f52e248c552b-fe74cd567ea2f1228f846834bd67571e.ssl.cf1.rackcdn.com%2Fldm-images%2F2020-Honda-Accord-LX-Platinum-White-Color.jpeg&f=1&nofb=1&ipt=2a8ee10ecce9de163f55374eb1749ecc19b4fd7fee61142cea68502741456153&ipo=images",
           price: 27599,
           vin: "1HGCD5568TA081518",
         },

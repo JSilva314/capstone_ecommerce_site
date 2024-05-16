@@ -7,6 +7,9 @@ import {
   Card,
   CardContent,
   Typography,
+  CardMedia,
+  Container,
+  Box,
 } from "@mui/material";
 
 function AllCars() {
@@ -21,7 +24,9 @@ function AllCars() {
     async function fetchCars() {
       try {
         const token = getToken();
-        const { data: foundCars } = await axios.get("/api/cars");
+        const { data: foundCars } = await axios.get("/api/cars", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setCars(foundCars);
       } catch (error) {
         console.error(error);
@@ -40,14 +45,17 @@ function AllCars() {
   );
 
   return (
-    <div>
-      <h2>All Cars</h2>
+    <Container>
+      <Typography variant="h4" gutterBottom>
+        All Cars
+      </Typography>
       <TextField
         label="Search"
         variant="outlined"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         sx={{ marginBottom: 2 }}
+        fullWidth
       />
       <Button
         variant="contained"
@@ -56,32 +64,74 @@ function AllCars() {
       >
         Clear
       </Button>
-      {filtered.length === 0 && <Typography>No cars found.</Typography>}
-      {filtered.map((car) => (
-        <Card
-          key={car.id}
-          sx={{
-            marginBottom: 2,
-            border: "1.5px solid black",
-            backgroundColor: "#f5f5f5",
-          }}
-        >
-          <CardContent>
-            <Link to={`/${car.id}`} style={{ textDecoration: "none" }}>
-              <Typography variant="h6">Make: {car.make}</Typography>
-              <Typography variant="h6">Model: {car.model}</Typography>
-              <Typography>New: {car.newUsed ? "Yes" : "No"}</Typography>
-              <Typography>Color: {car.color}</Typography>
-              <Typography>Year: {car.year}</Typography>
-              <Typography>Vehicle Type: {car.bodyType}</Typography>
-              <Typography>Image: {car.image}</Typography>
-              <Typography>Price: ${car.price}</Typography>
-              <Typography>Vin #: {car.vin}</Typography>
-            </Link>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+      {filtered.length === 0 && (
+        <Typography variant="h6">No cars found.</Typography>
+      )}
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 2,
+        }}
+      >
+        {filtered.map((car) => (
+          <Card
+            key={car.id}
+            sx={{
+              width: 300,
+              border: "1.5px solid black",
+              backgroundColor: "#f5f5f5",
+            }}
+          >
+            {car.image && (
+              <CardMedia
+                component="img"
+                height="140"
+                image={car.image}
+                alt={`${car.make} ${car.model}`}
+              />
+            )}
+            <CardContent>
+              <Link to={`/${car.id}`} style={{ textDecoration: "none" }}>
+                <Typography variant="h6" fontWeight="bold">
+                  Make: {car.make}
+                </Typography>
+                <Typography variant="h6" fontWeight="bold">
+                  Model: {car.model}
+                </Typography>
+                <Typography variant="body1" fontWeight="bold">
+                  New: {car.newUsed ? "Yes" : "No"}
+                </Typography>
+                <Typography variant="body1" fontWeight="bold">
+                  Color: {car.color}
+                </Typography>
+                <Typography variant="body1" fontWeight="bold">
+                  Year: {car.year}
+                </Typography>
+                <Typography variant="body1" fontWeight="bold">
+                  Vehicle Type: {car.bodyType}
+                </Typography>
+                <Typography variant="body1" fontWeight="bold">
+                  Price: ${car.price}
+                </Typography>
+                <Typography variant="body1" fontWeight="bold">
+                  Vin #: {car.vin}
+                </Typography>
+              </Link>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ mt: 2 }}
+                component={Link}
+                to={`/${car.id}`}
+              >
+                View Vehicle
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </Box>
+    </Container>
   );
 }
 

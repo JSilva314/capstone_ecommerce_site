@@ -2,12 +2,22 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Container,
+  Grid,
+} from "@mui/material";
 import { loadStripe } from "@stripe/stripe-js";
+
 const STRIPE_PUBLIC_KEY =
   "pk_test_51NcJTlH1n5IBH956mDK5AfZHroKsTnuSExgrJHAeo87CkcmCVpP0fqo2iBpve50cOFspCvBLEPhaMagYNUhvtg5400KX1meK4a";
 
 const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
+
 function CartAndCheckout({ user }) {
   const [cart, setCart] = useState([]);
   const [search, setSearch] = useState("");
@@ -15,9 +25,11 @@ function CartAndCheckout({ user }) {
   const getToken = () => {
     return localStorage.getItem("TOKEN");
   };
+
   const logout = () => {
     localStorage.removeItem("TOKEN");
   };
+
   useEffect(() => {
     async function fetchCart() {
       try {
@@ -87,39 +99,69 @@ function CartAndCheckout({ user }) {
   };
 
   return (
-    <div>
-      <h2>My Cart</h2>
-      {cart.map((singleCart) => (
-        <div key={singleCart.car.id} style={{ border: "1.5px solid black" }}>
-          <Link to={`/${singleCart.car.id}`}>
-            <h3>Make: {singleCart.car.make}</h3>
-            <h3>Model: {singleCart.car.model}</h3>
-            <h3>New: {singleCart.car.newUsed ? "Yes" : "No"}</h3>{" "}
-            <h3>Color: {singleCart.car.color}</h3>
-            <h3>Year: {singleCart.car.year}</h3>
-            <h3>Vehicle Type: {singleCart.car.bodyType}</h3>
-            <h3>Image: {singleCart.car.image}</h3>
-            <h3>Price: ${singleCart.car.price}</h3>
-            <h3>Vin #: {singleCart.car.vin}</h3>
-          </Link>
-          <Button onClick={() => handleRemoveCartItem(singleCart.id)}>
-            Remove from Cart
-          </Button>
-          <Button
-            onClick={() =>
-              handlePurchaseCar(
-                singleCart.car.model,
-                singleCart.car.price,
-                singleCart.car.id,
-                singleCart.id
-              )
-            }
-          >
-            Purchase Car
-          </Button>
-        </div>
-      ))}
-    </div>
+    <Container>
+      <Typography variant="h4" gutterBottom>
+        My Cart
+      </Typography>
+      <Grid container spacing={3}>
+        {cart.map((singleCart) => (
+          <Grid item xs={12} sm={6} md={4} key={singleCart.car.id}>
+            <Card sx={{ maxWidth: 345, margin: "auto" }}>
+              {singleCart.car.image && (
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={singleCart.car.image}
+                  alt={`${singleCart.car.make} ${singleCart.car.model}`}
+                />
+              )}
+              <CardContent>
+                <Link
+                  to={`/${singleCart.car.id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <Typography variant="h6">{singleCart.car.make}</Typography>
+                  <Typography variant="h6">{singleCart.car.model}</Typography>
+                  <Typography>
+                    New: {singleCart.car.newUsed ? "Yes" : "No"}
+                  </Typography>
+                  <Typography>Color: {singleCart.car.color}</Typography>
+                  <Typography>Year: {singleCart.car.year}</Typography>
+                  <Typography>
+                    Vehicle Type: {singleCart.car.bodyType}
+                  </Typography>
+                  <Typography>Price: ${singleCart.car.price}</Typography>
+                  <Typography>Vin #: {singleCart.car.vin}</Typography>
+                </Link>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => handleRemoveCartItem(singleCart.id)}
+                  sx={{ mt: 2 }}
+                >
+                  Remove from Cart
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() =>
+                    handlePurchaseCar(
+                      singleCart.car.model,
+                      singleCart.car.price,
+                      singleCart.car.id,
+                      singleCart.id
+                    )
+                  }
+                  sx={{ mt: 2 }}
+                >
+                  Purchase Car
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
   );
 }
 

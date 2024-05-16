@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 
 function Orders({ user }) {
   const [orders, setOrders] = useState([]);
@@ -29,30 +40,59 @@ function Orders({ user }) {
   }, [user]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div
+        style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
+      >
+        <CircularProgress />
+      </div>
+    );
   }
 
   if (error) {
     return <div>{error}</div>;
   }
-  console.log(orders);
+
   return (
     <div>
-      <h2>Orders</h2>
+      <Typography variant="h4" component="h2" gutterBottom>
+        Orders
+      </Typography>
       {orders.length === 0 ? (
-        <p>No orders found.</p>
+        <Typography>No orders found.</Typography>
       ) : (
-        <ul>
-          {orders.map((order) => (
-            <li key={order.orderId}>
-              Order ID: {order.orderId}, Car: {order.car.make} {order.car.model}
-              , User ID: {order.user.id}, Date: {order.createdAt}, Payment
-              Method:
-              {order.paymentMethod}, Email: {order.email}, Address:{" "}
-              {order.address}
-            </li>
-          ))}
-        </ul>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Order ID</TableCell>
+                <TableCell>Car</TableCell>
+                <TableCell>User ID</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Payment Method</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Address</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {orders.map((order) => (
+                <TableRow key={order.orderId}>
+                  <TableCell>{order.orderId}</TableCell>
+                  <TableCell>
+                    {order.car.make} {order.car.model}
+                  </TableCell>
+                  <TableCell>{order.user.id}</TableCell>
+                  <TableCell>
+                    {new Date(order.createdAt).toLocaleString()}
+                  </TableCell>
+                  <TableCell>{order.paymentMethod}</TableCell>
+                  <TableCell>{order.email}</TableCell>
+                  <TableCell>{order.address}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
     </div>
   );

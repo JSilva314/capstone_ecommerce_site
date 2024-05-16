@@ -15,6 +15,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import HomeIcon from "@mui/icons-material/Home";
 import DirectionsCar from "@mui/icons-material/DirectionsCar"; // Import car icon for the logo
+import HistoryIcon from "@mui/icons-material/History"; // Import History icon
 
 function Navbar({ setToken, isLoggedIn }) {
   const navigate = useNavigate();
@@ -62,6 +63,7 @@ function Navbar({ setToken, isLoggedIn }) {
               My Cart
             </Button>
             <Button color="inherit" component={Link} to="/orders">
+              <HistoryIcon sx={{ mr: 1 }} />
               Orders
             </Button>
             <IconButton
@@ -71,8 +73,10 @@ function Navbar({ setToken, isLoggedIn }) {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleMenu}
+              sx={{ fontSize: 30 }} // Adjust the font size here
             >
-              <AccountCircle />
+              <AccountCircle sx={{ fontSize: 30 }} />{" "}
+              {/* Make the icon larger */}
             </IconButton>
             <Menu
               id="menu-appbar"

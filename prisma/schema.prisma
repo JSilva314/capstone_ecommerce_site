@@ -46,9 +46,6 @@ model orderHistory {
   car           Cars     @relation(fields: [carId], references: [id])
   user          Users    @relation(fields: [userId], references: [id])
   createdAt     DateTime @default(now())
-  paymentMethod String
-  email         String
-  address       String
   carId         Int
   userId        Int
 }

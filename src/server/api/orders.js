@@ -1,10 +1,11 @@
-const express = require('express');
+const express = require("express");
 const ordersRouter = express.Router();
 const prisma = require("../client");
 
 // GET list of all orders for a specific member
-ordersRouter.get("/orders/:userId",  async (req, res, next) => {
+ordersRouter.get("/:userId", async (req, res, next) => {
   const { userId } = req.params;
+  console.log(userId);
   try {
     const orders = await prisma.orderHistory.findMany({
       where: {
@@ -12,34 +13,14 @@ ordersRouter.get("/orders/:userId",  async (req, res, next) => {
       },
       include: {
         car: true,
+        user: true,
       },
     });
+    console.log(orders);
     res.status(200).send(orders);
   } catch (error) {
     console.log(error);
-    res.status(500).send("Internal Server Error"); 
-  }
-});
-
-// GET 1 specific order based on ID
-ordersRouter.get("/orders/:orderId", async (req, res, next) => {
-  const { orderId } = req.params;
-  try {
-    const order = await prisma.orderHistory.findUnique({
-      where: {
-        orderId: parseInt(orderId),
-      },
-      include: {
-        car: true,
-      },
-    });
-    if (!order) {
-      return res.status(404).send("Order not Found");
-    }
-    res.status(200).send(order);
-  } catch (error) {
-    console.log(error);
-    res.status(500).send("Internal Server Error")
+    res.status(500).send("Internal Server Error");
   }
 });
 
