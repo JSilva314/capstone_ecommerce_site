@@ -60,5 +60,13 @@ model Cart {
   carId         Int
   userId        Int
 
+
+model Reviews {
+  id Int
+  message String
+  createdAt DateTime
+  user User @
+}
+
   @@map(name: "cart_car_fk")
 }
