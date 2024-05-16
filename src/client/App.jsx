@@ -13,6 +13,7 @@ import Cart from "./components/Cart";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./main.jsx";
+import Success from "./components/Success.jsx";
 
 function App() {
   const [user, setUser] = useState("");
@@ -41,7 +42,8 @@ function App() {
         <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/listcar" element={<ListCar />} />
         <Route path="/cart" element={<Cart user={user} />} />
-        <Route path="/order" element={<Orders user={user} />} />
+        <Route path="/orders" element={<Orders user={user} />} />
+        <Route path="/success" element={<Success />} />
       </Routes>
     </div>
   );

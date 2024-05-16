@@ -3,7 +3,11 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Button } from "@mui/material";
+import { loadStripe } from "@stripe/stripe-js";
+const STRIPE_PUBLIC_KEY =
+  "pk_test_51NcJTlH1n5IBH956mDK5AfZHroKsTnuSExgrJHAeo87CkcmCVpP0fqo2iBpve50cOFspCvBLEPhaMagYNUhvtg5400KX1meK4a";
 
+const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 function CartAndCheckout({ user }) {
   const [cart, setCart] = useState([]);
   const [search, setSearch] = useState("");
@@ -11,7 +15,9 @@ function CartAndCheckout({ user }) {
   const getToken = () => {
     return localStorage.getItem("TOKEN");
   };
-
+  const logout = () => {
+    localStorage.removeItem("TOKEN");
+  };
   useEffect(() => {
     async function fetchCart() {
       try {
@@ -38,16 +44,38 @@ function CartAndCheckout({ user }) {
     }
   };
 
-  const handlePurchaseCar = async (cartId) => {
+  const handlePurchaseCar = async (name, price, carId, cartId) => {
     try {
       const token = getToken(); // Get JWT token from localStorage
-      await axios.post(`/api/cart/purchase/${cartId}`, null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await axios.post(
+        `/api/stripe/create-checkout-session`,
+        {
+          productName: name,
+          productPrice: price,
+          carId: carId,
+          userId: user?.id,
+          cartId: cartId,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const stripe = await stripePromise;
+
       toast.success("Car purchased successfully!");
-      setCart((prevCart) => prevCart.filter((item) => item.id !== cartId));
+
+      const session = await response.data; // Use response.data for axios
+
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (result.error) {
+        console.error(result.error.message);
+      }
     } catch (error) {
       console.error("Error purchasing car:", error);
       if (error.response) {
@@ -77,7 +105,16 @@ function CartAndCheckout({ user }) {
           <Button onClick={() => handleRemoveCartItem(singleCart.id)}>
             Remove from Cart
           </Button>
-          <Button onClick={() => handlePurchaseCar(singleCart.id)}>
+          <Button
+            onClick={() =>
+              handlePurchaseCar(
+                singleCart.car.model,
+                singleCart.car.price,
+                singleCart.car.id,
+                singleCart.id
+              )
+            }
+          >
             Purchase Car
           </Button>
         </div>
