@@ -2,11 +2,19 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+} from "@mui/material";
 
 function SingleCar({ user }) {
   const { id } = useParams();
   const [car, setCar] = useState({});
   console.log(car);
+
   useEffect(() => {
     async function getCar() {
       try {
@@ -18,8 +26,9 @@ function SingleCar({ user }) {
       }
     }
     getCar();
-  }, []);
-  const handleAddtoCart = async () => {
+  }, [id]);
+
+  const handleAddToCart = async () => {
     try {
       await axios.post(`/api/cart`, {
         carId: car.id,
@@ -44,18 +53,55 @@ function SingleCar({ user }) {
   };
 
   return (
-    <div style={{ border: "2px solid black" }}>
-      <h3>Make: {car.make}</h3>
-      <h3>Model: {car.model}</h3>
-      <h3>Used/New: {car.newUsed ? "Yes" : "No"}</h3>
-      <h3>Color: {car.color}</h3>
-      <h3>Year: {car.year}</h3>
-      <h3>Vehicle Type: {car.bodyType}</h3>
-      <h3>Image: {car.image}</h3>
-      <h3>Price: ${car.price}</h3>
-      <h3>Vin #: {car.vin}</h3>
-      <button onClick={() => handleAddtoCart()}>Add to Cart</button>
-    </div>
+    <Card
+      sx={{
+        maxWidth: 600,
+        margin: "auto",
+        mt: 5,
+        boxShadow: 3,
+        borderRadius: 2,
+      }}
+    >
+      <CardContent>
+        <Typography variant="h4" component="div" sx={{ mb: 2 }}>
+          {car.make} {car.model}
+        </Typography>
+        <CardMedia
+          component="img"
+          height="300"
+          image={car.image}
+          alt={`${car.make} ${car.model}`}
+          sx={{ mb: 2, borderRadius: 1 }}
+        />
+        <Typography variant="body1" component="div">
+          <strong>Used/New:</strong> {car.newUsed ? "New" : "Used"}
+        </Typography>
+        <Typography variant="body1" component="div">
+          <strong>Color:</strong> {car.color}
+        </Typography>
+        <Typography variant="body1" component="div">
+          <strong>Year:</strong> {car.year}
+        </Typography>
+        <Typography variant="body1" component="div">
+          <strong>Vehicle Type:</strong> {car.bodyType}
+        </Typography>
+        <Typography variant="body1" component="div">
+          <strong>Price:</strong> ${car.price}
+        </Typography>
+        <Typography variant="body1" component="div">
+          <strong>Vin #:</strong> {car.vin}
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          sx={{ mt: 2 }}
+          onClick={handleAddToCart}
+        >
+          Add to Cart
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
+
 export default SingleCar;

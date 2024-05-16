@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import {
+  TextField,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  CardMedia,
+  Container,
+  Box,
+} from "@mui/material";
 
 function AllCars() {
   const [cars, setCars] = useState([]);
@@ -14,7 +24,9 @@ function AllCars() {
     async function fetchCars() {
       try {
         const token = getToken();
-        const { data: foundCars } = await axios.get("/api/cars");
+        const { data: foundCars } = await axios.get("/api/cars", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setCars(foundCars);
       } catch (error) {
         console.error(error);
@@ -23,7 +35,9 @@ function AllCars() {
     fetchCars();
   }, []);
 
-  console.log("cars", cars);
+  const handleClearSearch = () => {
+    setSearch("");
+  };
 
   // Filtering logic based on search query
   const filtered = cars.filter((car) =>
@@ -31,46 +45,93 @@ function AllCars() {
   );
 
   return (
-    <div>
-      <h2>All Cars</h2>
-      <input
-        placeholder="search..."
+    <Container>
+      <Typography variant="h4" gutterBottom>
+        All Cars
+      </Typography>
+      <TextField
+        label="Search"
+        variant="outlined"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
+        sx={{ marginBottom: 2 }}
+        fullWidth
       />
-      <button onClick={() => setSearch("")}>Clear</button>
-      {search.length === 0
-        ? cars.map((car) => (
-            <div key={car.id} style={{ border: "1.5px solid black" }}>
-              <Link to={`/${car.id}`}>
-                <h3>Make: {car.make}</h3>
-                <h3>Model: {car.model}</h3>
-                <h3>New: {car.newUsed ? "Yes" : "No"}</h3>{" "}
-                <h3>Color: {car.color}</h3>
-                <h3>Year: {car.year}</h3>
-                <h3>Vehicle Type: {car.bodyType}</h3>
-                <h3>Image: {car.image}</h3>
-                <h3>Price: ${car.price}</h3>
-                <h3>Vin #: {car.vin}</h3>
+      <Button
+        variant="contained"
+        onClick={handleClearSearch}
+        sx={{ marginBottom: 2 }}
+      >
+        Clear
+      </Button>
+      {filtered.length === 0 && (
+        <Typography variant="h6">No cars found.</Typography>
+      )}
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 2,
+        }}
+      >
+        {filtered.map((car) => (
+          <Card
+            key={car.id}
+            sx={{
+              width: 300,
+              border: "1.5px solid black",
+              backgroundColor: "#f5f5f5",
+            }}
+          >
+            {car.image && (
+              <CardMedia
+                component="img"
+                height="140"
+                image={car.image}
+                alt={`${car.make} ${car.model}`}
+              />
+            )}
+            <CardContent>
+              <Link to={`/${car.id}`} style={{ textDecoration: "none" }}>
+                <Typography variant="h6" fontWeight="bold">
+                  Make: {car.make}
+                </Typography>
+                <Typography variant="h6" fontWeight="bold">
+                  Model: {car.model}
+                </Typography>
+                <Typography variant="body1" fontWeight="bold">
+                  New: {car.newUsed ? "Yes" : "No"}
+                </Typography>
+                <Typography variant="body1" fontWeight="bold">
+                  Color: {car.color}
+                </Typography>
+                <Typography variant="body1" fontWeight="bold">
+                  Year: {car.year}
+                </Typography>
+                <Typography variant="body1" fontWeight="bold">
+                  Vehicle Type: {car.bodyType}
+                </Typography>
+                <Typography variant="body1" fontWeight="bold">
+                  Price: ${car.price}
+                </Typography>
+                <Typography variant="body1" fontWeight="bold">
+                  Vin #: {car.vin}
+                </Typography>
               </Link>
-            </div>
-          ))
-        : filtered.map((car) => (
-            <div key={car.id}>
-              <Link to={`/${car.id}`}>
-                <h3>Make: {car.make}</h3>
-                <h3>Model: {car.model}</h3>
-                <h3>New: {car.newUsed ? "Yes" : "No"}</h3>
-                <h3>Color: {car.color}</h3>
-                <h3>Year: {car.year}</h3>
-                <h3>Body Type: {car.bodyType}</h3>
-                <h3>Image: {car.image}</h3>
-                <h3>Price: ${car.price}</h3>
-                <h3>Vin #: {car.vin}</h3>
-              </Link>
-            </div>
-          ))}
-    </div>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{ mt: 2 }}
+                component={Link}
+                to={`/${car.id}`}
+              >
+                View Vehicle
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </Box>
+    </Container>
   );
 }
 

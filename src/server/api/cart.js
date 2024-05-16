@@ -102,4 +102,27 @@ cartRouter.delete("/:cartId", async (req, res) => {
     res.status(500).send({ message: "Internal Server Error" });
   }
 });
+
+// Purchase a car from the cart
+cartRouter.post("/purchase/:cartId", async (req, res, next) => {
+  const { cartId } = req.params;
+
+  try {
+    // Update the cart item to mark it as purchased
+    const updatedCartItem = await prisma.cart.update({
+      where: {
+        id: parseInt(cartId),
+      },
+      data: {
+        purchased: true,
+      },
+    });
+
+    res.status(200).json(updatedCartItem);
+  } catch (error) {
+    console.error("Error purchasing car:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 module.exports = cartRouter;

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { TextField, Button } from "@mui/material";
 
 function Register({ setToken }) {
   const navigate = useNavigate();
@@ -26,17 +27,20 @@ function Register({ setToken }) {
     <div>
       <h2>Register</h2>
       <div>
-        <input
+        <TextField
           placeholder="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <input
+        <TextField
+          type="password"
           placeholder="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button onClick={handleRegister}>Register</button>
+        <Button variant="contained" onClick={handleRegister}>
+          Register
+        </Button>
       </div>
     </div>
   );
