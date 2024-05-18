@@ -7,7 +7,8 @@ const stripeRouter = express.Router();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 stripeRouter.post("/create-checkout-session", async (req, res) => {
-  const { productName, productPrice, carId, userId, cartId } = req.body;
+  const { productName, productPrice, carId, userId, cartId, productImage } =
+    req.body;
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -18,6 +19,7 @@ stripeRouter.post("/create-checkout-session", async (req, res) => {
             currency: "usd",
             product_data: {
               name: productName,
+              images: [productImage],
             },
             unit_amount: productPrice * 100, // price in cents
           },

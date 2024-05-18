@@ -69,7 +69,7 @@ function AllCars() {
         ...prevSparkle,
         [id]: false,
       }));
-    }, 500); // Duration of the sparkle effect
+    }, 2000); // Duration of the sparkle effec
   };
 
   const filtered = cars.filter((car) =>
@@ -149,6 +149,7 @@ function AllCars() {
             {filtered.map((car) => (
               <Card
                 key={car.id}
+                className={sparkle[car.id] ? "sparkle" : ""}
                 sx={{
                   border: "none",
                   borderRadius: 1.5,
@@ -173,17 +174,14 @@ function AllCars() {
                 <CardContent sx={{ padding: 2.5 }}>
                   <Box display="flex" justifyContent="space-between">
                     <Link
-                      to={`/${car.id}`}
+                      to={`/cars/${car.id}`}
                       style={{ textDecoration: "none", color: "inherit" }}
                     >
                       <Typography variant="h6" fontWeight="bold" gutterBottom>
                         {car.make} {car.model}
                       </Typography>
                     </Link>
-                    <IconButton
-                      onClick={() => handleLike(car.id)}
-                      className={sparkle[car.id] ? "sparkle" : ""}
-                    >
+                    <IconButton onClick={() => handleLike(car.id)}>
                       {likedCars[car.id] ? (
                         <FavoriteIcon color="error" />
                       ) : (
@@ -231,7 +229,7 @@ function AllCars() {
                       width: "100%",
                     }}
                     component={Link}
-                    to={`/${car.id}`}
+                    to={`/cars/${car.id}`}
                   >
                     View Vehicle
                   </Button>

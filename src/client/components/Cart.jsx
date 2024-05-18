@@ -57,7 +57,7 @@ function CartAndCheckout({ user }) {
     }
   };
 
-  const handlePurchaseCar = async (name, price, carId, cartId) => {
+  const handlePurchaseCar = async (name, price, carId, cartId, carImage) => {
     try {
       const token = getToken(); // Get JWT token from localStorage
       const response = await axios.post(
@@ -68,6 +68,7 @@ function CartAndCheckout({ user }) {
           carId: carId,
           userId: user?.id,
           cartId: cartId,
+          productImage: carImage,
         },
         {
           headers: {
@@ -148,7 +149,8 @@ function CartAndCheckout({ user }) {
                       singleCart.car.model,
                       singleCart.car.price,
                       singleCart.car.id,
-                      singleCart.id
+                      singleCart.id,
+                      singleCart.car.image
                     )
                   }
                   sx={{ mt: 2 }}

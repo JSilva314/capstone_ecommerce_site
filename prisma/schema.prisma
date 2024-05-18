@@ -15,15 +15,15 @@ datasource db {
 
 model Users {
   id            Int            @id @default(autoincrement())
-  username      String?
+  fullName      String
+  username      String         @unique
   password      String
   email         String         @unique
-  address       String?
-  Phone         String?
-  paymentMethod String?
+  address       String
+  phone         String?
   Admin         Boolean        @default(false)
   orders        orderHistory[]
-  Cart          Cart[]
+  cart          Cart[]
 }
 
 model Cars {
