@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Box } from "@mui/material";
 
 function Register({ setToken }) {
   const navigate = useNavigate();
@@ -23,26 +23,41 @@ function Register({ setToken }) {
       console.error(error);
     }
   }
+
+  const commonStyles = { height: 56, mb: 2 };
+
   return (
-    <div>
+    <Box display="flex" flexDirection="column" alignItems="center">
       <h2>Register</h2>
-      <div>
+      <Box width="300px" display="flex" flexDirection="column" gap={2}>
         <TextField
-          placeholder="email"
+          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          variant="outlined"
+          fullWidth
+          sx={commonStyles}
         />
         <TextField
-          type="password"
-          placeholder="password"
+          type="Password"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          variant="outlined"
+          fullWidth
+          sx={commonStyles}
         />
-        <Button variant="contained" onClick={handleRegister}>
+        <Button
+          variant="contained"
+          onClick={handleRegister}
+          fullWidth
+          sx={commonStyles}
+        >
           Register
         </Button>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
+
 export default Register;

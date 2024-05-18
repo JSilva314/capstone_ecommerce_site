@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-// import { muiTypography } from "./components/muiTypography";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import AllCars from "./components/AllCars";
 import SingleCar from "./components/SingleCar";
@@ -8,9 +7,10 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import ListCar from "./components/ListCar";
 import Orders from "./components/Order";
+//import HomePage from "./components/HomePage";
 import axios from "axios";
 import Cart from "./components/Cart";
-import BottomNavBar from "./components/BottomNavBar"; 
+import BottomNavBar from "./components/BottomNavBar";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./main.jsx";
@@ -38,7 +38,8 @@ function App() {
       <Navbar isLoggedIn={token !== null} setToken={setToken} />
       <Routes>
         <Route path="/" element={<AllCars />} />
-        <Route path="/:id" element={<SingleCar user={user} />} />
+        <Route path="/cars" element={<AllCars />} />
+        <Route path="/cars/:id" element={<SingleCar user={user} />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/listcar" element={<ListCar />} />

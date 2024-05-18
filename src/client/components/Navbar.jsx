@@ -14,8 +14,8 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import HomeIcon from "@mui/icons-material/Home";
-import DirectionsCar from "@mui/icons-material/DirectionsCar"; // Import car icon for the logo
-import HistoryIcon from "@mui/icons-material/History"; // Import History icon
+import HistoryIcon from "@mui/icons-material/History"; 
+
 
 function Navbar({ setToken, isLoggedIn }) {
   const navigate = useNavigate();
@@ -36,16 +36,20 @@ function Navbar({ setToken, isLoggedIn }) {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" sx={{ backgroundColor: "#241A5C" }}>
       <Toolbar>
         <Box display="flex" alignItems="center" sx={{ flexGrow: 1 }}>
-          <DirectionsCar sx={{ mr: 1 }} /> {/* Add car icon */}
+          <img
+            src="/brand.jpg"
+            alt="Company Logo"
+            style={{ height: "100px", marginLeft: "-40px" }} // Adjust the height and margin as needed
+          />
           <Typography
             variant="h5"
             component="div"
             sx={{ fontWeight: "bold", letterSpacing: 2 }}
           >
-            CarMin
+            {/* You can add text here if you want to display next to the logo */}
           </Typography>
         </Box>
         <Button color="inherit" component={Link} to="/">
@@ -75,8 +79,7 @@ function Navbar({ setToken, isLoggedIn }) {
               onClick={handleMenu}
               sx={{ fontSize: 30 }} // Adjust the font size here
             >
-              <AccountCircle sx={{ fontSize: 30 }} />{" "}
-              {/* Make the icon larger */}
+              <AccountCircle sx={{ fontSize: 45 }} />{" "}
             </IconButton>
             <Menu
               id="menu-appbar"

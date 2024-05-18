@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import HeaderTitle from "./HeaderTitle";
 import {
   Table,
   TableBody,
@@ -11,6 +12,8 @@ import {
   CircularProgress,
   Typography,
 } from "@mui/material";
+
+
 
 function Orders({ user }) {
   const [orders, setOrders] = useState([]);
@@ -55,9 +58,7 @@ function Orders({ user }) {
 
   return (
     <div>
-      <Typography variant="h4" component="h2" gutterBottom>
-        Orders
-      </Typography>
+      <HeaderTitle title="My Orders" />
       {orders.length === 0 ? (
         <Typography>No orders found.</Typography>
       ) : (
