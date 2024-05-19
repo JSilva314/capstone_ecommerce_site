@@ -69,7 +69,7 @@ function AllCars() {
         ...prevSparkle,
         [id]: false,
       }));
-    }, 2000); // Duration of the sparkle effec
+    }, 1500); // Duration of the sparkle effec
   };
 
   const filtered = cars.filter((car) =>
