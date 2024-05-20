@@ -14,24 +14,6 @@ async function main() {
     //       paymentMethod: "Visa",
     //       Admin: false,
     //     },
-    //     {
-    //       username: "Harry Potter",
-    //       email: "Harry@example.com",
-    //       password: "platform9&3/4",
-    //       address: "2939 Porsche Place",
-    //       Phone: "2039822232",
-    //       paymentMethod: "Mastercard",
-    //       Admin: false,
-    //     },
-    //     {
-    //       username: "Ron Swonson",
-    //       email: "Ronald@example.com",
-    //       password: "america&bacon",
-    //       address: "5900 Camaro Circle",
-    //       Phone: "9732099889",
-    //       paymentMethod: "Visa",
-    //       Admin: true,
-    //     },
     //     // Add more user objects as needed
     //   ],
     // });
@@ -286,6 +268,32 @@ async function main() {
           price: 16700,
           vin: "5N1BA0NE2DN600095",
           miles: 85080,
+        },
+        {
+          make: "Porsche",
+          model: "911 Turbo",
+          newUsed: false,
+          color: "Blue",
+          year: 2006,
+          bodyType: "car",
+          image:
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fs1.cdn.autoevolution.com%2Fimages%2Fgallery%2FPORSCHE-911-Turbo--997--1344_44.jpg&f=1&nofb=1&ipt=1ab725dd54c9201a41dd98f249f87acaddab9e1fef76c669445f90da2d4ff4ea&ipo=images",
+          price: 102000,
+          vin: "WP0AA29966S716557",
+          miles: 4200,
+        },
+        {
+          make: "Jeep",
+          model: "Wrangler",
+          newUsed: false,
+          color: "Silver",
+          year: 2009,
+          bodyType: "suv",
+          image:
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.dealeraccelerate.com%2Fcam%2F34%2F731%2F11548%2F1920x1440%2F2009-jeep-wrangler&f=1&nofb=1&ipt=903d34785cdaf76d3bd115ae01e46e7d8da2535bea4a3aad1e9a1ec2dad5c266&ipo=images",
+          price: 13578,
+          vin: "1J4GE69189L703205",
+          miles: 67000,
         },
       ],
     });
