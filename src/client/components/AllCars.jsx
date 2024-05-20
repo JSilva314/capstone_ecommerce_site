@@ -36,9 +36,8 @@ function AllCars() {
     async function fetchCars() {
       try {
         const token = getToken();
-        const { data: foundCars } = await axios.get("/api/cars", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const { data: foundCars } = await axios.get("/api/cars", { headers });
         setCars(foundCars);
       } catch (error) {
         console.error(error);
@@ -69,7 +68,7 @@ function AllCars() {
         ...prevSparkle,
         [id]: false,
       }));
-    }, 1500); // Duration of the sparkle effec
+    }, 1500); // Duration of the sparkle effect
   };
 
   const filtered = cars.filter((car) =>

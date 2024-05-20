@@ -50,14 +50,14 @@ function Navbar({ setToken, isLoggedIn }) {
             <img
               src="/brand.jpg"
               alt="Company Logo"
-              style={{ height: "100px", marginLeft: "-40px" }} // Adjust the height and margin as needed
+              style={{ height: "100px", marginLeft: "-40px" }} // Adjust the height and margin HERE as needed
             />
             <Typography
               variant="h5"
               component="div"
               sx={{ fontWeight: "bold", letterSpacing: 2 }}
             >
-              {/* You can add text here if you want to display next to the logo */}
+          
             </Typography>
           </Box>
           <Button color="inherit" component={Link} to="/">
@@ -85,7 +85,7 @@ function Navbar({ setToken, isLoggedIn }) {
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu}
-                sx={{ fontSize: 30 }} // Adjust the font size here
+                sx={{ fontSize: 30 }} // Adjust font size here
               >
                 <AccountCircle sx={{ fontSize: 45 }} />{" "}
               </IconButton>
@@ -122,6 +122,8 @@ function Navbar({ setToken, isLoggedIn }) {
           )}
         </Toolbar>
       </AppBar>
+      <Toolbar sx={{ height: "100px" }} />{" "}
+      {/* This empty Toolbar acts as a spacer with specific height!!! */}
       <Button
         variant="contained"
         onClick={openFeedbackPopup}
@@ -132,10 +134,10 @@ function Navbar({ setToken, isLoggedIn }) {
           transform: "translateY(-50%) rotate(-90deg)",
           transformOrigin: "right center",
           zIndex: 1000,
-          backgroundColor: "#241A5C", // Set your custom background color here
-          color: "#fff", // Set your custom text color here
+          backgroundColor: "#241A5C", // Set custom background color here
+          color: "#fff", // Set custom text color here
           "&:hover": {
-            backgroundColor: "#e64a19", // Optional: Set a custom hover color
+            backgroundColor: "#e64a19", 
           },
         }}
       >

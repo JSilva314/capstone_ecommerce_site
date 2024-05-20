@@ -7,8 +7,8 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
-import { Facebook, Twitter, Instagram } from "@mui/icons-material"; // Import social media icons
-import DirectionsCar from "@mui/icons-material/DirectionsCar"; // Import logo icon
+import { Facebook, Twitter, Instagram } from "@mui/icons-material"; 
+import DirectionsCar from "@mui/icons-material/DirectionsCar"; 
 
 const sections = {
   Shop: [
