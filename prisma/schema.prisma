@@ -42,28 +42,31 @@ model Cars {
 }
 
 model orderHistory {
-  orderId       Int      @id @default(autoincrement())
-  car           Cars     @relation(fields: [carId], references: [id])
-  user          Users    @relation(fields: [userId], references: [id])
-  createdAt     DateTime @default(now())
-  carId         Int
-  userId        Int
+  orderId   Int      @id @default(autoincrement())
+  car       Cars     @relation(fields: [carId], references: [id])
+  user      Users    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  carId     Int
+  userId    Int
 }
 
 model Cart {
   id     Int   @id @default(autoincrement())
   user   Users @relation(fields: [userId], references: [id])
   car    Cars  @relation(fields: [carId], references: [id])
-  carId         Int
-  userId        Int
+  carId  Int
+  userId Int
 
+  model Review {
 
-model Reviews {
-  id Int
-  message String
-  createdAt DateTime
-  user User @
+  id        Int      @id @default(autoincrement())
+  message   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  car       Cars     @relation(fields: [carId], references: [id])
+  carId     Int
 }
 
-  @@map(name: "cart_car_fk")
+@@map(name: "cart_car_fk")
 }

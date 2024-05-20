@@ -29,7 +29,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.0",
     "react-toastify": "^10.0.5",
-    "stripe": "^15.6.0",
+    "stripe": "^15.7.0",
     "vite-express": "*",
     "volleyball": "^1.5.1"
   },
