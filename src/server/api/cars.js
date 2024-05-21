@@ -13,6 +13,21 @@ carsRouter.get("/", async (req, res, next) => {
   }
 });
 
+// GET only new cars
+carsRouter.get("/new", async (req, res, next) => {
+  try {
+    const newCars = await prisma.cars.findMany({
+      where: {
+        newUsed: true,
+      },
+    });
+    res.status(200).send(newCars);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
 // GET 1 specific car based on ID
 carsRouter.get("/:id", async (req, res, next) => {
   const { id } = req.params;

@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt");
 const authMiddleware = require("../middleware/authMiddleware");
 
 // Import user-related database functions
-const { createUser, getUser, getUserByEmail } = require("../db");
+const { createUser, getUser, getUserByEmail, getUserByUsername } = require("../db");
 
 // Login endpoint
 usersRouter.post("/login", async (req, res, next) => {
@@ -50,19 +50,62 @@ usersRouter.post("/login", async (req, res, next) => {
 
 // Register endpoint
 usersRouter.post("/register", async (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password, fullName, username, address, phone } = req.body;
+
+  // Validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordMinLength = 8;
+  const passwordRegex =
+    /^(?=.*[a-z])(?=(?:.*[A-Z]){2,})(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+  const usernameRegex = /^[a-zA-Z0-9_]+$/; // Username can only contain letters, numbers, and underscores
+
+  if (!email || !emailRegex.test(email)) {
+    return res.status(400).send({ message: "Invalid email address" });
+  }
+
+  if (
+    !password ||
+    password.length < passwordMinLength ||
+    !passwordRegex.test(password)
+  ) {
+    return res.status(400).send({
+      message:
+        "Password must be at least 8 characters long, contain at least 2 capital letters, 1 lowercase letter, and 1 special character",
+    });
+  }
+
+  if (!username || !usernameRegex.test(username)) {
+    return res.status(400).send({
+      message: "Username must contain only letters, numbers, and underscores",
+    });
+  }
+
+  if (!fullName) {
+    return res.status(400).send({ message: "Full name is required" });
+  }
+
+  if (!address) {
+    return res.status(400).send({ message: "Address is required" });
+  }
 
   try {
-    const existingUser = await getUserByEmail(email);
+    const existingUserByEmail = await getUserByEmail(email);
+    if (existingUserByEmail) {
+      return res.status(409).send({ message: "Email Already Registered" });
+    }
 
-    if (existingUser) {
-      res.status(400).send({ message: "User already exists" });
-      return;
+    const existingUserByUsername = await getUserByUsername(username);
+    if (existingUserByUsername) {
+      return res.status(409).send({ message: "Username Already Taken" });
     }
 
     const newUser = await createUser({
       email,
       password,
+      fullName,
+      username,
+      address,
+      phone,
     });
 
     const token = jwt.sign(
@@ -76,6 +119,7 @@ usersRouter.post("/register", async (req, res, next) => {
     res.status(500).send({ message: "Internal server error" });
   }
 });
+
 usersRouter.get("/profile", authMiddleware, async (req, res, next) => {
   console.log(req.user);
   const userId = req.user.id; // Extract user ID from decoded token

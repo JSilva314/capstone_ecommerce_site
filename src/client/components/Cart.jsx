@@ -12,6 +12,7 @@ import {
   Grid,
 } from "@mui/material";
 import { loadStripe } from "@stripe/stripe-js";
+import HeaderTitle from "./HeaderTitle";
 
 const STRIPE_PUBLIC_KEY =
   "pk_test_51NcJTlH1n5IBH956mDK5AfZHroKsTnuSExgrJHAeo87CkcmCVpP0fqo2iBpve50cOFspCvBLEPhaMagYNUhvtg5400KX1meK4a";
@@ -56,7 +57,7 @@ function CartAndCheckout({ user }) {
     }
   };
 
-  const handlePurchaseCar = async (name, price, carId, cartId) => {
+  const handlePurchaseCar = async (name, price, carId, cartId, carImage) => {
     try {
       const token = getToken(); // Get JWT token from localStorage
       const response = await axios.post(
@@ -67,6 +68,7 @@ function CartAndCheckout({ user }) {
           carId: carId,
           userId: user?.id,
           cartId: cartId,
+          productImage: carImage,
         },
         {
           headers: {
@@ -100,9 +102,7 @@ function CartAndCheckout({ user }) {
 
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>
-        My Cart
-      </Typography>
+      <HeaderTitle title="My Cart" />
       <Grid container spacing={3}>
         {cart.map((singleCart) => (
           <Grid item xs={12} sm={6} md={4} key={singleCart.car.id}>
@@ -149,7 +149,8 @@ function CartAndCheckout({ user }) {
                       singleCart.car.model,
                       singleCart.car.price,
                       singleCart.car.id,
-                      singleCart.id
+                      singleCart.id,
+                      singleCart.car.image
                     )
                   }
                   sx={{ mt: 2 }}

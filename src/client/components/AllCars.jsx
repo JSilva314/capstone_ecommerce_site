@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import PropTypes from "prop-types"; // Import PropTypes
 import { Link } from "react-router-dom";
 import {
   TextField,
@@ -10,11 +11,23 @@ import {
   CardMedia,
   Container,
   Box,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import HeaderTitle from "./HeaderTitle";
+import "./AllCars.css";
 
-function AllCars() {
+function AllCars({ isAdmin }) { // Destructure isAdmin prop
   const [cars, setCars] = useState([]);
   const [search, setSearch] = useState("");
+  const [likedCars, setLikedCars] = useState(() => {
+    const savedLikes = localStorage.getItem("likedCars");
+    return savedLikes ? JSON.parse(savedLikes) : {};
+  });
+  const [sparkle, setSparkle] = useState({});
 
   const getToken = () => {
     return localStorage.getItem("TOKEN");
@@ -24,9 +37,8 @@ function AllCars() {
     async function fetchCars() {
       try {
         const token = getToken();
-        const { data: foundCars } = await axios.get("/api/cars", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        const { data: foundCars } = await axios.get("/api/cars", { headers });
         setCars(foundCars);
       } catch (error) {
         console.error(error);
@@ -35,104 +47,212 @@ function AllCars() {
     fetchCars();
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("likedCars", JSON.stringify(likedCars));
+  }, [likedCars]);
+
   const handleClearSearch = () => {
     setSearch("");
   };
 
-  // Filtering logic based on search query
+  const handleLike = (id) => {
+    setLikedCars((prevLikedCars) => ({
+      ...prevLikedCars,
+      [id]: !prevLikedCars[id],
+    }));
+    setSparkle((prevSparkle) => ({
+      ...prevSparkle,
+      [id]: true,
+    }));
+    setTimeout(() => {
+      setSparkle((prevSparkle) => ({
+        ...prevSparkle,
+        [id]: false,
+      }));
+    }, 1500); // Duration of the sparkle effect
+  };
+
   const filtered = cars.filter((car) =>
     car.make.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
-        All Cars
-      </Typography>
-      <TextField
-        label="Search"
-        variant="outlined"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        sx={{ marginBottom: 2 }}
-        fullWidth
-      />
-      <Button
-        variant="contained"
-        onClick={handleClearSearch}
-        sx={{ marginBottom: 2 }}
-      >
-        Clear
-      </Button>
-      {filtered.length === 0 && (
-        <Typography variant="h6">No cars found.</Typography>
-      )}
-      <Box
+    <Box
+      sx={{
+        backgroundImage: 'url("/car2.jpg")',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 4,
+      }}
+    >
+      <Container
+        maxWidth="lg"
         sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: 2,
+          backgroundColor: "rgba(255, 255, 255, 0.2)",
+          borderRadius: 4,
+          padding: 4,
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        {filtered.map((car) => (
-          <Card
-            key={car.id}
+        <HeaderTitle title="Available Cars" />
+        {isAdmin === "true" && ( // Conditionally render admin-specific content
+          <Box mb={2}>
+            <Typography variant="h6" align="center" color="primary">
+              Admin: You have special privileges!
+            </Typography>
+            {/* Add admin-specific features here */}
+          </Box>
+        )}
+        <Box display="flex" justifyContent="space-between" mb={2}>
+          <TextField
+            label="Search by make"
+            variant="outlined"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            sx={{ flexGrow: 1, mr: 2 }}
+            fullWidth
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton>
+                    <SearchIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Button
+            variant="contained"
+            onClick={handleClearSearch}
             sx={{
-              width: 300,
-              border: "1.5px solid black",
-              backgroundColor: "#f5f5f5",
+              backgroundColor: "#15379b",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#0d2357",
+              },
+              flexShrink: 0,
             }}
           >
-            {car.image && (
-              <CardMedia
-                component="img"
-                height="140"
-                image={car.image}
-                alt={`${car.make} ${car.model}`}
-              />
-            )}
-            <CardContent>
-              <Link to={`/${car.id}`} style={{ textDecoration: "none" }}>
-                <Typography variant="h6" fontWeight="bold">
-                  Make: {car.make}
-                </Typography>
-                <Typography variant="h6" fontWeight="bold">
-                  Model: {car.model}
-                </Typography>
-                <Typography variant="body1" fontWeight="bold">
-                  New: {car.newUsed ? "Yes" : "No"}
-                </Typography>
-                <Typography variant="body1" fontWeight="bold">
-                  Color: {car.color}
-                </Typography>
-                <Typography variant="body1" fontWeight="bold">
-                  Year: {car.year}
-                </Typography>
-                <Typography variant="body1" fontWeight="bold">
-                  Vehicle Type: {car.bodyType}
-                </Typography>
-                <Typography variant="body1" fontWeight="bold">
-                  Price: ${car.price}
-                </Typography>
-                <Typography variant="body1" fontWeight="bold">
-                  Vin #: {car.vin}
-                </Typography>
-              </Link>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{ mt: 2 }}
-                component={Link}
-                to={`/${car.id}`}
+            Clear
+          </Button>
+        </Box>
+        {filtered.length === 0 ? (
+          <Typography variant="h6" align="center">
+            No cars found.
+          </Typography>
+        ) : (
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gap: 2,
+            }}
+          >
+            {filtered.map((car) => (
+              <Card
+                key={car.id}
+                className={sparkle[car.id] ? "sparkle" : ""}
+                sx={{
+                  border: "none",
+                  borderRadius: 1.5,
+                  overflow: "hidden",
+                  backgroundColor: "rgba(255, 255, 255, 0.8)",
+                  transition: "transform 0.3s, box-shadow 0.3s",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                    boxShadow: "0 12px 24px rgba(0, 0, 0, 0.05)",
+                  },
+                }}
               >
-                View Vehicle
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </Box>
-    </Container>
+                {car.image && (
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={car.image}
+                    alt={`${car.make} ${car.model}`}
+                    sx={{ objectFit: "cover" }}
+                  />
+                )}
+                <CardContent sx={{ padding: 2.5 }}>
+                  <Box display="flex" justifyContent="space-between">
+                    <Link
+                      to={`/cars/${car.id}`}
+                      style={{ textDecoration: "none", color: "inherit" }}
+                    >
+                      <Typography variant="h6" fontWeight="bold" gutterBottom>
+                        {car.make} {car.model}
+                      </Typography>
+                    </Link>
+                    <IconButton onClick={() => handleLike(car.id)}>
+                      {likedCars[car.id] ? (
+                        <FavoriteIcon color="error" />
+                      ) : (
+                        <FavoriteBorderIcon />
+                      )}
+                    </IconButton>
+                  </Box>
+                  <Typography variant="body2" color="text.secondary">
+                    New: {car.newUsed ? "Yes" : "No"}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Color: {car.color}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Year: {car.year}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Vehicle Type: {car.bodyType}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "green", fontWeight: "bold" }}
+                  >
+                    Price: ${car.price.toLocaleString()}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "black", fontWeight: "bold" }}
+                  >
+                    Vin #: {car.vin}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Miles: {car.miles}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                      mt: 2,
+                      backgroundColor: "#15379b",
+                      color: "#fff",
+                      "&:hover": {
+                        backgroundColor: "#0d2357",
+                      },
+                      width: "100%",
+                    }}
+                    component={Link}
+                    to={`/cars/${car.id}`}
+                  >
+                    View Vehicle
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </Box>
+        )}
+      </Container>
+    </Box>
   );
 }
+
+AllCars.propTypes = {
+  isAdmin: PropTypes.bool.isRequired,
+};
 
 export default AllCars;

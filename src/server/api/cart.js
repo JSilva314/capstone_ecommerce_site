@@ -55,6 +55,7 @@ cartRouter.get("/:id", async (req, res, next) => {
 });
 cartRouter.post("/", async (req, res, next) => {
   const { carId, userId } = req.body;
+  console.log("Received request to add car to cart:", { carId, userId });
   try {
     // Check if the user already has the car in the cart
     const existingCartItem = await prisma.cart.findFirst({

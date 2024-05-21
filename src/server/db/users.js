@@ -1,13 +1,24 @@
-const prisma = require('../client');
-const bcrypt = require('bcrypt');
+const prisma = require("../client");
+const bcrypt = require("bcrypt");
 
-const createUser = async ({ email, password }) => {
+const createUser = async ({
+  email,
+  password,
+  fullName,
+  username,
+  address,
+  phone,
+}) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     const user = await prisma.users.create({
       data: {
         email,
         password: hashedPassword,
+        fullName,
+        username,
+        address,
+        phone,
       },
     });
     return user;
@@ -49,8 +60,22 @@ const getUserByEmail = async (email) => {
   }
 };
 
+const getUserByUsername = async (username) => {
+  try {
+    const user = await prisma.users.findUnique({
+      where: {
+        username,
+      },
+    });
+    return user;
+  } catch (err) {
+    throw err;
+  }
+};
+
 module.exports = {
   createUser,
   getUser,
   getUserByEmail,
+  getUserByUsername,
 };

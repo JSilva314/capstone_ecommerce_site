@@ -15,21 +15,22 @@ datasource db {
 
 model Users {
   id            Int            @id @default(autoincrement())
-  username      String?
+  fullName      String
+  username      String         @unique
   password      String
   email         String         @unique
-  address       String?
-  Phone         String?
-  paymentMethod String?
+  address       String
+  phone         String?
   Admin         Boolean        @default(false)
   orders        orderHistory[]
-  Cart          Cart[]
+  cart          Cart[]
 }
 
 model Cars {
   id       Int            @id @default(autoincrement())
   make     String
   model    String
+  miles    Int
   newUsed  Boolean
   color    String
   year     Int
@@ -56,17 +57,6 @@ model Cart {
   car    Cars  @relation(fields: [carId], references: [id])
   carId  Int
   userId Int
-
-  model Review {
-
-  id        Int      @id @default(autoincrement())
-  message   String
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
-  car       Cars     @relation(fields: [carId], references: [id])
-  carId     Int
-}
 
 @@map(name: "cart_car_fk")
 }

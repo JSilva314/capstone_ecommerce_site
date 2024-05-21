@@ -8,9 +8,10 @@ import {
   CardContent,
   CardMedia,
   Typography,
+  Box,
 } from "@mui/material";
 
-function SingleCar({ user }) {
+function SingleCar({ user, isAdmin }) {
   const { id } = useParams();
   const [car, setCar] = useState({});
   console.log(car);
@@ -38,15 +39,12 @@ function SingleCar({ user }) {
       toast.success("Item added to cart successfully");
     } catch (error) {
       if (error.response) {
-        // The request was made and the server responded with a status code
         toast.error("Car already exists in your Cart");
         console.error("Error status:", error.response.status);
         console.error("Error message:", error.response.data);
       } else if (error.request) {
-        // The request was made but no response was received
         console.error("No response received:", error.request);
       } else {
-        // Something happened in setting up the request that triggered an error
         console.error("Error:", error.message);
       }
     }
@@ -91,14 +89,14 @@ function SingleCar({ user }) {
         <Typography variant="body1" component="div">
           <strong>Vin #:</strong> {car.vin}
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ mt: 2 }}
-          onClick={handleAddToCart}
-        >
-          Add to Cart
-        </Button>
+        <Typography variant="body1" fontWeight="bold">
+          <strong>Miles:</strong> {car.miles}
+        </Typography>
+        <Box display="flex" justifyContent="center" sx={{ mt: 2 }}>
+          <Button variant="contained" color="primary" onClick={handleAddToCart}>
+            Add to Cart
+          </Button>
+        </Box>
       </CardContent>
     </Card>
   );
