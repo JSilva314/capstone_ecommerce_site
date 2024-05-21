@@ -43,8 +43,11 @@ webhookRouter.post(
       default:
         console.log(`Unhandled event type ${event.type}`);
     }
+
+    res.sendStatus(200);
   }
 );
+
 const handleCheckoutSessionCompleted = async (session) => {
   const { carId, userId, cartId } = session.metadata;
   console.log(
@@ -57,17 +60,18 @@ const handleCheckoutSessionCompleted = async (session) => {
         userId: parseInt(userId),
       },
     });
+    console.log(`Created order: ${JSON.stringify(singleItem, null, 2)}`);
+
     // If the cart item exists, delete it
     await prisma.cart.delete({
       where: {
         id: parseInt(cartId),
       },
     });
+    console.log("Order created and car removed from cart");
   } catch (error) {
-    console.log(error);
+    console.log("Error in handleCheckoutSessionCompleted:", error);
   }
-  // Logic for handling successful checkout session
-  // e.g., save order to database, send confirmation email, etc.
 };
 
 module.exports = webhookRouter;

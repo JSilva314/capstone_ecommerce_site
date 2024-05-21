@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 import AllCars from "./components/AllCars";
 import SingleCar from "./components/SingleCar";
@@ -7,7 +7,6 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import ListCar from "./components/ListCar";
 import Orders from "./components/Order";
-//import HomePage from "./components/HomePage";
 import axios from "axios";
 import Cart from "./components/Cart";
 import BottomNavBar from "./components/BottomNavBar";
@@ -24,6 +23,25 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(
     window.localStorage.getItem("Admin") || null
   );
+  const [cart, setCart] = useState([]);
+
+  const getToken = () => {
+    return localStorage.getItem("TOKEN");
+  };
+
+  const fetchCart = useCallback(async () => {
+    try {
+      const token = getToken();
+      const { data: foundCart } = await axios.get(`/api/cart/${user?.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCart(foundCart);
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+    }
+  }, [user]);
 
   useEffect(() => {
     async function getUser() {
@@ -37,6 +55,7 @@ function App() {
     }
     getUser();
   }, []);
+
   return (
     <div className="App">
       <ToastContainer />
@@ -44,6 +63,7 @@ function App() {
         isLoggedIn={token !== null}
         setToken={setToken}
         isAdmin={isAdmin}
+        fetchCart={fetchCart}
       />
       <Routes>
         <Route path="/" element={<AllCars />} />
