@@ -16,7 +16,7 @@ import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import HomeIcon from "@mui/icons-material/Home";
 import HistoryIcon from "@mui/icons-material/History";
 
-function Navbar({ setToken, isLoggedIn }) {
+function Navbar({ setToken, isLoggedIn, fetchCart }) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -42,6 +42,11 @@ function Navbar({ setToken, isLoggedIn }) {
     );
   };
 
+  const handleNavigateToCart = () => {
+    if (fetchCart) fetchCart();
+    navigate("/cart");
+  };
+
   return (
     <>
       <AppBar position="fixed" sx={{ backgroundColor: "#241A5C" }}>
@@ -56,9 +61,7 @@ function Navbar({ setToken, isLoggedIn }) {
               variant="h5"
               component="div"
               sx={{ fontWeight: "bold", letterSpacing: 2 }}
-            >
-          
-            </Typography>
+            ></Typography>
           </Box>
           <Button color="inherit" component={Link} to="/">
             <HomeIcon sx={{ mr: 1 }} />
@@ -70,7 +73,7 @@ function Navbar({ setToken, isLoggedIn }) {
           </Button>
           {isLoggedIn ? (
             <>
-              <Button color="inherit" component={Link} to="/cart">
+              <Button color="inherit" onClick={handleNavigateToCart}>
                 <ShoppingCartIcon sx={{ mr: 1 }} />
                 My Cart
               </Button>
@@ -137,7 +140,7 @@ function Navbar({ setToken, isLoggedIn }) {
           backgroundColor: "#241A5C", // Set custom background color here
           color: "#fff", // Set custom text color here
           "&:hover": {
-            backgroundColor: "#e64a19", 
+            backgroundColor: "#e64a19",
           },
         }}
       >

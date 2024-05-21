@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   Button,
@@ -21,34 +21,45 @@ const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 
 function CartAndCheckout({ user }) {
   const [cart, setCart] = useState([]);
-  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
   const getToken = () => {
     return localStorage.getItem("TOKEN");
   };
 
-  const logout = () => {
-    localStorage.removeItem("TOKEN");
-  };
-
-  useEffect(() => {
-    async function fetchCart() {
-      try {
-        const token = getToken();
-        const { data: foundCart } = await axios.get(`/api/cart/${user?.id}`);
-        setCart(foundCart);
-      } catch (error) {
-        console.error("Error fetching cart:", error);
-      }
-    }
-    if (user) {
-      fetchCart();
+  const fetchCart = useCallback(async () => {
+    try {
+      const token = getToken();
+      const { data: foundCart } = await axios.get(`/api/cart/${user?.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setCart(foundCart);
+    } catch (error) {
+      console.error("Error fetching cart:", error);
     }
   }, [user]);
 
+  const logout = () => {
+    localStorage.removeItem("TOKEN");
+    navigate("/login");
+  };
+
+  useEffect(() => {
+    if (user) {
+      fetchCart();
+    }
+  }, [user, fetchCart]);
+
   const handleRemoveCartItem = async (cartId) => {
     try {
-      await axios.delete(`/api/cart/${cartId}`);
+      const token = getToken();
+      await axios.delete(`/api/cart/${cartId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       toast.success("Item removed from cart successfully");
       setCart((prevCart) => prevCart.filter((item) => item.id !== cartId));
     } catch (error) {
@@ -69,6 +80,11 @@ function CartAndCheckout({ user }) {
           userId: user?.id,
           cartId: cartId,
           productImage: carImage,
+          metadata: {
+            userId: user?.id,
+            carId: carId,
+            cartId: cartId,
+          },
         },
         {
           headers: {
@@ -79,7 +95,7 @@ function CartAndCheckout({ user }) {
 
       const stripe = await stripePromise;
 
-      toast.success("Car purchased successfully!");
+      toast.success("Redirecting to Stripe for payment...");
 
       const session = await response.data; // Use response.data for axios
 

@@ -3,9 +3,9 @@ const ordersRouter = express.Router();
 const prisma = require("../client");
 
 // GET list of all orders for a specific member
-ordersRouter.get("/:userId", async (req, res, next) => {
+ordersRouter.get("/:userId", async (req, res) => {
   const { userId } = req.params;
-  console.log(userId);
+  console.log(`Fetching orders for userId: ${userId}`);
   try {
     const orders = await prisma.orderHistory.findMany({
       where: {
@@ -16,10 +16,10 @@ ordersRouter.get("/:userId", async (req, res, next) => {
         user: true,
       },
     });
-    console.log(orders);
+    console.log(`Fetched orders: ${JSON.stringify(orders, null, 2)}`);
     res.status(200).send(orders);
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching orders:", error);
     res.status(500).send("Internal Server Error");
   }
 });

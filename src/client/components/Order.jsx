@@ -13,8 +13,6 @@ import {
   Typography,
 } from "@mui/material";
 
-
-
 function Orders({ user }) {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -24,11 +22,13 @@ function Orders({ user }) {
     async function fetchOrders() {
       try {
         const token = localStorage.getItem("TOKEN"); // Obtain the user's token from localStorage
+        console.log(`Fetching orders for userId: ${user?.id}`);
         const { data } = await axios.get(`/api/orders/${user?.id}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Set the Authorization header with the user's token
           },
         });
+        console.log(`Fetched orders: ${JSON.stringify(data, null, 2)}`);
         setOrders(data);
         setIsLoading(false);
       } catch (error) {
@@ -70,9 +70,6 @@ function Orders({ user }) {
                 <TableCell>Car</TableCell>
                 <TableCell>User ID</TableCell>
                 <TableCell>Date</TableCell>
-                <TableCell>Payment Method</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Address</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -86,9 +83,6 @@ function Orders({ user }) {
                   <TableCell>
                     {new Date(order.createdAt).toLocaleString()}
                   </TableCell>
-                  <TableCell>{order.paymentMethod}</TableCell>
-                  <TableCell>{order.email}</TableCell>
-                  <TableCell>{order.address}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
