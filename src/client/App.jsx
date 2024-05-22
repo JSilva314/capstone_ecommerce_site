@@ -14,6 +14,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./main.jsx";
 import Success from "./components/Success.jsx";
+import SingleOrderCar from "./components/SingleOrderCar.jsx";
+import LandingPage from "./components/LandingPage.jsx";
 
 function App() {
   const [user, setUser] = useState("");
@@ -60,9 +62,10 @@ function App() {
         fetchCart={fetchCart}
       />
       <Routes>
-        <Route path="/" element={<AllCars />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/cars" element={<AllCars />} />
         <Route path="/cars/:id" element={<SingleCar user={user} />} />
+        <Route path="/orders/:id" element={<SingleOrderCar user={user} />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/listcar" element={<ListCar />} />

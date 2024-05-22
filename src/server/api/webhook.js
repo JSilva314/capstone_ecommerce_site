@@ -2,6 +2,7 @@ const express = require("express");
 const Stripe = require("stripe");
 const bodyParser = require("body-parser");
 const prisma = require("../client");
+const generateRandomInteger = require("../utils/utilsFunctions");
 
 const webhookRouter = express.Router();
 
@@ -56,6 +57,7 @@ const handleCheckoutSessionCompleted = async (session) => {
   try {
     const singleItem = await prisma.orderHistory.create({
       data: {
+        orderId: generateRandomInteger(),
         carId: parseInt(carId),
         userId: parseInt(userId),
       },
@@ -68,6 +70,15 @@ const handleCheckoutSessionCompleted = async (session) => {
         id: parseInt(cartId),
       },
     });
+    await prisma.cars.update({
+      where: {
+        id: parseInt(carId),
+      },
+      data: {
+        sold: true,
+      },
+    });
+
     console.log("Order created and car removed from cart");
   } catch (error) {
     console.log("Error in handleCheckoutSessionCompleted:", error);
