@@ -40,6 +40,7 @@ apiRouter.use("/users", usersRouter);
 apiRouter.use("/cars", carsRouter);
 apiRouter.use("/cart", cartRouter);
 apiRouter.use("/orders", ordersRouter);
+apiRouter.use("/review", require("./review"));
 
 // Error handling middleware
 apiRouter.use((err, req, res, next) => {

@@ -16,7 +16,7 @@ import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import HomeIcon from "@mui/icons-material/Home";
 import HistoryIcon from "@mui/icons-material/History";
 
-function Navbar({ setToken, isLoggedIn, fetchCart }) {
+function Navbar({ setToken, isLoggedIn, fetchCart, isAdmin }) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
 

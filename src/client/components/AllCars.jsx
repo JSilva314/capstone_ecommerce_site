@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import PropTypes from "prop-types"; // Import PropTypes
 import { Link } from "react-router-dom";
 import {
   TextField,
@@ -19,7 +20,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import HeaderTitle from "./HeaderTitle";
 import "./AllCars.css";
 
-function AllCars() {
+function AllCars({ isAdmin }) { // Destructure isAdmin prop
   const [cars, setCars] = useState([]);
   const [search, setSearch] = useState("");
   const [likedCars, setLikedCars] = useState(() => {
@@ -100,6 +101,14 @@ function AllCars() {
         }}
       >
         <HeaderTitle title="Available Cars" />
+        {isAdmin === "true" && ( // Conditionally render admin-specific content
+          <Box mb={2}>
+            <Typography variant="h6" align="center" color="primary">
+              Admin: You have special privileges!
+            </Typography>
+            {/* Add admin-specific features here */}
+          </Box>
+        )}
         <Box display="flex" justifyContent="space-between" mb={2}>
           <TextField
             label="Search by make"
@@ -241,5 +250,9 @@ function AllCars() {
     </Box>
   );
 }
+
+AllCars.propTypes = {
+  isAdmin: PropTypes.bool.isRequired,
+};
 
 export default AllCars;

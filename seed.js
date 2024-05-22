@@ -19,7 +19,6 @@ async function main() {
     // });
     // console.log("Users seeded successfully:", users);
 
-    // Seed cars
     const cars = await prisma.cars.createMany({
       data: [
         {

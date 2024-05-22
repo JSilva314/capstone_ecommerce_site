@@ -56,8 +56,8 @@ model Cart {
   id     Int   @id @default(autoincrement())
   user   Users @relation(fields: [userId], references: [id])
   car    Cars  @relation(fields: [carId], references: [id])
-  carId         Int
-  userId        Int
+  carId  Int
+  userId Int
 
-  @@map(name: "cart_car_fk")
+@@map(name: "cart_car_fk")
 }
