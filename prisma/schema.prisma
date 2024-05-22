@@ -30,6 +30,7 @@ model Cars {
   id       Int            @id @default(autoincrement())
   make     String
   model    String
+  sold    Boolean   @default(false)
   miles    Int
   newUsed  Boolean
   color    String
@@ -43,12 +44,12 @@ model Cars {
 }
 
 model orderHistory {
-  orderId   Int      @id @default(autoincrement())
-  car       Cars     @relation(fields: [carId], references: [id])
-  user      Users    @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
-  carId     Int
-  userId    Int
+  orderId       Int   @id @default(autoincrement())
+  car           Cars     @relation(fields: [carId], references: [id])
+  user          Users    @relation(fields: [userId], references: [id])
+  createdAt     DateTime @default(now())
+  carId         Int
+  userId        Int
 }
 
 model Cart {

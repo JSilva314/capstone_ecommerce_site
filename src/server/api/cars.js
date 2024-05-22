@@ -6,10 +6,15 @@ const prisma = require("../client");
 carsRouter.get("/", async (req, res, next) => {
   console.log("cars hello", req);
   try {
-    const cars = await prisma.cars.findMany();
+    const cars = await prisma.cars.findMany({
+      where: {
+        sold: false,
+      },
+    });
     res.status(200).send(cars);
   } catch (error) {
     console.log(error);
+    res.status(500).send({ error: "Something went wrong" });
   }
 });
 
