@@ -294,6 +294,58 @@ async function main() {
           vin: "1J4GE69189L703205",
           miles: 67000,
         },
+        {
+          make: "Alfa Romeo",
+          model: "4c",
+          newUsed: false,
+          color: "White",
+          year: 2022,
+          bodyType: "car",
+          image:
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimageonthefly.autodatadirect.com%2Fimages%2F%3FIMG%3DUSC90ALC061A021001.png&f=1&nofb=1&ipt=57688f26798fa778479f1c5e1f2d59e45f6e0ffd6e6077b58d4d14df232d24a5&ipo=images",
+          price: 83299,
+          vin: "ZARBB42N1M6006871",
+          miles: 13000,
+        },
+        {
+          make: "Toyota",
+          model: "Supra",
+          newUsed: false,
+          color: "Blue",
+          year: 2021,
+          bodyType: "car",
+          image:
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fperformancedrive.com.au%2Fwp-content%2Fuploads%2F2020%2F04%2F2021-Toyota-Supra-RZ-Horizon-Blue-edition.jpg&f=1&nofb=1&ipt=5642ac3df31c88e425b98d8e6d40b9a2aa84de9efc45e5f4f1b78f0b656fb2de&ipo=images",
+          price: 47988,
+          vin: "JT2SW22M0N0056944",
+          miles: 23288,
+        },
+        {
+          make: "Porsche",
+          model: "GT4RS",
+          newUsed: true,
+          color: "Grey",
+          year: 2023,
+          bodyType: "car",
+          image:
+            "https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fcdn.carbuzz.com%2Fcar-thumbnails%2Foriginal%2F12000%2F800%2F12858.jpg&f=1&nofb=1&ipt=edd9cc0ed136692312530ef1dd7d910903aedcdd25898b146041383337be5a46&ipo=images",
+          price: 93899,
+          vin: "WP0JA2920L0010792",
+          miles: 900,
+        },
+        {
+          make: "Rolls Royce",
+          model: "Ghost",
+          newUsed: true,
+          color: "Black",
+          year: 2024,
+          bodyType: "car",
+          image:
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2F21motoring.com%2Fwp-content%2Fuploads%2F2023%2F10%2F2024-Rolls-Royce-Ghost-Ekleipsis.jpg&f=1&nofb=1&ipt=3a3c530d9752ac6fd458bc88a96df6247836a1dc0abe0aa2e4e0ce0f53a1e922&ipo=images",
+          price: 320000,
+          vin: "SCAZD02D1MCX30569",
+          miles: 1200,
+        },
       ],
     });
     console.log("Cars seeded successfully:", cars);
