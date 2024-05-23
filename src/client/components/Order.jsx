@@ -80,7 +80,7 @@ function Orders({ user }) {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <HeaderTitle title="My Orders" color="#17CF73" />
+        <HeaderTitle title="My Orders" color="#4A4A93" />
         {orders.length === 0 ? (
           <Typography>No orders found.</Typography>
         ) : (

@@ -69,7 +69,7 @@ function Navbar({ setToken, isLoggedIn, fetchCart, isAdmin }) {
           </Button>
           <Button color="inherit" component={Link} to="/cars">
             <DirectionsCarIcon sx={{ mr: 1 }} />
-            All Cars
+            View Cars
           </Button>
           {isLoggedIn ? (
             <>
