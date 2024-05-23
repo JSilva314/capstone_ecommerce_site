@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import ListCar from "./components/ListCar";
 import Orders from "./components/Order";
+import Profile from "./components/Profile"
 import axios from "axios";
 import Cart from "./components/Cart";
 import BottomNavBar from "./components/BottomNavBar";
@@ -88,6 +89,7 @@ function App() {
         <Route path="/listcar" element={<ListCar />} />
         <Route path="/cart" element={<Cart user={user} />} />
         <Route path="/orders" element={<Orders user={user} />} />
+        <Route path="/profile" element={<Profile user={user} />} />
         <Route path="/success" element={<Success />} />
       </Routes>
       <BottomNavBar />
