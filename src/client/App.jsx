@@ -15,8 +15,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./main.jsx";
 import Success from "./components/Success.jsx";
-import Account from "./components/Account.jsx";
-import AllUsers from "./components/AllUsers.jsx";
+//import Account from "./components/Account.jsx";
+//import AllUsers from "./components/AllUsers.jsx";
 import SingleOrderCar from "./components/SingleOrderCar.jsx";
 import LandingPage from "./components/LandingPage.jsx";
 
@@ -70,31 +70,20 @@ function App() {
         fetchCart={fetchCart}
       />
       <Routes>
-        <Route path="/" element={<AllCars />} />
-        <Route path="/cars" element={<AllCars isAdmin={isAdmin} />} />
-        <Route
-          path="/cars/:id"
-          element={<SingleCar user={user} isAdmin={isAdmin} />}
-        />
-        <Route
-          path="/login"
-          element={<Login setToken={setToken} setIsAdmin={setIsAdmin} />}
-        />
-        <Route
-          path="/account"
-          element={<Account setToken={setToken} setIsAdmin={setIsAdmin} />}
-        />
-        <Route path="/users" element={<AllUsers isAdmin={isAdmin} />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/cars" element={<AllCars />} />
+        <Route path="/cars/:id" element={<SingleCar user={user} />} />
+        <Route path="/orders/:id" element={<SingleOrderCar user={user} />} />
+        <Route path="/login" element={<Login setToken={setToken} />} />
         <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/listcar" element={<ListCar />} />
         <Route path="/cart" element={<Cart user={user} />} />
         <Route path="/orders" element={<Orders user={user} />} />
-        <Route path="/profile" element={<Profile user={user} />} />
         <Route path="/success" element={<Success />} />
+        <Route path="/profile" element={<Profile user={user} />} />
       </Routes>
       <BottomNavBar />
     </div>
   );
 }
-
 export default App;

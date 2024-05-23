@@ -128,11 +128,14 @@ function Orders({ user }) {
                     </Link>
                   </Box>
 
-                  <Typography variant="body2" color="text.secondary">
-                    Order Id: {order.orderId}
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "grey.700", fontWeight: "bold" }}
+                  >
+                    Order ID: {order.orderId}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Price: {order.car.price}
+                  <Typography variant="body2" sx={{ color: "green" }}>
+                    Price: ${order.car.price}
                   </Typography>
                   <Typography
                     variant="body2"

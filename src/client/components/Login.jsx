@@ -3,21 +3,19 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button, Box } from "@mui/material";
 
-function Login({ setIsAdmin, setToken }) {
+function Login({ setToken }) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   async function handleLogin() {
     try {
-      const { data: token, admin } = await axios.post("/api/users/login", {
+      const { data: token} = await axios.post("/api/users/login", {
         email,
         password,
       });
       window.localStorage.setItem("TOKEN", token.token);
-      window.localStorage.setItem("Admin", admin);
       setToken(token.token);
-      setIsAdmin(admin.admin);
       navigate("/");
     } catch (error) {
       console.error(error);
