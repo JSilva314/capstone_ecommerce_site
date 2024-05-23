@@ -1,35 +1,61 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const AllUsers = ({ isAdmin }) => {
+const AllUsers = ({ user }) => {
   const [users, setUsers] = useState([]);
+  const [refresher, setRefresher] = useState(false);
 
   useEffect(() => {
+    console.log("rendering");
     async function getUsers() {
       try {
-        const { data: foundUsers } = await axios.get("/api/users");
-        setUsers(foundUsers);
+        const { data } = await axios.get("/api/users", {
+          params: user,
+        });
+        handleSetData(data);
+        setUsers(data);
       } catch (error) {
         console.error(error);
       }
     }
     getUsers();
-  }, []);
+  }, [refresher, users]);
+  function handleSetUser(data) {
+    setUsers(data);
+  }
+  const handleUserDelete = async (currentUser) => {
+    try {
+      // Assuming currentUser has an id property
+      const response = await axios.delete(`/api/users/${currentUser.id}`);
+      console.log(response.data);
+      setRefresher((prev) => !prev);
+      // Optionally, refresh the user list or update the UI accordingly
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
 
   return (
     <div>
-      {isAdmin === "true" ? (
+      {user.Admin ? (
         <div>
           <h2> All Users </h2>
           <div id="all_users_container">
-            {users.map((user) => {
+            {users.map((currentUser) => {
               return (
                 <div
-                  key={user.id}
+                  key={currentUser.id}
                   style={{ border: "2px solid black", marginBottom: "5px" }}
                 >
-                  <h3> Username: {user.username} </h3>
-                  <h3> E-mail: {user.email} </h3>
+                  <h3> Username: {currentUser.username} </h3>
+                  <h3> E-mail: {currentUser.email} </h3>
+                  <button
+                    onClick={() => {
+                      handleUserDelete(currentUser);
+                    }}
+                  >
+                    Delete User
+                  </button>
                 </div>
               );
             })}

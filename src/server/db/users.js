@@ -27,21 +27,11 @@ const createUser = async ({
   }
 };
 
-const getUser = async ({ email, password }) => {
-  if (!email || !password) {
-    return;
-  }
+const getAllUsers = async () => {
   try {
-    const user = await prisma.users.findUnique({
-      where: {
-        email,
-      },
-    });
-    if (!user) return;
-    const passwordsMatch = await bcrypt.compare(password, user.password);
-    if (!passwordsMatch) return;
-    delete user.password;
-    return user;
+    const users = await prisma.users.findMany();
+    
+    return users;
   } catch (err) {
     throw err;
   }
@@ -75,7 +65,7 @@ const getUserByUsername = async (username) => {
 
 module.exports = {
   createUser,
-  getUser,
+  getAllUsers,
   getUserByEmail,
   getUserByUsername,
 };

@@ -16,7 +16,7 @@ ordersRouter.get("/:userId", async (req, res) => {
         user: true,
       },
     });
-    console.log(`Fetched orders: ${JSON.stringify(orders, null, 2)}`);
+    console.log(`Fetched orders: `, orders);
     res.status(200).send(orders);
   } catch (error) {
     console.error("Error fetching orders:", error);

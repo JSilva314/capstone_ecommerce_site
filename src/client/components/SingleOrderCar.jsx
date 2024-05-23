@@ -11,7 +11,7 @@ import {
   Box,
 } from "@mui/material";
 
-function SingleCar({ user }) {
+function SingleOrderCar({ user }) {
   const { id } = useParams();
   const [car, setCar] = useState({});
   console.log(car);
@@ -92,14 +92,9 @@ function SingleCar({ user }) {
         <Typography variant="body1" fontWeight="bold">
           <strong>Miles:</strong> {car.miles}
         </Typography>
-        <Box display="flex" justifyContent="center" sx={{ mt: 2 }}>
-          <Button variant="contained" color="primary" onClick={handleAddToCart}>
-            Add to Cart
-          </Button>
-        </Box>
       </CardContent>
     </Card>
   );
 }
 
-export default SingleCar;
+export default SingleOrderCar;

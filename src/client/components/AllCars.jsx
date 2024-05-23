@@ -19,8 +19,10 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import HeaderTitle from "./HeaderTitle";
 import "./AllCars.css";
+// import { user } from "../../server/client";
 
-function AllCars({ isAdmin }) { // Destructure isAdmin prop
+function AllCars({ user }) {
+
   const [cars, setCars] = useState([]);
   const [search, setSearch] = useState("");
   const [likedCars, setLikedCars] = useState(() => {
@@ -101,7 +103,7 @@ function AllCars({ isAdmin }) { // Destructure isAdmin prop
         }}
       >
         <HeaderTitle title="Available Cars" />
-        {isAdmin === "true" && ( // Conditionally render admin-specific content
+        {user.Admin && ( // Conditionally render admin-specific content
           <Box mb={2}>
             <Typography variant="h6" align="center" color="primary">
               Admin: You have special privileges!
@@ -251,8 +253,8 @@ function AllCars({ isAdmin }) { // Destructure isAdmin prop
   );
 }
 
-AllCars.propTypes = {
-  isAdmin: PropTypes.bool.isRequired,
-};
+// AllCars.propTypes = {
+//   isAdmin: PropTypes.bool.isRequired,
+// };
 
 export default AllCars;
