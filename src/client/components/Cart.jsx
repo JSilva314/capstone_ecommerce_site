@@ -118,7 +118,7 @@ function CartAndCheckout({ user }) {
 
   return (
     <Container>
-      <HeaderTitle title="My Cart" />
+      <HeaderTitle title="My Cart" color="#4A4A93" />
       <Grid container spacing={3}>
         {cart.map((singleCart) => (
           <Grid item xs={12} sm={6} md={4} key={singleCart.car.id}>

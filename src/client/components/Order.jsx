@@ -80,7 +80,7 @@ function Orders({ user }) {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <HeaderTitle title="My Orders" />
+        <HeaderTitle title="My Orders" color="#17CF73" />
         {orders.length === 0 ? (
           <Typography>No orders found.</Typography>
         ) : (
@@ -94,7 +94,6 @@ function Orders({ user }) {
             {orders.map((order) => (
               <Card
                 key={order.id}
-                // className={sparkle[car.id] ? "sparkle" : ""}
                 sx={{
                   border: "none",
                   borderRadius: 1.5,

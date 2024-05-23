@@ -100,7 +100,7 @@ function AllCars({ isAdmin }) { // Destructure isAdmin prop
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <HeaderTitle title="Available Cars" />
+        <HeaderTitle title="Available Cars" color="#4A4A93" />
         {isAdmin === "true" && ( // Conditionally render admin-specific content
           <Box mb={2}>
             <Typography variant="h6" align="center" color="primary">
