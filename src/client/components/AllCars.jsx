@@ -22,7 +22,6 @@ import "./AllCars.css";
 // import { user } from "../../server/client";
 
 function AllCars({ user }) {
-
   const [cars, setCars] = useState([]);
   const [search, setSearch] = useState("");
   const [likedCars, setLikedCars] = useState(() => {
@@ -42,6 +41,7 @@ function AllCars({ user }) {
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
         const { data: foundCars } = await axios.get("/api/cars", { headers });
         setCars(foundCars);
+        console.log(token, headers, foundCars);
       } catch (error) {
         console.error(error);
       }

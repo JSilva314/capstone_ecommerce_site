@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
-function Orders({ user, usersOrders }) {
+function OrderHistory({ user, usersOrders }) {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -174,4 +174,4 @@ function Orders({ user, usersOrders }) {
   );
 }
 
-export default Orders;
+export default OrderHistory;

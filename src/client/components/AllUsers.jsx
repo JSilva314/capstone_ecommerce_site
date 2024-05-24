@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const AllUsers = ({ user }) => {
+const AllUsers = ({ user, setUsersOrders }) => {
   const [users, setUsers] = useState([]);
   const [refresher, setRefresher] = useState(false);
 
@@ -12,7 +13,6 @@ const AllUsers = ({ user }) => {
         const { data } = await axios.get("/api/users", {
           params: user,
         });
-        handleSetData(data);
         setUsers(data);
       } catch (error) {
         console.error(error);
@@ -20,9 +20,7 @@ const AllUsers = ({ user }) => {
     }
     getUsers();
   }, [refresher, users]);
-  function handleSetUser(data) {
-    setUsers(data);
-  }
+
   const handleUserDelete = async (currentUser) => {
     try {
       // Assuming currentUser has an id property
@@ -34,7 +32,11 @@ const AllUsers = ({ user }) => {
       console.error("Error deleting user:", error);
     }
   };
-
+  const navToOrders = (selectedUser) => {
+    const navigate = useNavigate();
+    setUsersOrders(selectedUser);
+    navigate("/orders");
+  };
   return (
     <div>
       {user.Admin ? (
@@ -55,6 +57,13 @@ const AllUsers = ({ user }) => {
                     }}
                   >
                     Delete User
+                  </button>
+                  <button
+                    onClick={() => {
+                      navToOrders(currentUser);
+                    }}
+                  >
+                    Orders
                   </button>
                 </div>
               );

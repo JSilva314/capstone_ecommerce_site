@@ -24,7 +24,7 @@ function App() {
   const [user, setUser] = useState("");
   const [token, setToken] = useState(window.localStorage.getItem("TOKEN"));
   const [cart, setCart] = useState([]);
-
+  const [usersOrders, setUsersOrders] = useState(null);
   const getToken = () => {
     return localStorage.getItem("TOKEN");
   };
@@ -71,11 +71,11 @@ function App() {
           path="/account"
           element={<Account setToken={setToken} setUser={setUser} />}
         />
-        <Route path="/users" element={<AllUsers user={user} />} />
+        <Route path="/users" element={<AllUsers user={user} setUsersOrders={setUsersOrders} />} />
         <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/listcar" element={<ListCar />} />
         <Route path="/cart" element={<Cart user={user} />} />
-        <Route path="/orders" element={<Orders user={user} />} />
+        <Route path="/orders" element={<Orders user={user} usersOrders={usersOrders} />} />
         <Route path="/profile" element={<Profile user={user} />} />
         <Route path="/success" element={<Success />} />
       </Routes>
