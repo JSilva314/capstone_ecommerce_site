@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   Button,
@@ -22,6 +22,7 @@ const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 function CartAndCheckout({ user }) {
   const [cart, setCart] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const getToken = () => {
     return localStorage.getItem("TOKEN");
@@ -41,16 +42,24 @@ function CartAndCheckout({ user }) {
     }
   }, [user]);
 
-  const logout = () => {
-    localStorage.removeItem("TOKEN");
-    navigate("/login");
-  };
-
   useEffect(() => {
     if (user) {
       fetchCart();
     }
   }, [user, fetchCart]);
+
+  useEffect(() => {
+    if (location.state && location.state.car) {
+      setCart((prevCart) => [
+        ...prevCart,
+        {
+          id: Date.now(), // Temporary ID
+          car: location.state.car,
+          discountedPrice: location.state.discountedPrice,
+        },
+      ]);
+    }
+  }, [location.state]);
 
   const handleRemoveCartItem = async (cartId) => {
     try {
@@ -121,7 +130,7 @@ function CartAndCheckout({ user }) {
       <HeaderTitle title="My Cart" color="#4A4A93" />
       <Grid container spacing={3}>
         {cart.map((singleCart) => (
-          <Grid item xs={12} sm={6} md={4} key={singleCart.car.id}>
+          <Grid item xs={12} sm={6} md={4} key={singleCart.id}>
             <Card sx={{ maxWidth: 345, margin: "auto" }}>
               {singleCart.car.image && (
                 <CardMedia
@@ -146,7 +155,12 @@ function CartAndCheckout({ user }) {
                   <Typography>
                     Vehicle Type: {singleCart.car.bodyType}
                   </Typography>
-                  <Typography>Price: ${singleCart.car.price}</Typography>
+                  <Typography>
+                    Price: $
+                    {singleCart.discountedPrice
+                      ? singleCart.discountedPrice
+                      : singleCart.car.price}
+                  </Typography>
                   <Typography>Vin #: {singleCart.car.vin}</Typography>
                 </Link>
                 <Button
@@ -163,7 +177,9 @@ function CartAndCheckout({ user }) {
                   onClick={() =>
                     handlePurchaseCar(
                       singleCart.car.model,
-                      singleCart.car.price,
+                      singleCart.discountedPrice
+                        ? singleCart.discountedPrice
+                        : singleCart.car.price,
                       singleCart.car.id,
                       singleCart.id,
                       singleCart.car.image

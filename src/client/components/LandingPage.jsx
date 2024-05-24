@@ -15,7 +15,6 @@ import "swiper/css/pagination";
 import { Autoplay, Pagination } from "swiper/modules";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import HeaderTitle from "./HeaderTitle";
 import { keyframes } from "@mui/system";
 
 const videos = [
@@ -54,16 +53,16 @@ const borderColorChange = keyframes`
 // Define keyframes for discount timer transition
 const discountTimerTransition = keyframes`
   0%, 100% {
-    color: rgba(255, 255, 0, 1); /* Bold Yellow */
+    color: rgba(255, 165, 0, 1); /* Bold Orange */
     font-weight: bold;
   }
   50% {
-    color: rgba(255, 255, 0, 0.5); /* Translucent Yellow */
+    color: rgba(255, 165, 0, 0.5); /* Translucent Orange */
     font-weight: bold;
   }
 `;
 
-  const LandingPage = () => {
+const LandingPage = () => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const videoRef1 = useRef(null);
   const videoRef2 = useRef(null);
@@ -81,7 +80,9 @@ const discountTimerTransition = keyframes`
     const fetchCars = async () => {
       try {
         const response = await axios.get("/api/cars");
-        setCars(response.data);
+        const filteredCars = response.data.filter((car) => car.year >= 2020);
+        console.log("Filtered Cars:", filteredCars); // Log filtered cars
+        setCars(filteredCars);
         setLoading(false);
       } catch (error) {
         setError("Failed to fetch cars. Please try again later.");
@@ -315,114 +316,124 @@ const discountTimerTransition = keyframes`
               className="mySwiper"
               style={{ paddingBottom: "50px" }}
             >
-              {randomCars.map((car, index) => {
-                const discountedPrice = (car.price * 0.9).toFixed(2); // 10% discount
-                return (
-                  <SwiperSlide key={index}>
-                    <Card
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        textAlign: "center",
-                        padding: 3,
-                        borderRadius: 2,
-                        backdropFilter: "blur(10px)",
-                        mt: 8,
-                        mb: 8,
-                        maxHeight: "calc(100vh - 150px)", // Adjust for nav bars
-                        overflowY: "hidden", // Prevent scroll bars
-                        backgroundColor: "rgba(255, 255, 255, 0.2)",
-                        border: "2px solid transparent",
-                        transition: "border-color 2s",
-                        "&:hover": {
-                          borderColor: "#71bfdc",
-                        },
-                      }}
-                    >
-                      <CardMedia
-                        component="img"
-                        image={car.image}
-                        alt={car.title}
+              {randomCars.length > 0 ? (
+                randomCars.map((car, index) => {
+                  const discountedPrice = (car.price * 0.9).toFixed(2); // 10% discount
+                  return (
+                    <SwiperSlide key={index}>
+                      <Card
                         sx={{
-                          width: "100%",
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          textAlign: "center",
+                          padding: 3,
                           borderRadius: 2,
-                          maxHeight: "300px",
-                          objectFit: "cover",
-                          padding: "10px",
-                          backgroundColor: "rgba(113, 191, 220, 0.3)",
-                          border: "5px solid transparent",
-                          borderRadius: "8px",
-                          animation: `${borderColorChange} 4s infinite`,
+                          backdropFilter: "blur(10px)",
+                          mt: 8,
+                          mb: 8,
+                          maxHeight: "calc(100vh - 150px)", // Adjust for nav bars
+                          overflowY: "hidden", // Prevent scroll bars
+                          backgroundColor: "rgba(255, 255, 255, 0.2)",
+                          border: "2px solid transparent",
+                          transition: "border-color 2s",
+                          "&:hover": {
+                            borderColor: "#71bfdc",
+                          },
                         }}
-                      />
-                      <CardContent>
-                        <Typography variant="h4" component="h2" gutterBottom>
-                          {car.title}
-                        </Typography>
-                        <Typography variant="body1" component="p" gutterBottom>
-                          {car.description}
-                        </Typography>
-                        <Box
+                      >
+                        <CardMedia
+                          component="img"
+                          image={car.image}
+                          alt={car.title}
                           sx={{
-                            backgroundColor: "rgba(255, 255, 255, 0.9)",
-                            padding: 2,
-                            borderRadius: 2,
-                            mt: 2,
                             width: "100%",
-                            textAlign: "center",
+                            borderRadius: 2,
+                            maxHeight: "300px",
+                            objectFit: "cover",
+                            padding: "10px",
+                            backgroundColor: "rgba(113, 191, 220, 0.3)",
+                            border: "5px solid transparent",
+                            borderRadius: "8px",
+                            animation: `${borderColorChange} 4s infinite`,
                           }}
-                        >
-                          <Typography
-                            variant="h6"
-                            component="p"
-                            gutterBottom
-                            sx={{ color: "red", fontWeight: "bold" }}
-                          >
-                            Original Price: ${car.price}
+                        />
+                        <CardContent>
+                          <Typography variant="h4" component="h2" gutterBottom>
+                            {car.title}
                           </Typography>
                           <Typography
-                            variant="h6"
+                            variant="body1"
                             component="p"
                             gutterBottom
-                            sx={{ color: "green", fontWeight: "bold" }}
                           >
-                            Discounted Price: ${discountedPrice}
+                            {car.description}
                           </Typography>
-                          <Typography
-                            variant="h6"
-                            component="p"
-                            gutterBottom
+                          <Box
                             sx={{
-                              animation: `${discountTimerTransition} 3s infinite`,
+                              backgroundColor: "rgba(255, 255, 255, 0.9)",
+                              padding: 2,
+                              borderRadius: 2,
+                              mt: 2,
+                              width: "100%",
+                              textAlign: "center",
                             }}
                           >
-                            Special Discount Timer: {formatTime(timer)}
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            component="p"
-                            gutterBottom
-                            sx={{ color: "black", marginTop: 1 }}
-                          >
-                            *Purchase now before the clock countdown ends to
-                            lock in price!
-                          </Typography>
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            sx={{ mt: 2 }}
-                            onClick={() => handlePurchase(car)}
-                          >
-                            Purchase Now
-                          </Button>
-                        </Box>
-                      </CardContent>
-                    </Card>
-                  </SwiperSlide>
-                );
-              })}
+                            <Typography
+                              variant="h6"
+                              component="p"
+                              gutterBottom
+                              sx={{ color: "red", fontWeight: "bold" }}
+                            >
+                              Original Price: ${car.price}
+                            </Typography>
+                            <Typography
+                              variant="h6"
+                              component="p"
+                              gutterBottom
+                              sx={{ color: "green", fontWeight: "bold" }}
+                            >
+                              Discounted Price: ${discountedPrice}
+                            </Typography>
+                            <Typography
+                              variant="h6"
+                              component="p"
+                              gutterBottom
+                              sx={{
+                                animation: `${discountTimerTransition} 3s infinite`,
+                              }}
+                            >
+                              Special Discount Timer: {formatTime(timer)}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              component="p"
+                              gutterBottom
+                              sx={{ color: "black", marginTop: 1 }}
+                            >
+                              *Purchase now before the clock countdown ends to
+                              lock in price!
+                            </Typography>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              sx={{ mt: 2 }}
+                              onClick={() => handlePurchase(car)}
+                            >
+                              Purchase Now
+                            </Button>
+                          </Box>
+                        </CardContent>
+                      </Card>
+                    </SwiperSlide>
+                  );
+                })
+              ) : (
+                <Typography variant="h6" color="white">
+                  No cars available at the moment.
+                </Typography>
+              )}
             </Swiper>
           )}
         </Box>
