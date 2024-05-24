@@ -23,15 +23,7 @@ function Register({ setToken }) {
 
 
   async function handleRegister() {
-    console.log(
-      email,
-      password,
-      confirmPassword,
-      phoneNumber,
-      fullName,
-      username,
-      address
-    );
+   
 
     try {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -91,7 +83,7 @@ function Register({ setToken }) {
 
       if (response.status === 201) {
         const token = response.data;
-        console.log(token);
+        
         toast.success("User Registered Successfully");
         localStorage.setItem("TOKEN", token.token);
         setToken(token.token);

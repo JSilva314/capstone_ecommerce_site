@@ -33,7 +33,7 @@ function Profile() {
           },
         });
 
-        console.log("Profile fetched:", response.data); // Log fetched data
+        
         setProfile(response.data);
       } catch (error) {
         setError("Error fetching profile. Please try again.");

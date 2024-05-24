@@ -22,13 +22,13 @@ function Orders({ user }) {
     async function fetchOrders() {
       try {
         const token = localStorage.getItem("TOKEN"); // Obtain the user's token from localStorage
-        console.log(`Fetching orders for userId: ${user?.id}`);
+        
         const { data } = await axios.get(`/api/orders/${user?.id}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Set the Authorization header with the user's token
           },
         });
-        console.log(`Fetched orders: ${JSON.stringify(data, null, 2)}`);
+        
         setOrders(data);
         setIsLoading(false);
       } catch (error) {
@@ -55,7 +55,7 @@ function Orders({ user }) {
   if (error) {
     return <div>{error}</div>;
   }
-  console.log(orders);
+  
   return (
     <Box
       sx={{

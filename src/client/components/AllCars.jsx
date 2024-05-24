@@ -22,7 +22,7 @@ import ShareIcon from "@mui/icons-material/Share";
 import HeaderTitle from "./HeaderTitle";
 import "./AllCars.css";
 
-function AllCars({ isAdmin }) {
+function AllCars() {
   const [cars, setCars] = useState([]);
   const [search, setSearch] = useState("");
   const [likedCars, setLikedCars] = useState(() => {
@@ -135,7 +135,7 @@ function AllCars({ isAdmin }) {
         }}
       >
         <HeaderTitle title="Available Cars" color="#4A4A93" />
-        {isAdmin === "true" && ( // Conditionally render admin-specific content
+        {false && ( // Conditionally render admin-specific content
           <Box mb={2}>
             <Typography variant="h6" align="center" color="primary">
               Admin: You have special privileges!
@@ -292,8 +292,6 @@ function AllCars({ isAdmin }) {
   );
 }
 
-AllCars.propTypes = {
-  isAdmin: PropTypes.bool.isRequired,
-};
+
 
 export default AllCars;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const AllUsers = ({ isAdmin }) => {
+const AllUsers = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const AllUsers = ({ isAdmin }) => {
 
   return (
     <div>
-      {isAdmin === "true" ? (
+      {false ? (
         <div>
           <h2> All Users </h2>
           <div id="all_users_container">

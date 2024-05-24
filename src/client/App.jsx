@@ -7,7 +7,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import ListCar from "./components/ListCar";
 import Orders from "./components/Order";
-import Profile from "./components/Profile"
+import Profile from "./components/Profile";
 import axios from "axios";
 import Cart from "./components/Cart";
 import BottomNavBar from "./components/BottomNavBar";
@@ -20,13 +20,9 @@ import Success from "./components/Success.jsx";
 import SingleOrderCar from "./components/SingleOrderCar.jsx";
 import LandingPage from "./components/LandingPage.jsx";
 
-
 function App() {
   const [user, setUser] = useState("");
   const [token, setToken] = useState(window.localStorage.getItem("TOKEN"));
-  const [isAdmin, setIsAdmin] = useState(
-    window.localStorage.getItem("Admin") || null
-  );
   const [cart, setCart] = useState([]);
 
   const getToken = () => {
@@ -54,10 +50,12 @@ function App() {
           authorization: "Bearer " + localStorage.getItem("TOKEN"),
         },
       });
-      console.log(data);
+
       setUser(data);
     }
-    getUser();
+    if (token) {
+      getUser();
+    }
   }, []);
 
   return (
@@ -66,7 +64,6 @@ function App() {
       <Navbar
         isLoggedIn={token !== null}
         setToken={setToken}
-        isAdmin={isAdmin}
         fetchCart={fetchCart}
       />
       <Routes>
