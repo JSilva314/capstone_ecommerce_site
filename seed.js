@@ -3,7 +3,7 @@ const prisma = require("./src/server/client");
 async function main() {
   try {
     //Seed users
-    const users = await prisma.users.createMany({
+    const users = await prisma.Users.createMany({
       data: [
         // {
         //   username: "Emily Johnson",
@@ -19,7 +19,7 @@ async function main() {
     });
     console.log("Users seeded successfully:", users);
 
-    const cars = await prisma.cars.createMany({
+    const cars = await prisma.Cars.createMany({
       data: [
         {
           make: "Honda",
