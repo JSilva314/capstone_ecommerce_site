@@ -11,7 +11,7 @@ import {
   Box,
 } from "@mui/material";
 
-function SingleCar({ user, isAdmin }) {
+function SingleCar({ user }) {
   const { id } = useParams();
   const [car, setCar] = useState({});
   console.log(car);

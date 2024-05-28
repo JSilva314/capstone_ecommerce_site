@@ -10,7 +10,7 @@ function Login({ setToken }) {
 
   async function handleLogin() {
     try {
-      const { data: token} = await axios.post("/api/users/login", {
+      const { data: token } = await axios.post("/api/users/login", {
         email,
         password,
       });

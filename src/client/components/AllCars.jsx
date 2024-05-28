@@ -21,8 +21,10 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShareIcon from "@mui/icons-material/Share";
 import HeaderTitle from "./HeaderTitle";
 import "./AllCars.css";
+// import { user } from "../../server/client";
 
-function AllCars() {
+
+function AllCars({ user }) {
   const [cars, setCars] = useState([]);
   const [search, setSearch] = useState("");
   const [likedCars, setLikedCars] = useState(() => {
@@ -43,6 +45,7 @@ function AllCars() {
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
         const { data: foundCars } = await axios.get("/api/cars", { headers });
         setCars(foundCars);
+        console.log(token, headers, foundCars);
       } catch (error) {
         console.error(error);
       }
@@ -134,8 +137,8 @@ function AllCars() {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <HeaderTitle title="Available Cars" color="#4A4A93" />
-        {false && ( // Conditionally render admin-specific content
+        <HeaderTitle title="Available Cars" color="#4A4A93"/>
+        {user.Admin && ( // Conditionally render admin-specific content
           <Box mb={2}>
             <Typography variant="h6" align="center" color="primary">
               Admin: You have special privileges!
@@ -291,7 +294,5 @@ function AllCars() {
     </Box>
   );
 }
-
-
 
 export default AllCars;

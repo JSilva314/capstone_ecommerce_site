@@ -8,7 +8,24 @@ const bcrypt = require("bcrypt");
 const authMiddleware = require("../middleware/authMiddleware");
 
 // Import user-related database functions
-const { createUser, getUser, getUserByEmail, getUserByUsername } = require("../db");
+const {
+  createUser,
+  getAllUsers,
+  getUserByEmail,
+  getUserByUsername,
+} = require("../db");
+
+usersRouter.get("/", async (req, res, next) => {
+  const user = req.query;
+  try {
+    if (user.Admin) {
+      const allUsers = await getAllUsers();
+      res.send(allUsers);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 // Login endpoint
 usersRouter.post("/login", async (req, res, next) => {
@@ -142,5 +159,22 @@ usersRouter.get("/profile", authMiddleware, async (req, res, next) => {
   }
 });
 // Other user-related routes...
+
+usersRouter.delete("/:id", async (req, res, next) => {
+  const userId = req.params.id;
+  console.log(userId, "user ID");
+
+  try {
+    const deletedUser = await prisma.users.delete({
+      where: {
+        id: +userId,
+      },
+    });
+
+    res.status(200).json({ message: `User ${userId} deleted successfully` });
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = usersRouter;
