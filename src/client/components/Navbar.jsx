@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
 import {
   AppBar,
@@ -16,9 +17,11 @@ import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import HomeIcon from "@mui/icons-material/Home";
 import HistoryIcon from "@mui/icons-material/History";
 
-function Navbar({ setToken, isLoggedIn, fetchCart, isAdmin }) {
+function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  useEffect(() => {}, [user.Admin]);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -73,14 +76,24 @@ function Navbar({ setToken, isLoggedIn, fetchCart, isAdmin }) {
           </Button>
           {isLoggedIn ? (
             <>
-              <Button color="inherit" onClick={handleNavigateToCart}>
-                <ShoppingCartIcon sx={{ mr: 1 }} />
-                My Cart
-              </Button>
-              <Button color="inherit" component={Link} to="/orders">
-                <HistoryIcon sx={{ mr: 1 }} />
-                Orders
-              </Button>
+              {user.Admin ? (
+                <Button color="inherit" component={Link} to="/users">
+                  Admin
+                </Button>
+              ) : (
+                <>
+                  <Button color="inherit" onClick={handleNavigateToCart}>
+                    <ShoppingCartIcon sx={{ mr: 1 }} />
+                    My Cart
+                  </Button>
+
+                  <Button color="inherit" component={Link} to="/orders">
+                    <HistoryIcon sx={{ mr: 1 }} />
+                    Orders
+                  </Button>
+                </>
+              )}
+
               <IconButton
                 edge="end"
                 color="inherit"

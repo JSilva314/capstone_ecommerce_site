@@ -24,11 +24,10 @@ function App() {
   const [user, setUser] = useState("");
   const [token, setToken] = useState(window.localStorage.getItem("TOKEN"));
   const [cart, setCart] = useState([]);
-
+  const [usersOrders, setUsersOrders] = useState(null);
   const getToken = () => {
     return localStorage.getItem("TOKEN");
   };
-
   const fetchCart = useCallback(async () => {
     try {
       const token = getToken();
@@ -50,34 +49,38 @@ function App() {
           authorization: "Bearer " + localStorage.getItem("TOKEN"),
         },
       });
-
       setUser(data);
     }
     if (token) {
       getUser();
     }
   }, []);
-
   return (
     <div className="App">
       <ToastContainer />
       <Navbar
         isLoggedIn={token !== null}
         setToken={setToken}
+        user={user}
         fetchCart={fetchCart}
       />
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/cars" element={<AllCars />} />
+        <Route path="/" element={<LandingPage user={user} />} />
+        <Route path="/cars" element={<AllCars user={user} />} />
         <Route path="/cars/:id" element={<SingleCar user={user} />} />
-        <Route path="/orders/:id" element={<SingleOrderCar user={user} />} />
+   <Route path="/orders/:id" element={<SingleOrderCar user={user} />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
+        <Route
+          path="/account"
+          element={<Account setToken={setToken} setUser={setUser} />}/>
+        <Route path="/users" element={<AllUsers user={user} setUsersOrders={setUsersOrders} />} />
         <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/listcar" element={<ListCar />} />
         <Route path="/cart" element={<Cart user={user} />} />
-        <Route path="/orders" element={<Orders user={user} />} />
+        <Route path="/orders" element={<Orders user={user} usersOrders={usersOrders} />} />
+        <Route path="/profile" element={<Profile user={user} />} />     
         <Route path="/success" element={<Success />} />
-        <Route path="/profile" element={<Profile user={user} />} />
+ 
       </Routes>
       <BottomNavBar />
     </div>
