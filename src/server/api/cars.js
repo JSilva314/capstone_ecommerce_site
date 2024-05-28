@@ -1,6 +1,7 @@
 const express = require("express");
 const carsRouter = express.Router();
 const prisma = require("../client");
+// const { Details } = require("@mui/icons-material");
 
 // GET list of all cars
 carsRouter.get("/", async (req, res, next) => {
