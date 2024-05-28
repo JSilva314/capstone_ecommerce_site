@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon src/server/main.js -w src/server",
     "start": "NODE_ENV=production node src/server/main.js",
-    "seed": "npx prisma migrate reset && node seed.js",
+    "seed": "node .src/server/seed.js",
     "build": "vite build"
   },
   "dependencies": {
@@ -30,7 +30,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
     "react-toastify": "^10.0.5",
-    "stripe": "^15.7.0",
+    "stripe": "^15.8.0",
     "swiper": "^11.1.3",
     "vite-express": "*",
     "volleyball": "^1.5.1"

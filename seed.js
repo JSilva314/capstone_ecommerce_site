@@ -2,22 +2,20 @@ const prisma = require("./src/server/client");
 
 async function main() {
   try {
-    //Seed users
-    // const users = await prisma.users.createMany({
-    //   data: [
-    //     {
-    //       username: "Emily Johnson",
-    //       email: "emily@example.com",
-    //       password: "securepass",
-    //       address: "199 Locktight Court",
-    //       Phone: "9041181788",
-    //       paymentMethod: "Visa",
-    //       Admin: false,
-    //     },
-    //     Add more user objects as needed
-    //   ],
-    // });
-    // console.log("Users seeded successfully:", users);
+    const users = await prisma.users.createMany({
+      data: [
+        {
+          fullName: "Emily Johnson",
+          username: "ejohnson",
+          email: "emily@example.com",
+          password: "securepass",
+          address: "199 Locktight Court",
+          phone: "9041181788",
+          Admin: true,
+        },
+      ],
+    });
+    console.log("Users seeded successfully:", users);
 
     const cars = await prisma.cars.createMany({
       data: [
