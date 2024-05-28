@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Container,
   Typography,
@@ -8,8 +8,9 @@ import {
   Alert,
   Card,
   CardContent,
-  CardMedia,
-} from '@mui/material';
+  Avatar,
+  Grid,
+} from "@mui/material";
 
 function Profile() {
   const [profile, setProfile] = useState(null);
@@ -19,24 +20,24 @@ function Profile() {
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const token = localStorage.getItem('TOKEN');
+        const token = localStorage.getItem("TOKEN");
         if (!token) {
-          setError('No token found');
+          setError("No token found");
           setLoading(false);
           return;
         }
 
-        const response = await axios.get('/api/users/profile', {
+        const response = await axios.get("/api/users/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
 
-        console.log('Profile fetched:', response.data); // Log fetched data
+        
         setProfile(response.data);
       } catch (error) {
-        setError('Error fetching profile. Please try again.');
-        console.error('Error fetching profile:', error);
+        setError("Error fetching profile. Please try again.");
+        console.error("Error fetching profile:", error);
       } finally {
         setLoading(false);
       }
@@ -48,7 +49,12 @@ function Profile() {
   if (loading) {
     return (
       <Container>
-        <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="100vh"
+        >
           <CircularProgress />
         </Box>
       </Container>
@@ -71,25 +77,65 @@ function Profile() {
     );
   }
 
+  // Extract initials from full name
+  const getInitials = (name) => {
+    const names = name.split(" ");
+    const initials = names[0][0] + (names[1] ? names[1][0] : "");
+    return initials.toUpperCase();
+  };
+
   return (
     <Container>
       <Box my={4} display="flex" justifyContent="center">
-        <Card sx={{ maxWidth: 500 }}>
-          <CardMedia
-            component="img"
-            height="140"
-            image=""
-            alt=""
-          />
-          <CardContent>
+        <Card sx={{ maxWidth: 600, boxShadow: 3 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: 3,
+            }}
+          >
+            <Avatar
+              alt={profile.fullName}
+              src="/path/to/profile/image.jpg"
+              sx={{ width: 100, height: 100, marginBottom: 2 }}
+            >
+              {getInitials(profile.fullName)}
+            </Avatar>
             <Typography variant="h4" gutterBottom>
-              Profile
+              {profile.fullName}
             </Typography>
-            <Typography variant="h6">Full Name: {profile.fullName}</Typography>
-            <Typography variant="h6">Username: {profile.username}</Typography>
-            <Typography variant="h6">Email: {profile.email}</Typography>
-            <Typography variant="h6">Address: {profile.address}</Typography>
-            <Typography variant="h6">Phone: {profile.phone || 'N/A'}</Typography>
+          </Box>
+          <CardContent>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography variant="h6" color="textSecondary">
+                  Username:
+                </Typography>
+                <Typography variant="body1">{profile.username}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="h6" color="textSecondary">
+                  Email:
+                </Typography>
+                <Typography variant="body1">{profile.email}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="h6" color="textSecondary">
+                  Address:
+                </Typography>
+                <Typography variant="body1">{profile.address}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="h6" color="textSecondary">
+                  Phone:
+                </Typography>
+                <Typography variant="body1">
+                  {profile.phone || "N/A"}
+                </Typography>
+              </Grid>
+            </Grid>
           </CardContent>
         </Card>
       </Box>

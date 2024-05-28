@@ -13,13 +13,16 @@ import {
   Box,
   InputAdornment,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import ShareIcon from "@mui/icons-material/Share";
 import HeaderTitle from "./HeaderTitle";
 import "./AllCars.css";
 // import { user } from "../../server/client";
+
 
 function AllCars({ user }) {
   const [cars, setCars] = useState([]);
@@ -29,6 +32,7 @@ function AllCars({ user }) {
     return savedLikes ? JSON.parse(savedLikes) : {};
   });
   const [sparkle, setSparkle] = useState({});
+  const [shareTooltip, setShareTooltip] = useState({});
 
   const getToken = () => {
     return localStorage.getItem("TOKEN");
@@ -74,6 +78,37 @@ function AllCars({ user }) {
     }, 1500); // Duration of the sparkle effect
   };
 
+  const handleShare = async (car) => {
+    const url = `${window.location.origin}/cars/${car.id}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${car.make} ${car.model}`,
+          text: `Check out this car: ${car.make} ${car.model}`,
+          url: url,
+        });
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(url);
+        setShareTooltip((prev) => ({
+          ...prev,
+          [car.id]: "Link copied to clipboard!",
+        }));
+        setTimeout(() => {
+          setShareTooltip((prev) => ({
+            ...prev,
+            [car.id]: "Share",
+          }));
+        }, 2000);
+      } catch (error) {
+        console.error("Error copying link:", error);
+      }
+    }
+  };
+
   const filtered = cars.filter((car) =>
     car.make.toLowerCase().includes(search.toLowerCase())
   );
@@ -102,7 +137,7 @@ function AllCars({ user }) {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <HeaderTitle title="Available Cars" />
+        <HeaderTitle title="Available Cars" color="#4A4A93"/>
         {user.Admin && ( // Conditionally render admin-specific content
           <Box mb={2}>
             <Typography variant="h6" align="center" color="primary">
@@ -191,13 +226,20 @@ function AllCars({ user }) {
                         {car.make} {car.model}
                       </Typography>
                     </Link>
-                    <IconButton onClick={() => handleLike(car.id)}>
-                      {likedCars[car.id] ? (
-                        <FavoriteIcon color="error" />
-                      ) : (
-                        <FavoriteBorderIcon />
-                      )}
-                    </IconButton>
+                    <Box display="flex" flexDirection="column">
+                      <IconButton onClick={() => handleLike(car.id)}>
+                        {likedCars[car.id] ? (
+                          <FavoriteIcon color="error" />
+                        ) : (
+                          <FavoriteBorderIcon />
+                        )}
+                      </IconButton>
+                      <Tooltip title={shareTooltip[car.id] || "Share"}>
+                        <IconButton onClick={() => handleShare(car)}>
+                          <ShareIcon color="primary" />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
                   </Box>
                   <Typography variant="body2" color="text.secondary">
                     New: {car.newUsed ? "Yes" : "No"}
@@ -252,9 +294,5 @@ function AllCars({ user }) {
     </Box>
   );
 }
-
-// AllCars.propTypes = {
-//   isAdmin: PropTypes.bool.isRequired,
-// };
 
 export default AllCars;

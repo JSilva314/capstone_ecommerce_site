@@ -15,8 +15,8 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./main.jsx";
 import Success from "./components/Success.jsx";
-import Account from "./components/Account.jsx";
-import AllUsers from "./components/AllUsers.jsx";
+//import Account from "./components/Account.jsx";
+//import AllUsers from "./components/AllUsers.jsx";
 import SingleOrderCar from "./components/SingleOrderCar.jsx";
 import LandingPage from "./components/LandingPage.jsx";
 
@@ -51,7 +51,9 @@ function App() {
       });
       setUser(data);
     }
-    getUser();
+    if (token) {
+      getUser();
+    }
   }, []);
   return (
     <div className="App">
@@ -63,25 +65,25 @@ function App() {
         fetchCart={fetchCart}
       />
       <Routes>
-        <Route path="/" element={<AllCars user={user} />} />
+        <Route path="/" element={<LandingPage user={user} />} />
         <Route path="/cars" element={<AllCars user={user} />} />
         <Route path="/cars/:id" element={<SingleCar user={user} />} />
+   <Route path="/orders/:id" element={<SingleOrderCar user={user} />} />
         <Route path="/login" element={<Login setToken={setToken} />} />
         <Route
           path="/account"
-          element={<Account setToken={setToken} setUser={setUser} />}
-        />
+          element={<Account setToken={setToken} setUser={setUser} />}/>
         <Route path="/users" element={<AllUsers user={user} setUsersOrders={setUsersOrders} />} />
         <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/listcar" element={<ListCar />} />
         <Route path="/cart" element={<Cart user={user} />} />
         <Route path="/orders" element={<Orders user={user} usersOrders={usersOrders} />} />
-        <Route path="/profile" element={<Profile user={user} />} />
+        <Route path="/profile" element={<Profile user={user} />} />     
         <Route path="/success" element={<Success />} />
+ 
       </Routes>
       <BottomNavBar />
     </div>
   );
 }
-
 export default App;

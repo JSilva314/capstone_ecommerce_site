@@ -22,13 +22,13 @@ function Orders({ user, usersOrders }) {
     async function fetchOrders() {
       try {
         const token = localStorage.getItem("TOKEN"); // Obtain the user's token from localStorage
-        console.log(`Fetching orders for userId: ${user?.id}`);
+        
         const { data } = await axios.get(`/api/orders/${user?.id}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Set the Authorization header with the user's token
           },
         });
-        console.log(`Fetched orders: ${JSON.stringify(data, null, 2)}`);
+        
         setOrders(data);
         setIsLoading(false);
       } catch (error) {
@@ -55,7 +55,7 @@ function Orders({ user, usersOrders }) {
   if (error) {
     return <div>{error}</div>;
   }
-  console.log(orders);
+  
   return (
     <Box
       sx={{
@@ -80,7 +80,7 @@ function Orders({ user, usersOrders }) {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <HeaderTitle title="My Orders" />
+        <HeaderTitle title="My Orders" color="#4A4A93" />
         {orders.length === 0 ? (
           <Typography>No orders found.</Typography>
         ) : (
@@ -94,7 +94,6 @@ function Orders({ user, usersOrders }) {
             {orders.map((order) => (
               <Card
                 key={order.id}
-                // className={sparkle[car.id] ? "sparkle" : ""}
                 sx={{
                   border: "none",
                   borderRadius: 1.5,
@@ -128,11 +127,14 @@ function Orders({ user, usersOrders }) {
                     </Link>
                   </Box>
 
-                  <Typography variant="body2" color="text.secondary">
-                    Order Id: {order.orderId}
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "grey.700", fontWeight: "bold" }}
+                  >
+                    Order ID: {order.orderId}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Price: {order.car.price}
+                  <Typography variant="body2" sx={{ color: "green" }}>
+                    Price: ${order.car.price}
                   </Typography>
                   <Typography
                     variant="body2"
