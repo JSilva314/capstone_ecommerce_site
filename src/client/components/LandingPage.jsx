@@ -81,7 +81,7 @@ const LandingPage = () => {
       try {
         const response = await axios.get("/api/cars");
         const filteredCars = response.data.filter((car) => car.year >= 2020);
-        
+
         setCars(filteredCars);
         setLoading(false);
       } catch (error) {
