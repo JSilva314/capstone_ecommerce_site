@@ -32,8 +32,8 @@ stripeRouter.post("/create-checkout-session", async (req, res) => {
           client: "web",
         },
       },
-      success_url: "https://capstone-ecommerce-site.onrender.com//success",
-      cancel_url: "https://capstone-ecommerce-site.onrender.com//cancel",
+      success_url: "https://capstone-ecommerce-site.onrender.com/success",
+      cancel_url: "https://capstone-ecommerce-site.onrender.com/cancel",
       metadata: {
         carId: carId,
         userId: userId,
