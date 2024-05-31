@@ -272,7 +272,7 @@ const LandingPage = () => {
             }}
           >
             {wrapLetters(
-              "The way your buying should be, discounted prices all day, CarMin Certified quality. "
+              "The way your car buying experience should be, discounted prices all day, CarMin Certified quality. "
             )}
           </Typography>
           <Typography
