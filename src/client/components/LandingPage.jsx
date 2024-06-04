@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Helmet } from "react-helmet";
 import {
   Container,
   Typography,
@@ -208,6 +209,9 @@ const LandingPage = () => {
         fontWeight: "SemiBold 600",
       }}
     >
+      <Helmet>
+        <title>CarMin | Cheapest Cars Available</title>
+      </Helmet>
       <video
         ref={videoRef1}
         style={{

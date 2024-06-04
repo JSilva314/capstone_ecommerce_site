@@ -7,8 +7,8 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
-import { Facebook, Twitter, Instagram } from "@mui/icons-material"; 
-import DirectionsCar from "@mui/icons-material/DirectionsCar"; 
+import { Facebook, Twitter, Instagram } from "@mui/icons-material";
+import DirectionsCar from "@mui/icons-material/DirectionsCar";
 
 const sections = {
   Shop: [
@@ -46,7 +46,14 @@ const sections = {
 
 const BottomNavBar = () => {
   return (
-    <Box sx={{ backgroundColor: "#f5f5f5", py: 4, mt: 4 }}>
+    <Box
+      sx={{
+        backgroundColor: "#f5f5f5",
+        py: 4,
+        mt: 4,
+        borderTop: "4px solid #241A5C",
+      }}
+    >
       <Container>
         <Box sx={{ textAlign: "center", mb: 4 }}>
           <IconButton href="/" color="inherit">

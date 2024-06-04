@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
 import {
   Button,
   Card,
@@ -127,6 +128,9 @@ function CartAndCheckout({ user }) {
 
   return (
     <Container>
+      <Helmet>
+        <title>Place Your Order - CarMin</title>
+      </Helmet>
       <HeaderTitle title="My Cart" color="#4A4A93" />
       <Grid container spacing={3}>
         {cart.map((singleCart) => (

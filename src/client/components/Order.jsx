@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Helmet } from "react-helmet";
 import HeaderTitle from "./HeaderTitle";
 import {
   CircularProgress,
@@ -22,13 +23,13 @@ function Orders({ user, usersOrders }) {
     async function fetchOrders() {
       try {
         const token = localStorage.getItem("TOKEN"); // Obtain the user's token from localStorage
-        
+
         const { data } = await axios.get(`/api/orders/${user?.id}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Set the Authorization header with the user's token
           },
         });
-        
+
         setOrders(data);
         setIsLoading(false);
       } catch (error) {
@@ -55,7 +56,7 @@ function Orders({ user, usersOrders }) {
   if (error) {
     return <div>{error}</div>;
   }
-  
+
   return (
     <Box
       sx={{
@@ -71,6 +72,13 @@ function Orders({ user, usersOrders }) {
         padding: 4,
       }}
     >
+      <Helmet>
+        <title>My Vehicle Orders</title>
+        <meta
+          name="description"
+          content="View your order history and details of your purchased vehicles."
+        />
+      </Helmet>
       <Container
         maxWidth="lg"
         sx={{

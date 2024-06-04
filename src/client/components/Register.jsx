@@ -1,9 +1,22 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button, Box, Typography, InputAdornment, IconButton } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Box,
+  Typography,
+  InputAdornment,
+  IconButton,
+  Link,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
 import { toast } from "react-toastify";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Helmet } from "react-helmet";
 
 function Register({ setToken }) {
   const navigate = useNavigate();
@@ -16,74 +29,104 @@ function Register({ setToken }) {
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [address, setAddress] = useState("");
-  
+
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [fullNameError, setFullNameError] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
+  const [addressError, setAddressError] = useState(false);
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogContent, setDialogContent] = useState("");
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleClickShowConfirmPassword = () =>
     setShowConfirmPassword((show) => !show);
 
-
   async function handleRegister() {
-   
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordMinLength = 8;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=(?:.*[A-Z]){2,})(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+    const phoneRegex = /^[0-9]{10}$/;
+    const usernameRegex = /^[a-zA-Z0-9_]+$/; // Username can only contain letters, numbers, and underscores
+    const addressRegex = /^(.+),\s*(.+),\s*([A-Z]{2}),\s*(\d{5})$/; // Address format regex
+
+    setEmailError(false);
+    setPasswordError(false);
+    setConfirmPasswordError(false);
+    setFullNameError(false);
+    setUsernameError(false);
+    setAddressError(false);
+
+    if (!email || !emailRegex.test(email)) {
+      setEmailError(true);
+      toast.error("Invalid email address");
+      return;
+    }
+
+    if (
+      !password ||
+      password.length < passwordMinLength ||
+      !passwordRegex.test(password)
+    ) {
+      setPasswordError(true);
+      toast.error(
+        "Password must be at least 8 characters long, contain at least 2 capital letters, 1 lowercase letter, and 1 special character."
+      );
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setConfirmPasswordError(true);
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    if (!fullName) {
+      setFullNameError(true);
+      toast.error("Full name is required");
+      return;
+    }
+
+    if (!username || !usernameRegex.test(username)) {
+      setUsernameError(true);
+      toast.error(
+        "Username must contain only letters, numbers, and underscores"
+      );
+      return;
+    }
+
+    if (!address) {
+      setAddressError(true);
+      toast.error("Address is required");
+      return;
+    }
+
+    const addressMatch = address.match(addressRegex);
+    if (!addressMatch) {
+      setAddressError(true);
+      toast.error(
+        "Address must be in the format: 123 May St, San Diego, CA, 62704"
+      );
+      return;
+    }
+
+    const [fullAddress, street, city, state, zipCode] = addressMatch;
 
     try {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      const passwordMinLength = 8;
-      const passwordRegex =
-        /^(?=.*[a-z])(?=(?:.*[A-Z]){2,})(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
-      const phoneRegex = /^[0-9]{10}$/;
-      const usernameRegex = /^[a-zA-Z0-9_]+$/; // Username can only contain letters, numbers, and underscores
-
-      if (!email || !emailRegex.test(email)) {
-        toast.error("Invalid email address");
-        return;
-      }
-
-      if (
-        !password ||
-        password.length < passwordMinLength ||
-        !passwordRegex.test(password)
-      ) {
-        toast.error(
-          "Password must be at least 8 characters long, contain at least 2 capital letters, 1 lowercase letter, and 1 special character."
-        );
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        toast.error("Passwords do not match");
-        return;
-      }
-
-      if (!fullName) {
-        toast.error("Full name is required");
-        return;
-      }
-
-      
-      if (!username || !usernameRegex.test(username)) {
-        toast.error(
-          "Username must contain only letters, numbers, and underscores"
-        );
-        return;
-      }
-
-      if (!address) {
-        toast.error("Address is required");
-        return;
-      }
-
       const response = await axios.post("/api/users/register", {
         email,
         password,
         phoneNumber,
         fullName,
         username,
-        address,
+        address: fullAddress,
       });
 
       if (response.status === 201) {
         const token = response.data;
-        
         toast.success("User Registered Successfully");
         localStorage.setItem("TOKEN", token.token);
         setToken(token.token);
@@ -101,12 +144,62 @@ function Register({ setToken }) {
     }
   }
 
+  const handleDialogOpen = (content) => {
+    setDialogContent(content);
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    setDialogContent("");
+  };
+
   const commonStyles = { height: 56, mb: 2 };
 
   return (
-    <Box display="flex" flexDirection="column" alignItems="center">
-      <h2>Register</h2>
-      <Box width="300px" display="flex" flexDirection="column" gap={2}>
+    <Box
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      sx={{ minHeight: "100vh", justifyContent: "flex-start", mt: 8 }}
+    >
+      <Helmet>
+        <title>CarMin Registration</title>
+        <meta
+          name="description"
+          content="Register to create a new account and start managing your orders."
+        />
+      </Helmet>
+      <Box
+        width="300px"
+        display="flex"
+        flexDirection="column"
+        gap={2}
+        p={4}
+        border="1px solid #241A5C"
+        borderRadius={2}
+        boxShadow="0 4px 20px rgba(0, 0, 0, 0.2)"
+        bgcolor="background.paper"
+        alignItems="center"
+        sx={{
+          transition:
+            "box-shadow 0.3s ease-in-out, border-color 2s ease-in-out",
+          "&:hover": {
+            boxShadow: "0 8px 30px rgba(0, 0, 0, 0.4)",
+            borderColor: "#4E43A1",
+          },
+        }}
+      >
+        <Typography
+          variant="h4"
+          mb={2}
+          sx={{
+            fontFamily: "Raleway, sans-serif",
+            fontWeight: 600,
+          }}
+        >
+          Register
+        </Typography>
         <TextField
           label="Full Name"
           placeholder="First and Last name"
@@ -114,7 +207,14 @@ function Register({ setToken }) {
           onChange={(e) => setFullName(e.target.value)}
           variant="outlined"
           fullWidth
-          sx={commonStyles}
+          error={fullNameError}
+          sx={{
+            ...commonStyles,
+            "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
+              {
+                borderColor: "red",
+              },
+          }}
         />
         <TextField
           label="Username"
@@ -123,7 +223,14 @@ function Register({ setToken }) {
           onChange={(e) => setUsername(e.target.value)}
           variant="outlined"
           fullWidth
-          sx={commonStyles}
+          error={usernameError}
+          sx={{
+            ...commonStyles,
+            "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
+              {
+                borderColor: "red",
+              },
+          }}
         />
         <TextField
           label="Full Address"
@@ -132,7 +239,14 @@ function Register({ setToken }) {
           onChange={(e) => setAddress(e.target.value)}
           variant="outlined"
           fullWidth
-          sx={commonStyles}
+          error={addressError}
+          sx={{
+            ...commonStyles,
+            "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
+              {
+                borderColor: "red",
+              },
+          }}
         />
         <TextField
           label="Phone Number"
@@ -150,7 +264,14 @@ function Register({ setToken }) {
           onChange={(e) => setEmail(e.target.value)}
           variant="outlined"
           fullWidth
-          sx={commonStyles}
+          error={emailError}
+          sx={{
+            ...commonStyles,
+            "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
+              {
+                borderColor: "red",
+              },
+          }}
         />
         <TextField
           label="Password"
@@ -160,7 +281,14 @@ function Register({ setToken }) {
           onChange={(e) => setPassword(e.target.value)}
           variant="outlined"
           fullWidth
-          sx={commonStyles}
+          error={passwordError}
+          sx={{
+            ...commonStyles,
+            "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
+              {
+                borderColor: "red",
+              },
+          }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -191,7 +319,14 @@ function Register({ setToken }) {
           onChange={(e) => setConfirmPassword(e.target.value)}
           variant="outlined"
           fullWidth
-          sx={commonStyles}
+          error={confirmPasswordError}
+          sx={{
+            ...commonStyles,
+            "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
+              {
+                borderColor: "red",
+              },
+          }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -211,11 +346,67 @@ function Register({ setToken }) {
           variant="contained"
           onClick={handleRegister}
           fullWidth
-          sx={commonStyles}
+          sx={{
+            ...commonStyles,
+            animation: "pulse 20s infinite",
+            "@keyframes pulse": {
+              "0%": {
+                transform: "scale(1)",
+              },
+              "50%": {
+                transform: "scale(1.05)",
+              },
+              "100%": {
+                transform: "scale(1)",
+              },
+            },
+          }}
         >
           Create Account
         </Button>
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          sx={{ mt: 2, textAlign: "center" }}
+        >
+          By creating an account, you agree to CarMin's{" "}
+          <Link
+            href="#"
+            onClick={() =>
+              handleDialogOpen(
+                "Condition of Use: Your use of CarMin is subject to our conditions. Please utilize this application in order to simulate an efficient car purchasing experience, we utilize stripe as the payment processor with a test environment. Please use card # 4242 4242 4242 during checkout on Stripe portal; all other card information can be fake."
+              )
+            }
+            underline="hover"
+          >
+            Condition of Use
+          </Link>{" "}
+          and{" "}
+          <Link
+            href="#"
+            onClick={() =>
+              handleDialogOpen(
+                "Privacy Notice: Your privacy is important to us. We do not retain the account information, it is held on Render and will be deleted within 90 days of our trial period within this deployment platform."
+              )
+            }
+            underline="hover"
+          >
+            Privacy Notice
+          </Link>
+          .
+        </Typography>
       </Box>
+      <Dialog open={openDialog} onClose={handleDialogClose}>
+        <DialogTitle>Information</DialogTitle>
+        <DialogContent>
+          <Typography>{dialogContent}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

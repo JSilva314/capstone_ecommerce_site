@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { Link, useNavigate } from "react-router-dom";
 import {
   AppBar,
@@ -66,28 +65,72 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
               sx={{ fontWeight: "bold", letterSpacing: 2 }}
             ></Typography>
           </Box>
-          <Button color="inherit" component={Link} to="/">
+          <Button
+            color="inherit"
+            component={Link}
+            to="/"
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+              },
+            }}
+          >
             <HomeIcon sx={{ mr: 1 }} />
             Home
           </Button>
-          <Button color="inherit" component={Link} to="/cars">
+          <Button
+            color="inherit"
+            component={Link}
+            to="/cars"
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+              },
+            }}
+          >
             <DirectionsCarIcon sx={{ mr: 1 }} />
             View Cars
           </Button>
           {isLoggedIn ? (
             <>
               {user.Admin ? (
-                <Button color="inherit" component={Link} to="/users">
+                <Button
+                  color="inherit"
+                  component={Link}
+                  to="/users"
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.2)",
+                    },
+                  }}
+                >
                   Admin
                 </Button>
               ) : (
                 <>
-                  <Button color="inherit" onClick={handleNavigateToCart}>
+                  <Button
+                    color="inherit"
+                    onClick={handleNavigateToCart}
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.2)",
+                      },
+                    }}
+                  >
                     <ShoppingCartIcon sx={{ mr: 1 }} />
                     My Cart
                   </Button>
 
-                  <Button color="inherit" component={Link} to="/orders">
+                  <Button
+                    color="inherit"
+                    component={Link}
+                    to="/orders"
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.2)",
+                      },
+                    }}
+                  >
                     <HistoryIcon sx={{ mr: 1 }} />
                     Orders
                   </Button>
@@ -101,7 +144,12 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu}
-                sx={{ fontSize: 30 }} // Adjust font size here
+                sx={{
+                  fontSize: 30,
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  },
+                }} // Adjust font size and hover background color here
               >
                 <AccountCircle sx={{ fontSize: 45 }} />{" "}
               </IconButton>
@@ -128,10 +176,28 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
             </>
           ) : (
             <>
-              <Button color="inherit" component={Link} to="/login">
+              <Button
+                color="inherit"
+                component={Link}
+                to="/login"
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  },
+                }}
+              >
                 Login
               </Button>
-              <Button color="inherit" component={Link} to="/register">
+              <Button
+                color="inherit"
+                component={Link}
+                to="/register"
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  },
+                }}
+              >
                 Register
               </Button>
             </>
