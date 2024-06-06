@@ -41,16 +41,16 @@ Step-by-step instructions on how to set up the project.
 
 The project uses the following libraries and frameworks:
 
-Axios: For making HTTP requests.
-React: A JavaScript library for building user interfaces.
-React Router: For routing in React applications.
-Material-UI (MUI): For React UI components.
-Stripe: For payment processing.
-Webhooks: For handling real-time updates from Stripe.
-bcrypt: For hashing passwords.
-JWT (jsonwebtoken): For creating and verifying JSON Web Tokens.
-Prisma: For database ORM and migrations.
-nodemon: For automatically restarting the server during development.
+- Axios: For making HTTP requests.
+- React: A JavaScript library for building user interfaces.
+- React Router: For routing in React applications.
+- Material-UI (MUI): For React UI components.
+- Stripe: For payment processing.
+- Webhooks: For handling real-time updates from Stripe.
+- bcrypt: For hashing passwords.
+- JWT (jsonwebtoken): For creating and verifying JSON Web Tokens.
+- Prisma: For database ORM and migrations.
+- nodemon: For automatically restarting the server during development.
 
 ### Setup
 
