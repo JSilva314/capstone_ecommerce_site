@@ -26,7 +26,7 @@ function ForgotPassword() {
       sx={{ minHeight: "90vh" }}
     >
       <Helmet>
-        <title>Forgot Password</title>
+        <title>CarMin - Forgot Password</title>
         <meta name="description" content="Reset your password." />
       </Helmet>
       <Box

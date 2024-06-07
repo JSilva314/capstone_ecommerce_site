@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Box, TextField, Button, Typography } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
 import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 function ResetPassword() {
   const { token } = useParams();
@@ -15,6 +23,8 @@ function ResetPassword() {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [isValidToken, setIsValidToken] = useState(true);
   const [verificationCode, setVerificationCode] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -106,7 +116,7 @@ function ResetPassword() {
       sx={{ minHeight: "90vh" }}
     >
       <Helmet>
-        <title>Reset Password</title>
+        <title>CarMin - Reset Password</title>
         <meta name="description" content="Reset your password." />
       </Helmet>
       <Box
@@ -130,13 +140,26 @@ function ResetPassword() {
         </Typography>
         <TextField
           label="New Password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="Create Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           variant="outlined"
           fullWidth
           error={passwordError}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
           sx={{
             "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
               {
@@ -154,13 +177,26 @@ function ResetPassword() {
         </Typography>
         <TextField
           label="Confirm New Password"
-          type="password"
+          type={showConfirmPassword ? "text" : "password"}
           placeholder="Confirm Password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           variant="outlined"
           fullWidth
           error={confirmPasswordError}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  edge="end"
+                >
+                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
           sx={{
             "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
               {

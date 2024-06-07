@@ -17,6 +17,7 @@ import {
 import { toast } from "react-toastify";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Helmet } from "react-helmet";
+import { keyframes } from "@emotion/react";
 
 function Register({ setToken }) {
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ function Register({ setToken }) {
 
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogContent, setDialogContent] = useState("");
+  const [passwordFocused, setPasswordFocused] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleClickShowConfirmPassword = () =>
@@ -154,17 +156,52 @@ function Register({ setToken }) {
     setDialogContent("");
   };
 
+  const traceAnimation = keyframes`
+    0% {
+      border: 2px solid transparent;
+      box-shadow: 0 0 5px rgba(36, 26, 92, 0.3), 0 0 10px rgba(36, 26, 92, 0.3), 0 0 20px rgba(36, 26, 92, 0.3), 0 0 40px rgba(36, 26, 92, 0.3), 0 0 60px rgba(36, 26, 92, 0.3);
+    }
+    100% {
+      border: 2px solid rgba(36, 26, 92, 0.3);
+      box-shadow: 0 0 5px rgba(36, 26, 92, 0), 0 0 10px rgba(36, 26, 92, 0), 0 0 20px rgba(36, 26, 92, 0), 0 0 40px rgba(36, 26, 92, 0), 0 0 60px rgba(36, 26, 92, 0);
+    }
+  `;
+
+  const slideInAnimation = keyframes`
+    0% {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  `;
+
   const commonStyles = { height: 56, mb: 2 };
+
+  const passwordValid =
+    password.length >= 8 &&
+    /^(?=.*[a-z])(?=(?:.*[A-Z]){2,})(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/.test(
+      password
+    );
 
   return (
     <Box
       display="flex"
-      flexDirection="column"
+      justifyContent="center"
       alignItems="center"
-      sx={{ minHeight: "100vh", justifyContent: "flex-start", mt: 8 }}
+      sx={{
+        minHeight: "100vh",
+        backgroundImage: `url("/Registerbackground.jpg")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        mt: -8, // Adjust this value to bring the form higher
+      }}
     >
       <Helmet>
-        <title>CarMin Registration</title>
+        <title>CarMin Sign-Up</title>
         <meta
           name="description"
           content="Register to create a new account and start managing your orders."
@@ -176,29 +213,38 @@ function Register({ setToken }) {
         flexDirection="column"
         gap={2}
         p={4}
-        border="1px solid #241A5C"
+        border="2px solid transparent"
         borderRadius={2}
         boxShadow="0 4px 20px rgba(0, 0, 0, 0.2)"
         bgcolor="background.paper"
         alignItems="center"
         sx={{
-          transition:
-            "box-shadow 0.3s ease-in-out, border-color 2s ease-in-out",
-          "&:hover": {
-            boxShadow: "0 8px 30px rgba(0, 0, 0, 0.4)",
-            borderColor: "#4E43A1",
-          },
+          animation: `${traceAnimation} 20s linear infinite`,
         }}
       >
         <Typography
           variant="h4"
-          mb={2}
+          mb={1}
           sx={{
             fontFamily: "Raleway, sans-serif",
             fontWeight: 600,
+            color: "#241A5C",
+            animation: `${slideInAnimation} 1s ease-in-out`,
           }}
         >
-          Register
+          Sign Up
+        </Typography>
+        <Typography
+          variant="body1"
+          mb={2}
+          sx={{
+            fontFamily: "Raleway, sans-serif",
+            mt: -1,
+            color: "#6D6D6D",
+            animation: `${slideInAnimation} 1s ease-in-out`,
+          }}
+        >
+          It's quick and easy.
         </Typography>
         <TextField
           label="Full Name"
@@ -282,6 +328,7 @@ function Register({ setToken }) {
           variant="outlined"
           fullWidth
           error={passwordError}
+          onFocus={() => setPasswordFocused(true)}
           sx={{
             ...commonStyles,
             "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
@@ -305,8 +352,17 @@ function Register({ setToken }) {
         />
         <Typography
           variant="body2"
-          color="textSecondary"
-          sx={{ fontStyle: "italic", fontSize: "0.650rem", mt: "-8px", mb: 1 }}
+          sx={{
+            fontStyle: "italic",
+            fontSize: "0.700rem",
+            mt: "-8px",
+            mb: 1,
+            color: passwordFocused
+              ? passwordValid
+                ? "green"
+                : "red"
+              : "textSecondary",
+          }}
         >
           Password must be at least 8 characters long, contain at least 2
           capital letters, 1 lowercase letter, and 1 special character.

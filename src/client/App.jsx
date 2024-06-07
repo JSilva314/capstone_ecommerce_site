@@ -21,7 +21,7 @@ import SingleOrderCar from "./components/SingleOrderCar.jsx";
 import LandingPage from "./components/LandingPage.jsx";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
-import VerifyCode from "./components/VerifyCode"; // Import the new component
+import ValidateCode from "./components/ValidateCode.jsx";
 
 function App() {
   const [user, setUser] = useState("");
@@ -94,9 +94,8 @@ function App() {
         <Route path="/profile" element={<Profile user={user} />} />
         <Route path="/success" element={<Success />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/verify-code/:token" element={<ValidateCode />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path="/verify-code/:token" element={<VerifyCode />} />{" "}
-        {/* Add the new route */}
       </Routes>
       <BottomNavBar />
     </div>

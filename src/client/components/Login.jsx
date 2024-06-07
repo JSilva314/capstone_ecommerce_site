@@ -8,6 +8,7 @@ import {
   IconButton,
   InputAdornment,
   Typography,
+  Divider,
 } from "@mui/material";
 import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
@@ -79,7 +80,7 @@ function Login({ setToken }) {
     }
   `;
 
-  const commonStyles = { height: 56, mb: 2 };
+  const commonStyles = { height: 56, mb: 1 };
 
   return (
     <Box
@@ -196,6 +197,7 @@ function Login({ setToken }) {
         >
           Login
         </Button>
+
         <Link to="/forgot-password" style={{ textDecoration: "none" }}>
           <Typography
             variant="body2"
@@ -211,6 +213,24 @@ function Login({ setToken }) {
             Forgot password?
           </Typography>
         </Link>
+        <Divider sx={{ width: "100%", mt: 2, mb: 2 }} />
+        <Button
+          variant="contained"
+          fullWidth
+          component={Link}
+          to="/register"
+          sx={{
+            ...commonStyles,
+            mt: 1,
+            backgroundColor: "#00bc26",
+            color: "#fff",
+            "&:hover": {
+              backgroundColor: "#26e239",
+            },
+          }}
+        >
+          Create New Account
+        </Button>
       </Box>
     </Box>
   );
