@@ -14,13 +14,18 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Generate a random 6-digit verification code
+function generateVerificationCode() {
+  return Math.floor(100000 + Math.random() * 900000);
+}
+
 // Request password reset
 passwordResetRouter.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
   try {
     console.log("Forgot password request received for email:", email);
     const user = await prisma.users.findUnique({
-      where: { email: email }, // Ensure it's querying by email
+      where: { email: email },
     });
 
     if (!user) {
@@ -30,16 +35,18 @@ passwordResetRouter.post("/forgot-password", async (req, res) => {
 
     const resetToken = uuidv4();
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    const verificationCode = generateVerificationCode();
 
     await prisma.passwordResetToken.create({
       data: {
         token: resetToken,
         userId: user.id,
         expiresAt: expiresAt,
+        verificationCode: verificationCode,
       },
     });
 
-    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    const resetLink = `${process.env.FRONTEND_URL}/verify-code/${resetToken}`;
     console.log("Reset link generated:", resetLink);
 
     await transporter.sendMail({
@@ -47,7 +54,8 @@ passwordResetRouter.post("/forgot-password", async (req, res) => {
       to: user.email,
       subject: "Password Reset",
       html: `<p>You requested a password reset</p>
-             <p>Click this <a href="${resetLink}">link</a> to reset your password</p>`,
+             <p>Verification Code: ${verificationCode}</p>
+             <p>Click this <a href="${resetLink}">link</a> to verify your code</p>`,
     });
 
     console.log("Password reset email sent to:", user.email);
@@ -58,22 +66,28 @@ passwordResetRouter.post("/forgot-password", async (req, res) => {
   }
 });
 
-// Validate reset token
-passwordResetRouter.get("/validate-token/:token", async (req, res) => {
-  const { token } = req.params;
+// Verify the verification code
+passwordResetRouter.post("/verify-code", async (req, res) => {
+  const { token, verificationCode } = req.body;
 
   try {
     const passwordResetToken = await prisma.passwordResetToken.findUnique({
       where: { token },
     });
 
-    if (!passwordResetToken || passwordResetToken.expiresAt < new Date()) {
-      return res.status(400).send({ message: "Invalid or expired token" });
+    if (
+      !passwordResetToken ||
+      passwordResetToken.expiresAt < new Date() ||
+      passwordResetToken.verificationCode !== parseInt(verificationCode, 10)
+    ) {
+      return res
+        .status(400)
+        .send({ message: "Invalid or expired verification code" });
     }
 
-    res.status(200).send({ message: "Token is valid" });
+    res.status(200).send({ message: "Verification code is valid" });
   } catch (error) {
-    console.error("Error in /validate-token route:", error);
+    console.error("Error in /verify-code route:", error);
     res.status(500).send({ message: "Internal server error" });
   }
 });
@@ -81,7 +95,7 @@ passwordResetRouter.get("/validate-token/:token", async (req, res) => {
 // Reset password
 passwordResetRouter.post("/reset-password/:token", async (req, res) => {
   const { token } = req.params;
-  const { password } = req.body;
+  const { password, verificationCode } = req.body;
 
   try {
     console.log("Received reset-password request for token:", token);
@@ -91,7 +105,11 @@ passwordResetRouter.post("/reset-password/:token", async (req, res) => {
       include: { user: true },
     });
 
-    if (!passwordResetToken || passwordResetToken.expiresAt < new Date()) {
+    if (
+      !passwordResetToken ||
+      passwordResetToken.expiresAt < new Date() ||
+      passwordResetToken.verificationCode !== parseInt(verificationCode, 10)
+    ) {
       console.log("Invalid or expired token:", token);
       return res.status(400).send({ message: "Invalid or expired token" });
     }

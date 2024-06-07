@@ -68,6 +68,17 @@ function Login({ setToken }) {
     }
   `;
 
+  const slideInAnimation = keyframes`
+    0% {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  `;
+
   const commonStyles = { height: 56, mb: 2 };
 
   return (
@@ -76,7 +87,13 @@ function Login({ setToken }) {
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      sx={{ minHeight: "90vh", mt: -26 }}
+      sx={{
+        minHeight: "90vh",
+        mt: -26,
+        backgroundImage: `url("/background.jpg")`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
       <Helmet>
         <title>CarMin Sign-In</title>
@@ -103,13 +120,27 @@ function Login({ setToken }) {
       >
         <Typography
           variant="h4"
-          mb={2}
+          mb={1} // Reduce margin bottom to bring the texts closer
           sx={{
             fontFamily: "Raleway, sans-serif",
             fontWeight: 600,
+            color: "#241A5C",
+            animation: `${slideInAnimation} 1s ease-in-out`,
           }}
         >
-          Login
+          Welcome
+        </Typography>
+        <Typography
+          variant="body1"
+          mb={2}
+          sx={{
+            fontFamily: "Raleway, sans-serif",
+            mt: -1, // Negative margin top to bring this text closer to "Welcome"
+            color: "#6D6D6D", // Darker grey color
+            animation: `${slideInAnimation} 1s ease-in-out`,
+          }}
+        >
+          Sign-In to Use your CarMin Account
         </Typography>
         <TextField
           placeholder="Email"
@@ -165,9 +196,19 @@ function Login({ setToken }) {
         >
           Login
         </Button>
-        <Link to="/forgot-password">
-          <Typography variant="body2" color="primary">
-            Forgot Password?
+        <Link to="/forgot-password" style={{ textDecoration: "none" }}>
+          <Typography
+            variant="body2"
+            color="primary"
+            sx={{
+              fontWeight: "bold",
+              fontFamily: "Raleway, sans-serif",
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+              },
+            }}
+          >
+            Forgot password?
           </Typography>
         </Link>
       </Box>

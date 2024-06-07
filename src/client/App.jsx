@@ -19,17 +19,20 @@ import Account from "./components/Account.jsx";
 import AllUsers from "./components/AllUsers.jsx";
 import SingleOrderCar from "./components/SingleOrderCar.jsx";
 import LandingPage from "./components/LandingPage.jsx";
-import ForgotPassword from "./components/ForgotPassword"; 
+import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
+import VerifyCode from "./components/VerifyCode"; // Import the new component
 
 function App() {
   const [user, setUser] = useState("");
   const [token, setToken] = useState(window.localStorage.getItem("TOKEN"));
   const [cart, setCart] = useState([]);
   const [usersOrders, setUsersOrders] = useState(null);
+
   const getToken = () => {
     return localStorage.getItem("TOKEN");
   };
+
   const fetchCart = useCallback(async () => {
     try {
       const token = getToken();
@@ -56,7 +59,8 @@ function App() {
     if (token) {
       getUser();
     }
-  }, []);
+  }, [token]);
+
   return (
     <div className="App">
       <ToastContainer />
@@ -91,9 +95,12 @@ function App() {
         <Route path="/success" element={<Success />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/verify-code/:token" element={<VerifyCode />} />{" "}
+        {/* Add the new route */}
       </Routes>
       <BottomNavBar />
     </div>
   );
 }
+
 export default App;

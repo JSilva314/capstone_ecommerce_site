@@ -63,4 +63,5 @@ model PasswordResetToken {
   user      Users     @relation(fields: [userId], references: [id])
   userId    Int
   expiresAt DateTime
+  verificationCode Int
 }

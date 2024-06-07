@@ -46,7 +46,7 @@ function ForgotPassword() {
           mb={2}
           sx={{ fontFamily: "Raleway, sans-serif", fontWeight: 600 }}
         >
-          Forgot Password
+          Reset Password Request
         </Typography>
         <TextField
           placeholder="Email"

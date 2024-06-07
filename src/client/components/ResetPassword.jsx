@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Box, TextField, Button, Typography } from "@mui/material";
 import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
@@ -8,13 +8,23 @@ import { toast } from "react-toastify";
 function ResetPassword() {
   const { token } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
   const [isValidToken, setIsValidToken] = useState(true);
+  const [verificationCode, setVerificationCode] = useState("");
 
   useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const code = query.get("code");
+    if (code) {
+      setVerificationCode(code);
+    } else {
+      navigate("/forgot-password");
+    }
+
     const validateToken = async () => {
       try {
         await axios.get(`/api/password-reset/validate-token/${token}`);
@@ -22,7 +32,7 @@ function ResetPassword() {
       } catch (error) {
         if (error.response && error.response.status === 400) {
           toast.error(
-            "Expired password link, please request a new reset password link."
+            "Invalid or expired token. Please request a new password reset."
           );
           navigate("/forgot-password");
         } else {
@@ -33,7 +43,7 @@ function ResetPassword() {
     };
 
     validateToken();
-  }, [token, navigate]);
+  }, [token, navigate, location.search]);
 
   const handleResetPassword = async () => {
     const passwordMinLength = 8;
@@ -66,6 +76,7 @@ function ResetPassword() {
         `/api/password-reset/reset-password/${token}`,
         {
           password,
+          verificationCode,
         }
       );
       toast.success(response.data.message);
@@ -73,7 +84,7 @@ function ResetPassword() {
     } catch (error) {
       if (error.response && error.response.status === 400) {
         toast.error(
-          "Expired token. Please request a new password reset."
+          "Password reset link has expired, Please request a new password reset!"
         );
         navigate("/forgot-password");
       } else {
