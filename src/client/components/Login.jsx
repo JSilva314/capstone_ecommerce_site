@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   TextField,
   Button,
@@ -165,6 +165,11 @@ function Login({ setToken }) {
         >
           Login
         </Button>
+        <Link to="/forgot-password">
+          <Typography variant="body2" color="primary">
+            Forgot Password?
+          </Typography>
+        </Link>
       </Box>
     </Box>
   );

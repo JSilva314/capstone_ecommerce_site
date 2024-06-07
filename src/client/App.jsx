@@ -19,6 +19,8 @@ import Account from "./components/Account.jsx";
 import AllUsers from "./components/AllUsers.jsx";
 import SingleOrderCar from "./components/SingleOrderCar.jsx";
 import LandingPage from "./components/LandingPage.jsx";
+import ForgotPassword from "./components/ForgotPassword"; 
+import ResetPassword from "./components/ResetPassword";
 
 function App() {
   const [user, setUser] = useState("");
@@ -87,6 +89,8 @@ function App() {
         />
         <Route path="/profile" element={<Profile user={user} />} />
         <Route path="/success" element={<Success />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
       <BottomNavBar />
     </div>
