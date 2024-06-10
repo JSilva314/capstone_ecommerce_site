@@ -11,6 +11,8 @@ import {
   Typography,
   Container,
   Grid,
+  CircularProgress,
+  Box,
 } from "@mui/material";
 import { loadStripe } from "@stripe/stripe-js";
 import HeaderTitle from "./HeaderTitle";
@@ -22,6 +24,8 @@ const stripePromise = loadStripe(STRIPE_PUBLIC_KEY);
 
 function CartAndCheckout({ user }) {
   const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,16 +34,25 @@ function CartAndCheckout({ user }) {
   };
 
   const fetchCart = useCallback(async () => {
+    if (!user?.id) {
+      setError("User not logged in.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const token = getToken();
-      const { data: foundCart } = await axios.get(`/api/cart/${user?.id}`, {
+      const { data: foundCart } = await axios.get(`/api/cart/${user.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       setCart(foundCart);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching cart:", error);
+      setError("Failed to fetch cart items.");
+      setLoading(false);
     }
   }, [user]);
 
@@ -125,6 +138,39 @@ function CartAndCheckout({ user }) {
       toast.error("Error purchasing car. Please try again.");
     }
   };
+
+  if (loading) {
+    return (
+      <Container>
+        <Helmet>
+          <title>Loading - CarMin</title>
+        </Helmet>
+        <HeaderTitle title="Loading Cart..." color="#4A4A93" />
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          height="50vh"
+        >
+          <CircularProgress />
+        </Box>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container>
+        <Helmet>
+          <title>Error - CarMin</title>
+        </Helmet>
+        <HeaderTitle title="Error Loading Cart" color="#4A4A93" />
+        <Typography variant="h6" color="error" align="center">
+          {error}
+        </Typography>
+      </Container>
+    );
+  }
 
   return (
     <Container>

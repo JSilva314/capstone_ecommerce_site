@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   AppBar,
@@ -15,39 +15,11 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import HomeIcon from "@mui/icons-material/Home";
 import HistoryIcon from "@mui/icons-material/History";
+import GoogleTranslate from "./GoogleTranslate";
 
 function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [languageAnchorEl, setLanguageAnchorEl] = useState(null);
-
-  useEffect(() => {
-    // Function to initialize Google Translate
-    const googleTranslateElementInit = () => {
-      new window.google.translate.TranslateElement(
-        {
-          pageLanguage: "en",
-          includedLanguages: "en,es,zh-CN",
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-        },
-        "google_translate_element"
-      );
-    };
-
-    // Dynamically load Google Translate script
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.async = true;
-    script.src =
-      "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-    script.onload = googleTranslateElementInit;
-    document.head.appendChild(script);
-
-    // Clean up function to remove the script
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -57,25 +29,9 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
     setAnchorEl(null);
   };
 
-  const handleLanguageMenu = (event) => {
-    setLanguageAnchorEl(event.currentTarget);
-  };
-
-  const handleLanguageClose = () => {
-    setLanguageAnchorEl(null);
-  };
-
-  const handleLanguageChange = (lang) => {
-    const googleTranslateElement = document.querySelector(".goog-te-combo");
-    if (googleTranslateElement) {
-      googleTranslateElement.value = lang;
-      googleTranslateElement.dispatchEvent(new Event("change"));
-    }
-    handleLanguageClose();
-  };
-
   const handleLogout = () => {
     setToken(null);
+    setAnchorEl(null);
     window.localStorage.removeItem("TOKEN");
     navigate("/");
   };
@@ -112,52 +68,7 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
               sx={{ fontWeight: "bold", letterSpacing: 2 }}
             ></Typography>
           </Box>
-          <Button
-            color="inherit"
-            onClick={handleLanguageMenu}
-            sx={{
-              "&:hover": {
-                backgroundColor: "rgba(255, 255, 255, 0.2)",
-              },
-            }}
-          >
-            <img
-              src="/images/english-flag.png"
-              alt="English"
-              style={{ marginRight: "8px", height: "20px", width: "20px" }}
-            />
-            EN
-          </Button>
-          <Menu
-            anchorEl={languageAnchorEl}
-            open={Boolean(languageAnchorEl)}
-            onClose={handleLanguageClose}
-          >
-            <MenuItem onClick={() => handleLanguageChange("en")}>
-              <img
-                src="/images/english-flag.png"
-                alt="English"
-                style={{ marginRight: "8px", height: "20px", width: "20px" }}
-              />
-              English
-            </MenuItem>
-            <MenuItem onClick={() => handleLanguageChange("es")}>
-              <img
-                src="/images/spanish-flag.png"
-                alt="Español"
-                style={{ marginRight: "8px", height: "20px", width: "20px" }}
-              />
-              Español
-            </MenuItem>
-            <MenuItem onClick={() => handleLanguageChange("zh-CN")}>
-              <img
-                src="/images/chinese-flag.png"
-                alt="中文"
-                style={{ marginRight: "8px", height: "20px", width: "20px" }}
-              />
-              中文
-            </MenuItem>
-          </Menu>
+
           <Button
             color="inherit"
             component={Link}
@@ -186,7 +97,7 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
           </Button>
           {isLoggedIn ? (
             <>
-              {user.Admin ? (
+              {user && user.Admin ? (
                 <Button
                   color="inherit"
                   component={Link}
@@ -261,6 +172,9 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
               >
                 <MenuItem onClick={handleClose} component={Link} to="/profile">
                   Profile
+                </MenuItem>
+                <MenuItem onClick={handleClose} component={Link} to="/settings">
+                  Settings
                 </MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>

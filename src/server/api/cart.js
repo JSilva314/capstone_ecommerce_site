@@ -2,7 +2,7 @@ const express = require("express");
 const cartRouter = express.Router();
 const prisma = require("../client");
 
-// GET list of all cart
+// GET list of all cart items
 cartRouter.get("/", async (req, res, next) => {
   try {
     const cart = await prisma.cart.findMany({
@@ -18,6 +18,8 @@ cartRouter.get("/", async (req, res, next) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+// GET cart items for a specific user
 cartRouter.get("/:userId", async (req, res) => {
   const userId = parseInt(req.params.userId); // Convert userId to integer
 
@@ -39,20 +41,28 @@ cartRouter.get("/:userId", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 // GET 1 specific car based on ID
 cartRouter.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     const car = await prisma.cart.findUnique({
       where: {
-        id: +id,
+        id: parseInt(id),
+      },
+      include: {
+        car: true,
+        user: true,
       },
     });
     res.status(200).send(car);
   } catch (error) {
     console.log(error);
+    res.status(500).send("Internal Server Error");
   }
 });
+
+// POST add a car to the cart
 cartRouter.post("/", async (req, res, next) => {
   const { carId, userId } = req.body;
   console.log("Received request to add car to cart:", { carId, userId });
@@ -75,8 +85,8 @@ cartRouter.post("/", async (req, res, next) => {
     // If the car is not in the user's cart, create a new cart item
     const singleItem = await prisma.cart.create({
       data: {
-        carId,
-        userId,
+        carId: parseInt(carId),
+        userId: parseInt(userId),
       },
     });
 
@@ -86,6 +96,8 @@ cartRouter.post("/", async (req, res, next) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+// DELETE a cart item
 cartRouter.delete("/:cartId", async (req, res) => {
   const { cartId } = req.params;
 

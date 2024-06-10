@@ -33,7 +33,7 @@ function Login({ setToken }) {
 
     if (!email || !emailRegex.test(email)) {
       setEmailError(true);
-      toast.error("Incorrect email or password.");
+      toast.error("Incorrect email format.");
       return;
     }
 
@@ -47,8 +47,24 @@ function Login({ setToken }) {
       navigate("/");
     } catch (error) {
       console.error(error);
-      setPasswordError(true);
-      toast.error("Incorrect email or password.");
+      if (error.response && error.response.status === 401) {
+        const errorMessage = error.response.data.message;
+        if (errorMessage.includes("email")) {
+          setEmailError(true);
+          toast.error("Email not found. Please check your email address.");
+        } else if (errorMessage.includes("password")) {
+          setPasswordError(true);
+          toast.error("Incorrect password. Please try again.");
+        } else {
+          setEmailError(true);
+          setPasswordError(true);
+          toast.error("Incorrect email or password.");
+        }
+      } else {
+        setEmailError(true);
+        setPasswordError(true);
+        toast.error("Login failed. Please try again later.");
+      }
     }
   }
 

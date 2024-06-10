@@ -61,7 +61,6 @@ function AllCars({ user }) {
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
         const { data: foundCars } = await axios.get("/api/cars", { headers });
         setCars(foundCars);
-        console.log(token, headers, foundCars);
       } catch (error) {
         console.error(error);
       }
@@ -91,7 +90,7 @@ function AllCars({ user }) {
         ...prevSparkle,
         [id]: false,
       }));
-    }, 1500); // Duration of the sparkle effect
+    }, 1500);
   };
 
   const handleShare = async (car) => {
@@ -292,7 +291,7 @@ function AllCars({ user }) {
                 key={car.id}
                 className={sparkle[car.id] ? "sparkle" : ""}
                 sx={{
-                  margin: 2, // Add margin to create space between cards
+                  margin: 2,
                   border: "none",
                   borderRadius: 1.5,
                   overflow: "hidden",
@@ -703,9 +702,5 @@ function AllCars({ user }) {
     </Box>
   );
 }
-
-AllCars.propTypes = {
-  user: PropTypes.object.isRequired,
-};
 
 export default AllCars;

@@ -64,7 +64,7 @@ const pulse = keyframes`
   }
 `;
 
-const LandingPage = () => {
+const LandingPage = ({ user }) => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const videoRef1 = useRef(null);
   const videoRef2 = useRef(null);
@@ -190,6 +190,7 @@ const LandingPage = () => {
       navigate("/register");
     } else {
       const discountedPrice = (car.price * 0.9).toFixed(2); // 10% discount
+
       navigate("/cart", { state: { car, discountedPrice } });
 
       // Update the cars list after purchase
