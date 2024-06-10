@@ -24,28 +24,50 @@ function SingleOrderCar({ user }) {
         console.log(foundCar);
       } catch (error) {
         console.error(error);
+        toast.error("Failed to fetch car details.");
       }
     }
     getCar();
   }, [id]);
 
   const handleAddToCart = async () => {
+    const token = localStorage.getItem("TOKEN");
+
+    if (!user || !user.id) {
+      toast.error("You must be logged in to add items to the cart.");
+      return;
+    }
+
     try {
-      await axios.post(`/api/cart`, {
-        carId: car.id,
-        userId: user.id,
-      });
+      await axios.post(
+        `/api/cart`,
+        {
+          carId: car.id,
+          userId: user.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log("Item added to cart successfully");
       toast.success("Item added to cart successfully");
     } catch (error) {
       if (error.response) {
-        toast.error("Car already exists in your Cart");
+        if (error.response.status === 409) {
+          toast.error("Car already exists in your Cart.");
+        } else {
+          toast.error("Failed to add car to cart. Please try again.");
+        }
         console.error("Error status:", error.response.status);
         console.error("Error message:", error.response.data);
       } else if (error.request) {
         console.error("No response received:", error.request);
+        toast.error("Failed to add car to cart. Please check your network.");
       } else {
         console.error("Error:", error.message);
+        toast.error("An unexpected error occurred. Please try again.");
       }
     }
   };
@@ -92,6 +114,11 @@ function SingleOrderCar({ user }) {
         <Typography variant="body1" fontWeight="bold">
           <strong>Miles:</strong> {car.miles}
         </Typography>
+        <Box display="flex" justifyContent="center" sx={{ mt: 2 }}>
+          <Button variant="contained" color="primary" onClick={handleAddToCart}>
+            Add to Cart
+          </Button>
+        </Box>
       </CardContent>
     </Card>
   );

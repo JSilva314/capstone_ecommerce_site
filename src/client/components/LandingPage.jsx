@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { Helmet } from "react-helmet";
 import {
   Container,
   Typography,
@@ -50,19 +51,20 @@ const borderColorChange = keyframes`
   }
 `;
 
-// Define keyframes for discount timer transition
-const discountTimerTransition = keyframes`
-  0%, 100% {
-    color: rgba(255, 165, 0, 1); /* Bold Orange */
-    font-weight: bold;
+// Define keyframes for button pulse animation
+const pulse = keyframes`
+  0% {
+    transform: scale(1);
   }
   50% {
-    color: rgba(255, 165, 0, 0.5); /* Translucent Orange */
-    font-weight: bold;
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
   }
 `;
 
-const LandingPage = () => {
+const LandingPage = ({ user }) => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const videoRef1 = useRef(null);
   const videoRef2 = useRef(null);
@@ -76,21 +78,21 @@ const LandingPage = () => {
   const storedTimestamp = localStorage.getItem("timestamp");
   const storedCars = JSON.parse(localStorage.getItem("discountedCars"));
 
+  const fetchCars = async () => {
+    try {
+      const response = await axios.get("/api/cars");
+      const filteredCars = response.data.filter((car) => car.year >= 2020);
+
+      setCars(filteredCars);
+      setLoading(false);
+    } catch (error) {
+      setError("Failed to fetch cars. Please try again later.");
+      setLoading(false);
+      console.error("Error fetching cars:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchCars = async () => {
-      try {
-        const response = await axios.get("/api/cars");
-        const filteredCars = response.data.filter((car) => car.year >= 2020);
-
-        setCars(filteredCars);
-        setLoading(false);
-      } catch (error) {
-        setError("Failed to fetch cars. Please try again later.");
-        setLoading(false);
-        console.error("Error fetching cars:", error);
-      }
-    };
-
     fetchCars();
   }, []);
 
@@ -136,31 +138,40 @@ const LandingPage = () => {
   };
 
   useEffect(() => {
-    if (storedCars && storedTimestamp) {
-      const currentTime = Date.now();
-      const timeElapsed = Math.floor((currentTime - storedTimestamp) / 1000);
-      if (timeElapsed < 3600) {
-        setRandomCars(storedCars);
-        setTimer(3600 - timeElapsed);
-      } else {
-        const newRandomCars = getRandomCars();
-        setRandomCars(newRandomCars);
-        localStorage.setItem("discountedCars", JSON.stringify(newRandomCars));
-        localStorage.setItem("timestamp", Date.now());
-        setTimer(3600);
+    const currentTime = Date.now();
+    const isValidStoredData = () => {
+      if (storedCars && storedTimestamp) {
+        const timeElapsed = Math.floor((currentTime - storedTimestamp) / 1000);
+        return timeElapsed < 3600;
       }
+      return false;
+    };
+
+    if (isValidStoredData()) {
+      const timeElapsed = Math.floor((currentTime - storedTimestamp) / 1000);
+      setRandomCars(storedCars);
+      setTimer(3600 - timeElapsed);
     } else if (cars.length) {
       const newRandomCars = getRandomCars();
       setRandomCars(newRandomCars);
       localStorage.setItem("discountedCars", JSON.stringify(newRandomCars));
-      localStorage.setItem("timestamp", Date.now());
+      localStorage.setItem("timestamp", currentTime);
       setTimer(3600);
     }
   }, [cars]);
 
   useEffect(() => {
     const countdownTimer = setInterval(() => {
-      setTimer((prevTimer) => (prevTimer > 0 ? prevTimer - 1 : 0));
+      setTimer((prevTimer) => {
+        if (prevTimer > 0) {
+          return prevTimer - 1;
+        } else {
+          clearInterval(countdownTimer);
+          localStorage.removeItem("discountedCars");
+          localStorage.removeItem("timestamp");
+          return 0;
+        }
+      });
     }, 1000);
 
     return () => clearInterval(countdownTimer);
@@ -172,14 +183,22 @@ const LandingPage = () => {
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
 
-  const handlePurchase = (car) => {
+  const handlePurchase = async (car) => {
     const token = localStorage.getItem("TOKEN");
 
     if (!token) {
       navigate("/register");
     } else {
       const discountedPrice = (car.price * 0.9).toFixed(2); // 10% discount
+
       navigate("/cart", { state: { car, discountedPrice } });
+
+      // Update the cars list after purchase
+      await fetchCars();
+      const newRandomCars = getRandomCars();
+      setRandomCars(newRandomCars);
+      localStorage.setItem("discountedCars", JSON.stringify(newRandomCars));
+      localStorage.setItem("timestamp", Date.now());
     }
   };
 
@@ -208,6 +227,9 @@ const LandingPage = () => {
         fontWeight: "SemiBold 600",
       }}
     >
+      <Helmet>
+        <title>CarMin | Cheapest Cars Available</title>
+      </Helmet>
       <video
         ref={videoRef1}
         style={{
@@ -401,7 +423,8 @@ const LandingPage = () => {
                               component="p"
                               gutterBottom
                               sx={{
-                                animation: `${discountTimerTransition} 3s infinite`,
+                                fontWeight: "bold",
+                                color: "rgba(255, 165, 0, 1)", // Bold Orange
                               }}
                             >
                               Special Discount Timer: {formatTime(timer)}
@@ -418,10 +441,13 @@ const LandingPage = () => {
                             <Button
                               variant="contained"
                               color="primary"
-                              sx={{ mt: 2 }}
+                              sx={{
+                                mt: 2,
+                                animation: `${pulse} 2s infinite`,
+                              }}
                               onClick={() => handlePurchase(car)}
                             >
-                              Purchase Now
+                              Add to Cart
                             </Button>
                           </Box>
                         </CardContent>

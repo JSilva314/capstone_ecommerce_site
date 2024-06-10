@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   AppBar,
@@ -16,12 +15,11 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import HomeIcon from "@mui/icons-material/Home";
 import HistoryIcon from "@mui/icons-material/History";
+import GoogleTranslate from "./GoogleTranslate";
 
 function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  useEffect(() => {}, [user.Admin]);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -33,6 +31,7 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
 
   const handleLogout = () => {
     setToken(null);
+    setAnchorEl(null);
     window.localStorage.removeItem("TOKEN");
     navigate("/");
   };
@@ -52,13 +51,16 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
 
   return (
     <>
-      <AppBar position="fixed" sx={{ backgroundColor: "#323270" }}>
+      <AppBar
+        position="fixed"
+        sx={{ backgroundColor: "#323270", fontFamily: "Raleway, sans-serif" }}
+      >
         <Toolbar>
           <Box display="flex" alignItems="center" sx={{ flexGrow: 1 }}>
             <img
               src="/brand.jpg"
               alt="Company Logo"
-              style={{ height: "100px", marginLeft: "-40px" }} // Adjust the height and margin HERE as needed
+              style={{ height: "100px", marginLeft: "-40px" }}
             />
             <Typography
               variant="h5"
@@ -66,34 +68,77 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
               sx={{ fontWeight: "bold", letterSpacing: 2 }}
             ></Typography>
           </Box>
-          <Button color="inherit" component={Link} to="/">
+
+          <Button
+            color="inherit"
+            component={Link}
+            to="/"
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+              },
+            }}
+          >
             <HomeIcon sx={{ mr: 1 }} />
             Home
           </Button>
-          <Button color="inherit" component={Link} to="/cars">
+          <Button
+            color="inherit"
+            component={Link}
+            to="/cars"
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+              },
+            }}
+          >
             <DirectionsCarIcon sx={{ mr: 1 }} />
             View Cars
           </Button>
           {isLoggedIn ? (
             <>
-              {user.Admin ? (
-                <Button color="inherit" component={Link} to="/users">
+              {user && user.Admin ? (
+                <Button
+                  color="inherit"
+                  component={Link}
+                  to="/users"
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "rgba(255, 255, 255, 0.2)",
+                    },
+                  }}
+                >
                   Admin
                 </Button>
               ) : (
                 <>
-                  <Button color="inherit" onClick={handleNavigateToCart}>
+                  <Button
+                    color="inherit"
+                    onClick={handleNavigateToCart}
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.2)",
+                      },
+                    }}
+                  >
                     <ShoppingCartIcon sx={{ mr: 1 }} />
                     My Cart
                   </Button>
-
-                  <Button color="inherit" component={Link} to="/orders">
+                  <Button
+                    color="inherit"
+                    component={Link}
+                    to="/orders"
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.2)",
+                      },
+                    }}
+                  >
                     <HistoryIcon sx={{ mr: 1 }} />
                     Orders
                   </Button>
                 </>
               )}
-
               <IconButton
                 edge="end"
                 color="inherit"
@@ -101,9 +146,14 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleMenu}
-                sx={{ fontSize: 30 }} // Adjust font size here
+                sx={{
+                  fontSize: 30,
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  },
+                }}
               >
-                <AccountCircle sx={{ fontSize: 45 }} />{" "}
+                <AccountCircle sx={{ fontSize: 45 }} />
               </IconButton>
               <Menu
                 id="menu-appbar"
@@ -123,23 +173,43 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
                 <MenuItem onClick={handleClose} component={Link} to="/profile">
                   Profile
                 </MenuItem>
+                <MenuItem onClick={handleClose} component={Link} to="/settings">
+                  Settings
+                </MenuItem>
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </>
           ) : (
             <>
-              <Button color="inherit" component={Link} to="/login">
+              <Button
+                color="inherit"
+                component={Link}
+                to="/login"
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  },
+                }}
+              >
                 Login
               </Button>
-              <Button color="inherit" component={Link} to="/register">
+              <Button
+                color="inherit"
+                component={Link}
+                to="/register"
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
+                  },
+                }}
+              >
                 Register
               </Button>
             </>
           )}
         </Toolbar>
       </AppBar>
-      <Toolbar sx={{ height: "100px" }} />{" "}
-      {/* This empty Toolbar acts as a spacer with specific height!!! */}
+      <Toolbar sx={{ height: "100px" }} />
       <Button
         variant="contained"
         onClick={openFeedbackPopup}
@@ -150,8 +220,8 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
           transform: "translateY(-50%) rotate(-90deg)",
           transformOrigin: "right center",
           zIndex: 1000,
-          backgroundColor: "#241A5C", // Set custom background color here
-          color: "#fff", // Set custom text color here
+          backgroundColor: "#241A5C",
+          color: "#fff",
           "&:hover": {
             backgroundColor: "#e64a19",
           },

@@ -1,35 +1,35 @@
 require("dotenv").config();
 
 const express = require("express");
-const router = require("vite-express");
 const app = express();
+const router = require("vite-express");
 
 const bodyParser = require("body-parser");
 
-//Import authMiddleware
+// Import middleware
 const authMiddleware = require("./middleware/authMiddleware");
-const webhookRouter = require("./api/webhook");
 
-// Apply auth middleware to the /api routes
-app.use("/api/stripe/webhook", webhookRouter);
+// Import routers
+const webhookRouter = require("./api/webhook");
+const passwordResetRouter = require("./api/passwordreset");
+const apiRouter = require("./api");
+const usersRouter = require("./api/users");
+const stripeRouter = require("./api/stripe");
+
 // Middlewares
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+// Apply routes
+app.use("/api/stripe/webhook", webhookRouter);
+app.use("/api/stripe", stripeRouter);
+app.use("/api/password-reset", passwordResetRouter); // No auth middleware for password reset
+app.use("/api", apiRouter);
+app.use("/api/users", authMiddleware, usersRouter); // Only these routes require auth middleware
+
 const db = require("./db/client");
 db.connect();
-
-// Declare Routes
-const apiRouter = require("./api");
-const usersRouter = require("./api/users");
-const stripeRouter = require("./api/stripe");
-
-// Apply auth middleware to the /api routes
-app.use("/api/stripe", stripeRouter);
-app.use("/api", apiRouter);
-app.use("/api", authMiddleware, usersRouter);
-// ADD more routes that require authorization
 
 router.listen(app, 3000, () =>
   console.log("Server is listening on port 3000...")

@@ -24,7 +24,7 @@ const HeaderTitle = ({ title, color = "inherit" }) => {
         variant="h4"
         gutterBottom
         fontWeight="bold"
-        sx={{ fontFamily: "'Roboto', sans-serif" }} // Modern font
+        sx={{ fontFamily: "'Raleway', sans-serif", fontWeight: "675" }} // Use boldest Raleway font
       >
         {title}
       </Typography>

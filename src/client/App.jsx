@@ -20,19 +20,29 @@ import AllUsers from "./components/AllUsers.jsx";
 import SingleOrderCar from "./components/SingleOrderCar.jsx";
 import LandingPage from "./components/LandingPage.jsx";
 import OrderHistory from "./components/OrderHistory.jsx";
+import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
+import ValidateCode from "./components/ValidateCode.jsx";
+import Settings from "./components/Settings.jsx";
 
 function App() {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(null); // Changed from "" to null
   const [token, setToken] = useState(window.localStorage.getItem("TOKEN"));
   const [cart, setCart] = useState([]);
   const [usersOrders, setUsersOrders] = useState(null);
+
   const getToken = () => {
     return localStorage.getItem("TOKEN");
   };
+
   const fetchCart = useCallback(async () => {
+    if (!user || !user.id) {
+      console.error("User ID is missing");
+      return;
+    }
     try {
       const token = getToken();
-      const { data: foundCart } = await axios.get(`/api/cart/${user?.id}`, {
+      const { data: foundCart } = await axios.get(`/api/cart/${user.id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -45,22 +55,24 @@ function App() {
 
   useEffect(() => {
     async function getUser() {
-      const { data } = await axios.get("/api/profile", {
+      const { data } = await axios.get("/api/users/profile", {
         headers: {
           authorization: "Bearer " + localStorage.getItem("TOKEN"),
         },
       });
-      setUser(data);
+      setUser(data || null); // Ensure user is either an object or null
     }
     if (token) {
       getUser();
     }
-  }, []);
+  }, [token]);
+
+  console.log(user);
   return (
     <div className="App">
       <ToastContainer />
       <Navbar
-        isLoggedIn={token !== null}
+        isLoggedIn={!!token}
         setToken={setToken}
         user={user}
         fetchCart={fetchCart}
@@ -88,10 +100,15 @@ function App() {
         <Route path="/cart" element={<Cart user={user} />} />
         <Route path="/orders" element={<Orders user={user} />} />
         <Route path="/profile" element={<Profile user={user} />} />
+        <Route path="/settings" element={<Settings user={user} />} />
         <Route path="/success" element={<Success />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/verify-code/:token" element={<ValidateCode />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
       <BottomNavBar />
     </div>
   );
 }
+
 export default App;
