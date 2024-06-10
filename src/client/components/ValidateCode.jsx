@@ -20,7 +20,7 @@ function ValidateCode() {
       navigate(`/reset-password/${token}?code=${verificationCode}`);
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        toast.error("Invalid or expired verification code. Please try again.");
+        toast.error("Invalid or expired verification code. Please request a new password reset link.");
       } else {
         toast.error("Error verifying code");
       }

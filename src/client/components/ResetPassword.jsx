@@ -25,6 +25,11 @@ function ResetPassword() {
   const [verificationCode, setVerificationCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+
+  const passwordMinLength = 8;
+  const passwordRegex =
+    /^(?=.*[a-z])(?=(?:.*[A-Z]){2,})(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -56,10 +61,6 @@ function ResetPassword() {
   }, [token, navigate, location.search]);
 
   const handleResetPassword = async () => {
-    const passwordMinLength = 8;
-    const passwordRegex =
-      /^(?=.*[a-z])(?=(?:.*[A-Z]){2,})(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
-
     setPasswordError(false);
     setConfirmPasswordError(false);
 
@@ -107,6 +108,9 @@ function ResetPassword() {
     return null; // Or a loading spinner / message if you want
   }
 
+  const isPasswordValid =
+    password.length >= passwordMinLength && passwordRegex.test(password);
+
   return (
     <Box
       display="flex"
@@ -143,7 +147,10 @@ function ResetPassword() {
           type={showPassword ? "text" : "password"}
           placeholder="Create Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            if (!isTyping) setIsTyping(true);
+          }}
           variant="outlined"
           fullWidth
           error={passwordError}
@@ -169,7 +176,9 @@ function ResetPassword() {
         />
         <Typography
           variant="body2"
-          color="textSecondary"
+          color={
+            isTyping ? (isPasswordValid ? "green" : "red") : "textSecondary"
+          }
           sx={{ fontStyle: "italic", fontSize: "0.650rem", mt: "-8px", mb: 1 }}
         >
           Password must be at least 8 characters long, contain at least 2

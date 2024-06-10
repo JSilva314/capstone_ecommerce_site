@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   AppBar,
@@ -18,9 +18,36 @@ import HistoryIcon from "@mui/icons-material/History";
 
 function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [languageAnchorEl, setLanguageAnchorEl] = useState(null);
 
-  useEffect(() => {}, [user.Admin]);
+  useEffect(() => {
+    // Function to initialize Google Translate
+    const googleTranslateElementInit = () => {
+      new window.google.translate.TranslateElement(
+        {
+          pageLanguage: "en",
+          includedLanguages: "en,es,zh-CN",
+          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+        },
+        "google_translate_element"
+      );
+    };
+
+    // Dynamically load Google Translate script
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.async = true;
+    script.src =
+      "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.onload = googleTranslateElementInit;
+    document.head.appendChild(script);
+
+    // Clean up function to remove the script
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -28,6 +55,23 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleLanguageMenu = (event) => {
+    setLanguageAnchorEl(event.currentTarget);
+  };
+
+  const handleLanguageClose = () => {
+    setLanguageAnchorEl(null);
+  };
+
+  const handleLanguageChange = (lang) => {
+    const googleTranslateElement = document.querySelector(".goog-te-combo");
+    if (googleTranslateElement) {
+      googleTranslateElement.value = lang;
+      googleTranslateElement.dispatchEvent(new Event("change"));
+    }
+    handleLanguageClose();
   };
 
   const handleLogout = () => {
@@ -51,13 +95,16 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
 
   return (
     <>
-      <AppBar position="fixed" sx={{ backgroundColor: "#323270" }}>
+      <AppBar
+        position="fixed"
+        sx={{ backgroundColor: "#323270", fontFamily: "Raleway, sans-serif" }}
+      >
         <Toolbar>
           <Box display="flex" alignItems="center" sx={{ flexGrow: 1 }}>
             <img
               src="/brand.jpg"
               alt="Company Logo"
-              style={{ height: "100px", marginLeft: "-40px" }} // Adjust the height and margin HERE as needed
+              style={{ height: "100px", marginLeft: "-40px" }}
             />
             <Typography
               variant="h5"
@@ -65,6 +112,52 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
               sx={{ fontWeight: "bold", letterSpacing: 2 }}
             ></Typography>
           </Box>
+          <Button
+            color="inherit"
+            onClick={handleLanguageMenu}
+            sx={{
+              "&:hover": {
+                backgroundColor: "rgba(255, 255, 255, 0.2)",
+              },
+            }}
+          >
+            <img
+              src="/images/english-flag.png"
+              alt="English"
+              style={{ marginRight: "8px", height: "20px", width: "20px" }}
+            />
+            EN
+          </Button>
+          <Menu
+            anchorEl={languageAnchorEl}
+            open={Boolean(languageAnchorEl)}
+            onClose={handleLanguageClose}
+          >
+            <MenuItem onClick={() => handleLanguageChange("en")}>
+              <img
+                src="/images/english-flag.png"
+                alt="English"
+                style={{ marginRight: "8px", height: "20px", width: "20px" }}
+              />
+              English
+            </MenuItem>
+            <MenuItem onClick={() => handleLanguageChange("es")}>
+              <img
+                src="/images/spanish-flag.png"
+                alt="Español"
+                style={{ marginRight: "8px", height: "20px", width: "20px" }}
+              />
+              Español
+            </MenuItem>
+            <MenuItem onClick={() => handleLanguageChange("zh-CN")}>
+              <img
+                src="/images/chinese-flag.png"
+                alt="中文"
+                style={{ marginRight: "8px", height: "20px", width: "20px" }}
+              />
+              中文
+            </MenuItem>
+          </Menu>
           <Button
             color="inherit"
             component={Link}
@@ -120,7 +213,6 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
                     <ShoppingCartIcon sx={{ mr: 1 }} />
                     My Cart
                   </Button>
-
                   <Button
                     color="inherit"
                     component={Link}
@@ -136,7 +228,6 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
                   </Button>
                 </>
               )}
-
               <IconButton
                 edge="end"
                 color="inherit"
@@ -149,9 +240,9 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
                   "&:hover": {
                     backgroundColor: "rgba(255, 255, 255, 0.2)",
                   },
-                }} // Adjust font size and hover background color here
+                }}
               >
-                <AccountCircle sx={{ fontSize: 45 }} />{" "}
+                <AccountCircle sx={{ fontSize: 45 }} />
               </IconButton>
               <Menu
                 id="menu-appbar"
@@ -204,8 +295,7 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
           )}
         </Toolbar>
       </AppBar>
-      <Toolbar sx={{ height: "100px" }} />{" "}
-      {/* This empty Toolbar acts as a spacer with specific height!!! */}
+      <Toolbar sx={{ height: "100px" }} />
       <Button
         variant="contained"
         onClick={openFeedbackPopup}
@@ -216,8 +306,8 @@ function Navbar({ setToken, isLoggedIn, fetchCart, user }) {
           transform: "translateY(-50%) rotate(-90deg)",
           transformOrigin: "right center",
           zIndex: 1000,
-          backgroundColor: "#241A5C", // Set custom background color here
-          color: "#fff", // Set custom text color here
+          backgroundColor: "#241A5C",
+          color: "#fff",
           "&:hover": {
             backgroundColor: "#e64a19",
           },
