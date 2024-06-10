@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-
 const AllUsers = ({ user, setUsersOrders }) => {
   const [users, setUsers] = useState([]);
   const [refresher, setRefresher] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("rendering");
     async function getUsers() {
       try {
         const { data } = await axios.get("/api/users", {
@@ -20,13 +19,14 @@ const AllUsers = ({ user, setUsersOrders }) => {
       }
     }
     getUsers();
-  }, [refresher, users]);
+  }, [refresher]);
 
   const handleUserDelete = async (currentUser) => {
     try {
+      console.log(currentUser.id, "currentUser");
       // Assuming currentUser has an id property
       const response = await axios.delete(`/api/users/${currentUser.id}`);
-      console.log(response.data);
+
       setRefresher((prev) => !prev);
       // Optionally, refresh the user list or update the UI accordingly
     } catch (error) {
@@ -34,9 +34,8 @@ const AllUsers = ({ user, setUsersOrders }) => {
     }
   };
   const navToOrders = (selectedUser) => {
-    const navigate = useNavigate();
     setUsersOrders(selectedUser);
-    navigate("/orders");
+    navigate("/orderhistory");
   };
   return (
     <div>
