@@ -19,6 +19,7 @@ import Account from "./components/Account.jsx";
 import AllUsers from "./components/AllUsers.jsx";
 import SingleOrderCar from "./components/SingleOrderCar.jsx";
 import LandingPage from "./components/LandingPage.jsx";
+import OrderHistory from "./components/OrderHistory.jsx";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
 import ValidateCode from "./components/ValidateCode.jsx";
@@ -90,13 +91,14 @@ function App() {
           path="/users"
           element={<AllUsers user={user} setUsersOrders={setUsersOrders} />}
         />
+        <Route
+          path="/orderhistory"
+          element={<OrderHistory usersOrders={usersOrders} />}
+        />
         <Route path="/register" element={<Register setToken={setToken} />} />
         <Route path="/listcar" element={<ListCar />} />
         <Route path="/cart" element={<Cart user={user} />} />
-        <Route
-          path="/orders"
-          element={<Orders user={user} usersOrders={usersOrders} />}
-        />
+        <Route path="/orders" element={<Orders user={user} />} />
         <Route path="/profile" element={<Profile user={user} />} />
         <Route path="/settings" element={<Settings user={user} />} />
         <Route path="/success" element={<Success />} />

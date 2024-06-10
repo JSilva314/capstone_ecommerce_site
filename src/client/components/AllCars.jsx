@@ -32,11 +32,13 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import HeaderTitle from "./HeaderTitle";
 import "./AllCars.css";
+// import { user } from "../../server/client";
 import { Helmet } from "react-helmet";
 
 function AllCars({ user }) {
   const [cars, setCars] = useState([]);
   const [search, setSearch] = useState("");
+  const [refresher, setRefresher] = useState(false);
   const [likedCars, setLikedCars] = useState(() => {
     const savedLikes = localStorage.getItem("likedCars");
     return savedLikes ? JSON.parse(savedLikes) : {};
@@ -66,7 +68,7 @@ function AllCars({ user }) {
       }
     }
     fetchCars();
-  }, []);
+  }, [refresher]);
 
   useEffect(() => {
     localStorage.setItem("likedCars", JSON.stringify(likedCars));
@@ -188,6 +190,15 @@ function AllCars({ user }) {
     car.make.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleDeleteCar = async (carId) => {
+    try {
+      const response = await axios.delete(`/api/cars/${carId}`);
+      console.log(response.data);
+      setRefresher((prev) => !prev);
+    } catch (error) {
+      console.error("Error deleting car:", error);
+    }
+  };
   const compareAttributes = (car1, car2, attribute) => {
     if (attribute === "price" || attribute === "miles") {
       if (car1[attribute] < car2[attribute]) {
@@ -234,7 +245,8 @@ function AllCars({ user }) {
         }}
       >
         <HeaderTitle title="Available Cars" color="#4A4A93" />
-        {user?.Admin && (
+
+        {user.Admin && ( // Conditionally render admin-specific content
           <Box mb={2}>
             <Typography variant="h6" align="center" color="primary">
               Admin: You have special privileges!
@@ -421,6 +433,13 @@ function AllCars({ user }) {
                     to={`/cars/${car.id}`}
                   >
                     View Vehicle
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      handleDeleteCar(car.id);
+                    }}
+                  >
+                    Delete Vehicle
                   </Button>
                 </CardContent>
               </Card>

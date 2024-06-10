@@ -164,15 +164,17 @@ usersRouter.delete("/:id", async (req, res, next) => {
   const userId = req.params.id;
   console.log(userId, "user ID");
 
+  console.log("Deleting user with ID:", userId);
   try {
     const deletedUser = await prisma.users.delete({
       where: {
         id: +userId,
       },
     });
-
+    console.log("User deleted:", deletedUser);
     res.status(200).json({ message: `User ${userId} deleted successfully` });
   } catch (error) {
+    console.error("Error deleting user:", error);
     next(error);
   }
 });

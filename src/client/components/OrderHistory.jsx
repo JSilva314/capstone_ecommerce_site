@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 
-function OrderHistory({ user, usersOrders }) {
+function OrderHistory({ usersOrders }) {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,8 +22,8 @@ function OrderHistory({ user, usersOrders }) {
     async function fetchOrders() {
       try {
         const token = localStorage.getItem("TOKEN"); // Obtain the user's token from localStorage
-        console.log(`Fetching orders for userId: ${user?.id}`);
-        const { data } = await axios.get(`/api/orders/${user?.id}`, {
+        console.log(`Fetching orders for userId: ${usersOrders?.id}`);
+        const { data } = await axios.get(`/api/orders/${usersOrders?.id}`, {
           headers: {
             Authorization: `Bearer ${token}`, // Set the Authorization header with the user's token
           },
@@ -37,10 +37,10 @@ function OrderHistory({ user, usersOrders }) {
         setIsLoading(false);
       }
     }
-    if (user) {
+    if (usersOrders) {
       fetchOrders();
     }
-  }, [user]);
+  }, [usersOrders]);
 
   if (isLoading) {
     return (
@@ -80,7 +80,7 @@ function OrderHistory({ user, usersOrders }) {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <HeaderTitle title="My Orders" />
+        <HeaderTitle title={`${usersOrders.username}'s Orders`} />
         {orders.length === 0 ? (
           <Typography>No orders found.</Typography>
         ) : (
