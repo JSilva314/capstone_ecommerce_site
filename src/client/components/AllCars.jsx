@@ -435,7 +435,7 @@ function AllCars({ user }) {
                   >
                     View Vehicle
                   </Button>
-                  {user.Admin(
+                  {user?.Admin && (
                     <Button
                       variant="contained"
                       color="secondary"
