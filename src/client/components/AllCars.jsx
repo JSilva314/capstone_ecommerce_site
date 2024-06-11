@@ -246,13 +246,14 @@ function AllCars({ user }) {
       >
         <HeaderTitle title="Available Cars" color="#4A4A93" />
 
-        {user.Admin && ( // Conditionally render admin-specific content
-          <Box mb={2}>
-            <Typography variant="h6" align="center" color="primary">
-              Admin: You have special privileges!
-            </Typography>
-          </Box>
-        )}
+        {user &&
+          user.Admin && ( // Conditionally render admin-specific content
+            <Box mb={2}>
+              <Typography variant="h6" align="center" color="primary">
+                Admin: You have special privileges!
+              </Typography>
+            </Box>
+          )}
         <Box display="flex" justifyContent="space-between" mb={2}>
           <TextField
             label="Search by make"
@@ -435,7 +436,7 @@ function AllCars({ user }) {
                   >
                     View Vehicle
                   </Button>
-                  {user.Admin && (
+                  {user.Admin(
                     <Button
                       variant="contained"
                       color="secondary"
