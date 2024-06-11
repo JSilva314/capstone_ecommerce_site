@@ -417,6 +417,7 @@ function AllCars({ user }) {
                   >
                     Miles: {car.miles}
                   </Typography>
+
                   <Button
                     variant="contained"
                     color="primary"
@@ -434,13 +435,24 @@ function AllCars({ user }) {
                   >
                     View Vehicle
                   </Button>
-                  <Button
-                    onClick={() => {
-                      handleDeleteCar(car.id);
-                    }}
-                  >
-                    Delete Vehicle
-                  </Button>
+                  {user.Admin && (
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      sx={{
+                        mt: 2,
+                        backgroundColor: "#F7422F",
+                        color: "#fff",
+                        "&:hover": {
+                          backgroundColor: "#D32F2F",
+                        },
+                        width: "100%",
+                      }}
+                      onClick={() => handleDeleteCar(car.id)}
+                    >
+                      Delete Vehicle
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             ))}
