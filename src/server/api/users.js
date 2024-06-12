@@ -158,6 +158,35 @@ usersRouter.get("/profile", authMiddleware, async (req, res, next) => {
     res.status(500).send({ message: "Internal server error" });
   }
 });
+
+// Update user endpoint
+usersRouter.put("/update", authMiddleware, async (req, res, next) => {
+  const { fullName, username, address } = req.body;
+  const userId = req.user.id; // Extract user ID from decoded token
+
+  try {
+    // Check if the username is already taken by another user
+    const existingUserByUsername = await getUserByUsername(username);
+    if (existingUserByUsername && existingUserByUsername.id !== userId) {
+      return res.status(409).send({ message: "Username Already Taken" });
+    }
+
+    const updatedUser = await prisma.users.update({
+      where: { id: userId },
+      data: {
+        fullName,
+        username,
+        address,
+      },
+    });
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error("Error updating user information:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 // Other user-related routes...
 
 usersRouter.delete("/:id", async (req, res, next) => {
