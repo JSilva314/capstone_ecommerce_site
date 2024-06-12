@@ -1,148 +1,272 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import GoogleTranslate from "./GoogleTranslate";
 import axios from "axios";
-import { Box, Container, Typography, Card, CardContent, Button } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  TextField,
+  Button,
+  IconButton,
+  InputAdornment,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Link
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { toast } from "react-toastify";
+import { Helmet } from "react-helmet";
+import { keyframes } from "@emotion/react";
 
 const Settings = () => {
-  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogContent, setDialogContent] = useState("");
+
+  const handleDialogOpen = (content) => {
+    setDialogContent(content);
+    setOpenDialog(true);
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    setDialogContent("");
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem("TOKEN");
+      try {
+        const response = await axios.get("/api/users/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setEmail(response.data.email);
+        setUsername(response.data.username);
+        setAddress(response.data.address);
+        setPhone(response.data.phone);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("TOKEN"); // Retrieve the authentication token from localStorage
-      const response = await axios.put(
-        "/api/users/update",
-        {
-          fullName,
-          username,
-          address,
+      const token = localStorage.getItem("TOKEN");
+      const updateData = {};
+      if (email) updateData.email = email;
+      if (username) updateData.username = username;
+      if (address) updateData.address = address;
+      if (phone) updateData.phone = phone;
+  
+      const response = await axios.put("/api/users/update", updateData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the authentication token in the request headers
-          },
-        }
-      );
+      });
+  
       if (response.status === 200) {
-        setMessage("User information updated successfully!");
+        toast.success("User information updated successfully!");
       }
     } catch (error) {
-      setMessage("Error updating user information.");
-      console.error("Error updating user information:", error);
+      if (error.response && error.response.status === 409) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Error updating user information.");
+        console.error("Error updating user information:", error);
+      }
     }
- };
+  };
+
+  const traceAnimation = keyframes`
+    0% {
+      border: 2px solid transparent;
+      box-shadow: 0 0 5px rgba(36, 26, 92, 0.3), 0 0 10px rgba(36, 26, 92, 0.3), 0 0 20px rgba(36, 26, 92, 0.3), 0 0 40px rgba(36, 26, 92, 0.3), 0 0 60px rgba(36, 26, 92, 0.3);
+    }
+    100% {
+      border: 2px solid rgba(36, 26, 92, 0.3);
+      box-shadow: 0 0 5px rgba(36, 26, 92, 0), 0 0 10px rgba(36, 26, 92, 0), 0 0 20px rgba(36, 26, 92, 0), 0 0 40px rgba(36, 26, 92, 0), 0 0 60px rgba(36, 26, 92, 0);
+    }
+  `;
+
+  const slideInAnimation = keyframes`
+    0% {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  `;
+
+  const commonStyles = { height: 56, mb: 2 };
 
   return (
     <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
       sx={{
-        backgroundImage: 'url("/car2.jpg")',
+        minHeight: "100vh",
+        backgroundImage: `url("/Registerbackground.jpg")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 4,
+        mt: -8,
       }}
     >
-      <Container
-        maxWidth="lg"
+      <Helmet>
+        <title>CarMin Account Settings</title>
+        <meta name="description" content="Update your account settings." />
+      </Helmet>
+      <Box
+        width="300px"
+        display="flex"
+        flexDirection="column"
+        gap={2}
+        p={4}
+        border="2px solid transparent"
+        borderRadius={2}
+        boxShadow="0 4px 20px rgba(0, 0, 0, 0.2)"
+        bgcolor="background.paper"
+        alignItems="center"
         sx={{
-          backgroundColor: "#491A93",
-          borderRadius: 4,
-          padding: 4,
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+          animation: `${traceAnimation} 20s linear infinite`,
         }}
       >
-        <Typography variant="h1" 
-          sx={{ 
-            marginBottom: 4,
-            color: "#EFF1F3",
-            fontSize: "3rem",
-            fontWeight: "bold",
-            textAlign: "center",
-            textTransform: "uppercase",
-
-         }}>Account Settings</Typography>
+        <Typography
+          variant="h4"
+          mb={1}
+          sx={{
+            fontFamily: "Raleway, sans-serif",
+            fontWeight: 600,
+            color: "#241A5C",
+            animation: `${slideInAnimation} 1s ease-in-out`,
+          }}
+        >
+          Account Settings
+        </Typography>
         <form onSubmit={handleUpdate}>
-          <Card
+          <TextField
+            label="Email Address"
+            placeholder="johndoe@icloud.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            variant="outlined"
+            fullWidth
             sx={{
-              border: "none",
-              borderRadius: 1.5,
-              overflow: "hidden",
-              backgroundColor: "rgba(255, 255, 255, 0.8)",
-              transition: "transform 0.3s, box-shadow 0.3s",
-              "&:hover": {
-                transform: "scale(1.05)",
-                boxShadow: "0 12px 24px rgba(0, 0, 0, 0.05)",
+              ...commonStyles,
+              "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
+                {
+                  borderColor: "red",
+                },
+            }}
+          />
+          <TextField
+            label="Username"
+            placeholder="No Special Characters"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            variant="outlined"
+            fullWidth
+            sx={{
+              ...commonStyles,
+              "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
+                {
+                  borderColor: "red",
+                },
+            }}
+          />
+          <TextField
+            label="Full Address"
+            placeholder="123 May St, San Diego, CA, 62704"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            variant="outlined"
+            fullWidth
+            sx={{
+              ...commonStyles,
+              "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
+                {
+                  borderColor: "red",
+                },
+            }}
+          />
+          <TextField
+            label="Phone Number"
+            placeholder="Optional"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            variant="outlined"
+            fullWidth
+            sx={commonStyles}
+          />
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            p={2} // Adjust padding as needed
+          >
+            <GoogleTranslate />
+          </Box>
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            sx={{
+              ...commonStyles,
+              animation: "pulse 20s infinite",
+              "@keyframes pulse": {
+                "0%": {
+                  transform: "scale(1)",
+                },
+                "50%": {
+                  transform: "scale(1.05)",
+                },
+                "100%": {
+                  transform: "scale(1)",
+                },
               },
-              marginBottom: 2,
+              backgroundColor: "#15379b",
+              color: "#fff",
+              "&:hover": {
+                backgroundColor: "#0d2357",
+              },
             }}
           >
-            <CardContent>
-              <div>
-                <label>
-                  <Typography variant="subtitle1">Full Name:</Typography>
-                  <input
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    required
-                  />
-                </label>
-              </div>
-              <div>
-                <label>
-                  <Typography variant="subtitle1">Username:</Typography>
-                  <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                  />
-                </label>
-              </div>
-              <div>
-                <label>
-                  <Typography variant="subtitle1">Address:</Typography>
-                  <input
-                    type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    required
-                  />
-                </label>
-              </div>
-              <GoogleTranslate />
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{
-                  marginTop: 2,
-                  backgroundColor: "#15379b",
-                  color: "#fff",
-                  "&:hover": {
-                    backgroundColor: "#0d2357",
-                  },
-                  width: "100%",
-                }}
-              >
-                Update
-              </Button>
-            </CardContent>
-          </Card>
+            Update
+          </Button>
         </form>
         {message && (
-          <Typography variant="body1" sx={{ color: "white", marginTop: 2 }}>
+          <Typography variant="body1" sx={{ color: "red", marginTop: 2 }}>
             {message}
           </Typography>
         )}
-      </Container>
+      </Box>
+      <Dialog open={openDialog} onClose={handleDialogClose}>
+        <DialogTitle>Information</DialogTitle>
+        <DialogContent>
+          <Typography>{dialogContent}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

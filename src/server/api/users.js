@@ -137,6 +137,7 @@ usersRouter.post("/register", async (req, res, next) => {
   }
 });
 
+// User Profile
 usersRouter.get("/profile", authMiddleware, async (req, res, next) => {
   console.log(req.user);
   const userId = req.user.id; // Extract user ID from decoded token
@@ -161,12 +162,14 @@ usersRouter.get("/profile", authMiddleware, async (req, res, next) => {
 
 // Update user endpoint
 usersRouter.put("/update", authMiddleware, async (req, res, next) => {
-  const { fullName, username, address } = req.body;
+  const { email, username, address, phone } = req.body;
   const userId = req.user.id; // Extract user ID from decoded token
 
   try {
     // Check if the username is already taken by another user
-    const existingUserByUsername = await getUserByUsername(username);
+    const existingUserByUsername = await prisma.users.findUnique({
+      where: { username },
+    });
     if (existingUserByUsername && existingUserByUsername.id !== userId) {
       return res.status(409).send({ message: "Username Already Taken" });
     }
@@ -174,9 +177,10 @@ usersRouter.put("/update", authMiddleware, async (req, res, next) => {
     const updatedUser = await prisma.users.update({
       where: { id: userId },
       data: {
-        fullName,
+        email,
         username,
         address,
+        phone,
       },
     });
 
@@ -186,6 +190,8 @@ usersRouter.put("/update", authMiddleware, async (req, res, next) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+module.exports = usersRouter;
 
 // Other user-related routes...
 
