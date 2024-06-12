@@ -80,5 +80,18 @@ carsRouter.post("/", async (req, res, next) => {
     console.error(error);
   }
 });
+carsRouter.delete("/:id", async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const car = await prisma.cars.delete({
+      where: {
+        id: +id,
+      },
+    });
+    res.status(200).send(car);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 module.exports = carsRouter;
