@@ -27,7 +27,6 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShareIcon from "@mui/icons-material/Share";
 import CompareIcon from "@mui/icons-material/Compare";
 import DeleteIcon from "@mui/icons-material/Delete";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import HeaderTitle from "./HeaderTitle";
@@ -175,13 +174,46 @@ function AllCars({ user }) {
     });
   };
 
-  const handleAddToCart = (car) => {
-    if (!user) {
-      navigate("/register");
+  const handleAddToCart = async (car) => {
+    const token = localStorage.getItem("TOKEN");
+
+    if (!user || !user.id) {
+      toast.error("You must be logged in to add items to the cart.");
+      navigate("/login");
       return;
     }
-    setCart((prevCart) => [...prevCart, car]);
-    toast.success(`${car.make} ${car.model} added to cart!`);
+
+    try {
+      await axios.post(
+        `/api/cart`,
+        {
+          carId: car.id,
+          userId: user.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toast.success("Item added to cart successfully");
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 409) {
+          toast.error("Car already exists in your cart.");
+        } else {
+          toast.error("Failed to add car to cart. Please try again.");
+        }
+        console.error("Error status:", error.response.status);
+        console.error("Error message:", error.response.data);
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+        toast.error("Failed to add car to cart. Please check your network.");
+      } else {
+        console.error("Error:", error.message);
+        toast.error("An unexpected error occurred. Please try again.");
+      }
+    }
   };
 
   const filtered = cars.filter((car) =>
@@ -702,5 +734,9 @@ function AllCars({ user }) {
     </Box>
   );
 }
+
+AllCars.propTypes = {
+  user: PropTypes.object,
+};
 
 export default AllCars;

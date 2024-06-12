@@ -20,7 +20,9 @@ function ValidateCode() {
       navigate(`/reset-password/${token}?code=${verificationCode}`);
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        toast.error("Invalid or expired verification code. Please request a new password reset link.");
+        toast.error(
+          "Invalid or expired verification code. Please request a new password reset link."
+        );
       } else {
         toast.error("Error verifying code");
       }
@@ -33,7 +35,12 @@ function ValidateCode() {
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      sx={{ minHeight: "90vh" }}
+      sx={{
+        minHeight: "90vh",
+        backgroundImage: `url("/ValidateCode.jpg")`, // Set the path to your image
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
       <Helmet>
         <title>Verify Code</title>
@@ -50,13 +57,35 @@ function ValidateCode() {
         boxShadow="0 4px 20px rgba(0, 0, 0, 0.2)"
         bgcolor="background.paper"
         alignItems="center"
+        textAlign="center"
       >
+        <img
+          src="/greencheckmark.png"
+          alt="Checkmark Icon"
+          style={{ width: "100px", height: "100px", marginBottom: "6px" }}
+        />
         <Typography
-          variant="h4"
-          mb={2}
-          sx={{ fontFamily: "Raleway, sans-serif", fontWeight: 600 }}
+          variant="h5"
+          mb={1} 
+          sx={{
+            fontFamily: "Raleway, sans-serif",
+            fontWeight: 600,
+            animation: `shine 6s infinite`,
+            "@keyframes shine": {
+              "0%": { color: "black" },
+              "50%": { color: "green" },
+              "100%": { color: "black" },
+            },
+          }}
         >
           Verify Code
+        </Typography>
+        <Typography
+          variant="h8"
+          mb={1} 
+          sx={{ fontFamily: "Raleway, sans-serif", fontWeight: 600 }}
+        >
+          Please check your email for your verification code and input here:
         </Typography>
         <TextField
           label="Verification Code"
@@ -65,8 +94,14 @@ function ValidateCode() {
           onChange={(e) => setVerificationCode(e.target.value)}
           variant="outlined"
           fullWidth
+          sx={{ mb: 2 }} 
         />
-        <Button variant="contained" onClick={handleVerifyCode} fullWidth>
+        <Button
+          variant="contained"
+          onClick={handleVerifyCode}
+          fullWidth
+          sx={{ borderRadius: "20px" }}
+        >
           Validate Code
         </Button>
       </Box>

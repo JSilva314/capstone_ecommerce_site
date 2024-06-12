@@ -6,12 +6,11 @@ import {
   TextField,
   Button,
   Typography,
-  IconButton,
-  InputAdornment,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 function ResetPassword() {
   const { token } = useParams();
@@ -24,7 +23,6 @@ function ResetPassword() {
   const [isValidToken, setIsValidToken] = useState(true);
   const [verificationCode, setVerificationCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
   const passwordMinLength = 8;
@@ -117,7 +115,12 @@ function ResetPassword() {
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      sx={{ minHeight: "90vh" }}
+      sx={{
+        minHeight: "90vh",
+        backgroundImage: `url("/ConfirmPassword.jpg")`, // Set the path to your image
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
       <Helmet>
         <title>CarMin - Reset Password</title>
@@ -134,13 +137,31 @@ function ResetPassword() {
         boxShadow="0 4px 20px rgba(0, 0, 0, 0.2)"
         bgcolor="background.paper"
         alignItems="center"
+        textAlign="center"
+        sx={{ mt: -20 }}
       >
         <Typography
           variant="h4"
-          mb={2}
-          sx={{ fontFamily: "Raleway, sans-serif", fontWeight: 600 }}
+          mb={0}
+          sx={{
+            fontFamily: "Raleway, sans-serif",
+            fontWeight: 600,
+            animation: `shine 6s infinite`,
+            "@keyframes shine": {
+              "0%": { color: "black" },
+              "50%": { color: "green" },
+              "100%": { color: "black" },
+            },
+          }}
         >
           Reset Password
+        </Typography>
+        <Typography
+          variant="h8"
+          mb={1}
+          sx={{ fontFamily: "Raleway, sans-serif", fontWeight: 600 }}
+        >
+          Create a new, strong password that you don’t use for other websites
         </Typography>
         <TextField
           label="New Password"
@@ -154,19 +175,6 @@ function ResetPassword() {
           variant="outlined"
           fullWidth
           error={passwordError}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
           sx={{
             "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
               {
@@ -186,26 +194,13 @@ function ResetPassword() {
         </Typography>
         <TextField
           label="Confirm New Password"
-          type={showConfirmPassword ? "text" : "password"}
+          type={showPassword ? "text" : "password"}
           placeholder="Confirm Password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           variant="outlined"
           fullWidth
           error={confirmPasswordError}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  edge="end"
-                >
-                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
           sx={{
             "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline":
               {
@@ -213,8 +208,19 @@ function ResetPassword() {
               },
           }}
         />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={showPassword}
+              onChange={() => setShowPassword(!showPassword)}
+              color="primary"
+            />
+          }
+          label="Show Passwords"
+          sx={{ alignSelf: "flex-start", mt: -1 }}
+        />
         <Button variant="contained" onClick={handleResetPassword} fullWidth>
-          Reset Password
+          Save New Password
         </Button>
       </Box>
     </Box>

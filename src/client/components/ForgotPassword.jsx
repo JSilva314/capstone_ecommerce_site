@@ -1,19 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {
-  Box,
-  TextField,
-  Button,
-  Typography,
-  Modal,
-  CircularProgress,
-} from "@mui/material";
+import { Box, TextField, Button, Typography, Modal } from "@mui/material";
 import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
   const handleForgotPassword = async () => {
@@ -22,18 +14,10 @@ function ForgotPassword() {
       return;
     }
 
-    // Simple email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      toast.error("Please enter a valid email address.");
-      return;
-    }
-
-    setLoading(true);
     try {
       await axios.post("/api/password-reset/forgot-password", { email });
       toast.success("Password reset link sent to your email");
-      setOpen(true);
+      setOpen(true); // Open the modal
     } catch (error) {
       console.error("Error sending password reset link:", error);
       if (error.response && error.response.status === 404) {
@@ -41,8 +25,6 @@ function ForgotPassword() {
       } else {
         toast.error("Error sending password reset link");
       }
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -56,7 +38,13 @@ function ForgotPassword() {
       flexDirection="column"
       alignItems="center"
       justifyContent="center"
-      sx={{ minHeight: "90vh" }}
+      sx={{
+        minHeight: "90vh",
+        mt: -26,
+        backgroundImage: `url("/PasswordReset.jpg")`, // Set the path to your image
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
       <Helmet>
         <title>CarMin - Forgot Password</title>
@@ -73,13 +61,27 @@ function ForgotPassword() {
         boxShadow="0 4px 20px rgba(0, 0, 0, 0.2)"
         bgcolor="background.paper"
         alignItems="center"
+        textAlign="center"
       >
+        <img
+          src="/lock.png"
+          alt="Lock Icon"
+          style={{ width: "120px", height: "120px", marginBottom: "6px" }}
+        />
         <Typography
-          variant="h4"
+          variant="h5"
           mb={2}
           sx={{ fontFamily: "Raleway, sans-serif", fontWeight: 600 }}
         >
-          Reset Password Request
+          Trouble Logging In?
+        </Typography>
+        <Typography
+          variant="h8"
+          mb={2}
+          sx={{ fontFamily: "Raleway, sans-serif", fontWeight: 600 }}
+        >
+          Enter your email and we'll send a link to get you back into your
+          account.
         </Typography>
         <TextField
           placeholder="Email"
@@ -87,19 +89,14 @@ function ForgotPassword() {
           onChange={(e) => setEmail(e.target.value)}
           variant="outlined"
           fullWidth
-          aria-label="Email Address"
         />
         <Button
           variant="contained"
           onClick={handleForgotPassword}
           fullWidth
-          disabled={loading}
+          sx={{ borderRadius: "20px" }}
         >
-          {loading ? (
-            <CircularProgress size={24} />
-          ) : (
-            "Send Reset Password Link"
-          )}
+          Send Reset Password Link
         </Button>
       </Box>
 
