@@ -3,9 +3,16 @@ const bcrypt = require("bcrypt");
 
 async function main() {
   try {
+    // Clear existing orderHistory and related records
+    await prisma.orderHistory.deleteMany({});
+    await prisma.cart.deleteMany({});
+
+    // Clear existing users (optional, if needed)
+    await prisma.users.deleteMany({});
 
     // Clear existing cars
     await prisma.cars.deleteMany({});
+    
     // Hash the admin password
     const hashedPassword = await bcrypt.hash("securepass", 10);
 

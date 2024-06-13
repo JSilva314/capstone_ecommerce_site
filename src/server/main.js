@@ -14,6 +14,7 @@ const webhookRouter = require("./api/webhook");
 const passwordResetRouter = require("./api/passwordreset");
 const apiRouter = require("./api");
 const usersRouter = require("./api/users");
+const adminUsersRouter = require("./api/adminUsers");
 const stripeRouter = require("./api/stripe");
 
 // Middlewares
@@ -27,6 +28,7 @@ app.use("/api/stripe", stripeRouter);
 app.use("/api/password-reset", passwordResetRouter); // No auth middleware for password reset
 app.use("/api", apiRouter);
 app.use("/api/users", authMiddleware, usersRouter); // Only these routes require auth middleware
+app.use("/api/admin/users", authMiddleware, adminUsersRouter); // Only these routes require auth middleware
 
 const db = require("./db/client");
 db.connect();
