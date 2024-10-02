@@ -1,7 +1,7 @@
 const { Client } = require("pg");
 const connectionString =
   process.env.DATABASE_URL ||
-  "postgresql://capstone1_99au_user:YJghCSEfckCr6oMp1FflMM37ibVc7i7q@dpg-cru8t9rv2p9s73enq6o0-a.oregon-postgres.render.com/capstone1_99au";
+  "postgresql://capstone_ecommerce_user:GeAfLKzi58sKf3tax7urWdeyxRw5QYoR@dpg-cruadtrv2p9s73eodo50-a/capstone_ecommerce";
 
 const db = new Client({
   connectionString,
